@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [Header("Panels")]
     public GameObject SettingsPanel;
     public GameObject VideoSettingsPanel;
     public GameObject AudioSettingsPanel;
