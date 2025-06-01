@@ -1,5 +1,7 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
@@ -11,7 +13,26 @@ public class MainMenu : MonoBehaviour
     public GameObject CreditsPanel;
     public GameObject MenuPanel;
 
-    // Initially hide all of the menu panels
+    [Header("Buttons")]
+    public Button ContinueButton;
+
+    private string saveFilePath;
+
+    void Awake()
+    {
+        // Build the path to the save file
+        saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+
+        if (ContinueButton != null)
+        {
+            // If no save exists, hide the Continue button
+            if (!File.Exists(saveFilePath))
+            {
+                ContinueButton.gameObject.SetActive(false);
+            }
+        }
+    }
+
     void Start()
     {
         MenuPanel.SetActive(true);
@@ -19,13 +40,27 @@ public class MainMenu : MonoBehaviour
         CreditsPanel.SetActive(false);
     }
 
-    // Load the game and start from the beginning
+    // Start a new game from the beginning
     public void MainGameStart()
     {
         SceneManager.LoadScene("1City");
     }
 
-    // Open game settings (video settings as default)
+    // Load the last saved game (scene and player position)
+    public void LoadGame()
+    {
+        bool success = SaveManager.Instance.LoadGame();
+        if (!success)
+        {
+            Debug.LogWarning("MainMenu: No save file found to load.");
+        }
+        else
+        {
+            Debug.Log("MainMenu: Loaded saved game.");
+        }
+    }
+
+    // Open video settings (default sub‐panel)
     public void OpenVideoSettings()
     {
         MenuPanel.SetActive(false);
@@ -51,7 +86,7 @@ public class MainMenu : MonoBehaviour
         ControlsSettingsPanel.SetActive(true);
     }
 
-    // Close game settings
+    // Close settings or credits and return to main menu
     public void ClosePanel()
     {
         SettingsPanel.SetActive(false);
@@ -59,14 +94,14 @@ public class MainMenu : MonoBehaviour
         MenuPanel.SetActive(true);
     }
 
-    // Open game credits
+    // Open the credits panel
     public void OpenCredits()
     {
         MenuPanel.SetActive(false);
         CreditsPanel.SetActive(true);
     }
 
-    // Exit the game
+    // Quit the application
     public void QuitGame()
     {
         Application.Quit();
