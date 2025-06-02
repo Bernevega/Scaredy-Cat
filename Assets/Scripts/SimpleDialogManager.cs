@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 public class DialogNode
 {
     public string speaker;   // “Mom Cat” or “Kitty”
-    public string text;      // The actual line
+    public string text;      // The actual line (no "Mom Cat:" prefix here)
     public string next;      // The key of the next node (or null if it ends)
 }
 
@@ -32,7 +32,10 @@ public class SimpleDialogManager : MonoBehaviour
     [Tooltip("The parent panel (Canvas) for dialogue")]
     public GameObject dialogPanel;
 
-    [Tooltip("TextMeshPro for showing NPC lines")]
+    [Tooltip("Image component to display the speaker's icon")]
+    public Image speakerIcon;
+
+    [Tooltip("TextMeshPro for showing NPC lines (Mom Cat)")]
     public TMP_Text npcText;
 
     [Tooltip("TextMeshPro for showing Player (Kitty) lines")]
@@ -40,6 +43,13 @@ public class SimpleDialogManager : MonoBehaviour
 
     [Tooltip("The Continue button (just one)")]
     public Button continueButton;
+
+    [Header("Speaker Portrait Sprites")]
+    [Tooltip("Portrait sprite for Mom Cat")]
+    public Sprite momCatSprite;
+
+    [Tooltip("Portrait sprite for Kitty")]
+    public Sprite kittySprite;
 
     private Dictionary<string, DialogTree> allTrees;
     private DialogTree currentTree;
@@ -61,7 +71,7 @@ public class SimpleDialogManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Call this to start a dialogue. 
+    /// Call this to start a dialogue.
     /// sceneID must match a top‐level key in home_scene.json (e.g., "HomeScene").
     /// </summary>
     public void StartDialogue(string sceneID)
@@ -81,28 +91,39 @@ public class SimpleDialogManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Displays either in the NPC text field or the player text field,
-    /// depending on who is the speaker. Hides the other field.
+    /// Displays the current node’s text in either npcText or playerText, 
+    /// and sets the speakerIcon sprite based on currentNode.speaker.
     /// </summary>
     private void ShowCurrentNode()
     {
-        // Clear both fields first
-        npcText.text = "";
-        playerText.text = "";
-
-        // If this node’s speaker is "Kitty", show in playerText; otherwise npcText.
-        if (currentNode.speaker == "Kitty")
+        // 1) Set the speakerIcon sprite
+        if (currentNode.speaker == "Mom Cat")
         {
-            playerText.text = $"Kitty: {currentNode.text}";
+            speakerIcon.sprite = momCatSprite;
+        }
+        else if (currentNode.speaker == "Kitty")
+        {
+            speakerIcon.sprite = kittySprite;
         }
         else
         {
-            npcText.text = $"{currentNode.speaker}: {currentNode.text}";
+            // If you add more speakers in the future, extend this if/else.
+            speakerIcon.sprite = null;
         }
 
-        // If next == null, this is the last line → keep Continue to close the panel.
-        // If next != null, Continue will advance to that node.
-        // (No need to enable/disable the button, since Continue always does the same thing.)
+        // 2) Clear both text fields
+        npcText.text = "";
+        playerText.text = "";
+
+        // 3) Put the raw line (no "Mom Cat:" prefix) into the appropriate field
+        if (currentNode.speaker == "Kitty")
+        {
+            playerText.text = currentNode.text;
+        }
+        else
+        {
+            npcText.text = currentNode.text;
+        }
     }
 
     /// <summary>
