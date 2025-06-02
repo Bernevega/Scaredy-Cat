@@ -97,12 +97,8 @@ public class Interactor : MonoBehaviour
             }
         }
 
-        if (closestIndex != -1)
-        {
-            InteractableTargetChanged(closestIndex);
-        }
-        else
-            interactTarget = null;
+        InteractableTargetChanged(closestIndex);
+            
     }
 
 
@@ -124,26 +120,36 @@ public class Interactor : MonoBehaviour
 
             if (interactable != null)
             {
+                interactable.Deselect(this);
                 interactable.eventForceUnselect -= InteractableDisabledOrDestroyed;
             }
         }
 
-        interactTarget = interactablesInBounds[targetIndex];
-
-        Interactable targetInteractable = interactTarget.GetComponent<Interactable>();
-
-        if (targetInteractable != null)
+        if (targetIndex != -1)
         {
-            targetInteractable.eventForceUnselect += InteractableDisabledOrDestroyed;
+            interactTarget = interactablesInBounds[targetIndex];
+
+            Interactable targetInteractable = interactTarget.GetComponent<Interactable>();
+
+            if (targetInteractable != null)
+            {
+                targetInteractable.Select(this);
+                targetInteractable.eventForceUnselect += InteractableDisabledOrDestroyed;
+            }
+        }
+        else
+        {
+            interactTarget = null;
         }
     }
 
-    private void InteractableDisabledOrDestroyed(Interactor interactor, Interactable interactable)
+    private void InteractableDisabledOrDestroyed(Interactable interactable)
     {
         for (int i = 0; i < interactablesInBounds.Length; i++)
         {
             if (interactablesInBounds[i] == interactable.gameObject)
             {
+                interactable.Deselect(this);
                 interactablesInBounds[i] = null;
                 interactTarget = null;
             }
