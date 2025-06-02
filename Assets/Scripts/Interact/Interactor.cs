@@ -3,14 +3,15 @@ using UnityEngine;
 [RequireComponent (typeof(Collider))]
 public class Interactor : MonoBehaviour
 {
-    [SerializeField] LayerMask interactLayer;
+    
     [SerializeField] GameObject owner;
-
-
-
-    Collider interactCollider;
     [SerializeField] GameObject[] interactablesInBounds = new GameObject[5];
+    
+    
+    
+    Collider interactCollider;
     GameObject interactTarget;
+    LayerMask interactLayer;
 
 
 
@@ -18,6 +19,7 @@ public class Interactor : MonoBehaviour
     {
         interactCollider = GetComponent<Collider>();
 
+        interactLayer = LayerMask.GetMask("Interactable");
         interactCollider.includeLayers = interactLayer;
         interactCollider.excludeLayers = ~interactLayer;
     }
