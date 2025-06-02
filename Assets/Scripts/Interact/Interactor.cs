@@ -99,24 +99,7 @@ public class Interactor : MonoBehaviour
 
         if (closestIndex != -1)
         {
-            if (interactTarget != null)
-            {
-                Interactable interactable = interactTarget.GetComponent<Interactable>();
-
-                if (interactable != null)
-                {
-                    interactable.eventForceUnselect -= InteractableDisabledOrDestroyed;
-                }
-            }
-
-            interactTarget = interactablesInBounds[closestIndex];
-
-            Interactable targetInteractable = interactTarget.GetComponent<Interactable>();
-
-            if (targetInteractable != null)
-            {
-                targetInteractable.eventForceUnselect += InteractableDisabledOrDestroyed;
-            }
+            InteractableTargetChanged(closestIndex);
         }
         else
             interactTarget = null;
@@ -133,6 +116,28 @@ public class Interactor : MonoBehaviour
         }
     }
 
+    private void InteractableTargetChanged(int targetIndex)
+    {
+        if (interactTarget != null)
+        {
+            Interactable interactable = interactTarget.GetComponent<Interactable>();
+
+            if (interactable != null)
+            {
+                interactable.eventForceUnselect -= InteractableDisabledOrDestroyed;
+            }
+        }
+
+        interactTarget = interactablesInBounds[targetIndex];
+
+        Interactable targetInteractable = interactTarget.GetComponent<Interactable>();
+
+        if (targetInteractable != null)
+        {
+            targetInteractable.eventForceUnselect += InteractableDisabledOrDestroyed;
+        }
+    }
+
     private void InteractableDisabledOrDestroyed(Interactor interactor, Interactable interactable)
     {
         for (int i = 0; i < interactablesInBounds.Length; i++)
@@ -140,10 +145,8 @@ public class Interactor : MonoBehaviour
             if (interactablesInBounds[i] == interactable.gameObject)
             {
                 interactablesInBounds[i] = null;
-                Debug.Log("Interactable disabled or destroyed");
+                interactTarget = null;
             }
         }
-
-        
     }
 }
