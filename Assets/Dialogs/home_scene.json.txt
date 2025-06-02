@@ -1,0 +1,27 @@
+{
+  "HomeScene": {
+    "start": "momWarn1",
+    "nodes": {
+      "momWarn1": {
+        "speaker": "Mom Cat",
+        "text": "Do not stay out too late with your friends!",
+        "next": "kittyReply1"
+      },
+      "kittyReply1": {
+        "speaker": "Kitty",
+        "text": "Alright, Alright geez.",
+        "next": "momWarn2"
+      },
+      "momWarn2": {
+        "speaker": "Mom Cat",
+        "text": "I am serious! You will be taken by ghosts if you stay out too late. Be home before sunset! Bye, I love you!!",
+        "next": "kittyReply2"
+      },
+      "kittyReply2": {
+        "speaker": "Kitty",
+        "text": "Bye mom, love you too!",
+        "next": null
+      }
+    }
+  }
+}
