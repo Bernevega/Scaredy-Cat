@@ -29,9 +29,9 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         // Read input axes (WASD / arrow keys).
-        float moveX = Input.GetAxis("Horizontal"); // A/D or Left/Right
-        float moveZ = Input.GetAxis("Vertical");   // W/S or Up/Down
-
+        float moveX = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right
+        float moveZ = Input.GetAxisRaw("Vertical");   // W/S or Up/Down
+        
         // Build a movement direction vector relative to the player’s orientation
         Vector3 moveDir = transform.right * moveX + transform.forward * moveZ;
         moveDir.Normalize(); // Make sure diagonal movement isn't faster
