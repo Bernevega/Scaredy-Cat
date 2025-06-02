@@ -1,0 +1,149 @@
+using UnityEngine;
+
+[RequireComponent (typeof(Collider))]
+public class Interactor : MonoBehaviour
+{
+    [SerializeField] LayerMask interactLayer;
+    [SerializeField] GameObject owner;
+
+
+
+    Collider interactCollider;
+    [SerializeField] GameObject[] interactablesInBounds = new GameObject[5];
+    GameObject interactTarget;
+
+
+
+    private void Awake()
+    {
+        interactCollider = GetComponent<Collider>();
+
+        interactCollider.includeLayers = interactLayer;
+        interactCollider.excludeLayers = ~interactLayer;
+    }
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        int nullIndex = -1;
+        for (int i = 0; i < interactablesInBounds.Length; i++)
+        {
+            if (nullIndex == -1 && interactablesInBounds[i] == null)
+            {
+                nullIndex = i;
+            }
+            if (interactablesInBounds[i] == other.gameObject)
+            {
+                nullIndex = -1;
+                break;
+            }
+        }
+
+        if (nullIndex != -1)
+            interactablesInBounds[nullIndex] = other.gameObject;
+        RecalculateClosestInteractable();
+    }
+
+
+
+    private void OnTriggerExit(Collider other)
+    {
+        for (int i = 0;i < interactablesInBounds.Length;i++)
+        {
+            if (interactablesInBounds[i] == other.gameObject)
+            {
+                interactablesInBounds[i] = null;
+                break;
+            }
+        }
+
+        RecalculateClosestInteractable();
+    }
+
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            InteractPressed();
+        }
+    }
+
+
+
+    private void RecalculateClosestInteractable()
+    {
+        float closestDist = 
+            interactTarget == null ? 
+            float.MaxValue : 
+            (transform.position - interactTarget.transform.position).sqrMagnitude;
+
+        int closestIndex = -1;
+
+        for (int i = 0; i < interactablesInBounds.Length; i++)
+        {
+            if (interactablesInBounds[i] == interactTarget ||
+                interactablesInBounds[i] == null)
+                continue;
+
+            float dist = (transform.position - interactablesInBounds[i].transform.position).sqrMagnitude;
+
+            if (dist < closestDist)
+            {
+                closestDist = dist;
+                closestIndex = i;
+            }
+        }
+
+        if (closestIndex != -1)
+        {
+            if (interactTarget != null)
+            {
+                Interactable interactable = interactTarget.GetComponent<Interactable>();
+
+                if (interactable != null)
+                {
+                    interactable.eventForceUnselect -= InteractableDisabledOrDestroyed;
+                }
+            }
+
+            interactTarget = interactablesInBounds[closestIndex];
+
+            Interactable targetInteractable = interactTarget.GetComponent<Interactable>();
+
+            if (targetInteractable != null)
+            {
+                targetInteractable.eventForceUnselect += InteractableDisabledOrDestroyed;
+            }
+        }
+        else
+            interactTarget = null;
+    }
+
+
+
+    private void InteractPressed()
+    {
+        if (interactTarget)
+        {
+            Interactable interactable = interactTarget.GetComponent<Interactable>();
+            interactable?.Interact(this);
+        }
+    }
+
+    private void InteractableDisabledOrDestroyed(Interactor interactor, Interactable interactable)
+    {
+        for (int i = 0; i < interactablesInBounds.Length; i++)
+        {
+            if (interactablesInBounds[i] == interactable.gameObject)
+            {
+                interactablesInBounds[i] = null;
+                Debug.Log("Interactable disabled or destroyed");
+            }
+        }
+
+        
+    }
+}
