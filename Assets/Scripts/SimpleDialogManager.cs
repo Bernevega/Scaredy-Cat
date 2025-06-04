@@ -8,15 +8,15 @@ using Newtonsoft.Json;
 [System.Serializable]
 public class DialogNode
 {
-    public string speaker;   // “Mom Cat” or “Kitty”
-    public string text;      // The actual line (no "Mom Cat:" prefix here)
+    public string speaker;   // “Mom Cat”, “Kitty”, “Tire”, “Ydna”, “Oliver”, or "Ydna, Tire, Oliver"
+    public string text;      // The actual line
     public string next;      // The key of the next node (or null if it ends)
 }
 
 [System.Serializable]
 public class DialogTree
 {
-    public string start;                              // e.g. "momWarn1"
+    public string start;                              // e.g. "momWarn1" or "kittyAsk"
     public Dictionary<string, DialogNode> nodes;      // Maps keys to DialogNode
 }
 
@@ -25,7 +25,7 @@ public class SimpleDialogManager : MonoBehaviour
     public static SimpleDialogManager Instance;
 
     [Header("JSON Setup")]
-    [Tooltip("Drag your home_scene.json here")]
+    [Tooltip("Drag your combined_dialog.json (Mom+Friends dialogues) here")]
     public TextAsset jsonFile;
 
     [Header("UI References")]
@@ -35,7 +35,7 @@ public class SimpleDialogManager : MonoBehaviour
     [Tooltip("Image component to display the speaker's icon")]
     public Image speakerIcon;
 
-    [Tooltip("TextMeshPro for showing NPC lines (Mom Cat)")]
+    [Tooltip("TextMeshPro for showing NPC lines (Mom Cat, Tire, Ydna, Oliver, etc.)")]
     public TMP_Text npcText;
 
     [Tooltip("TextMeshPro for showing Player (Kitty) lines")]
@@ -51,14 +51,34 @@ public class SimpleDialogManager : MonoBehaviour
     [Tooltip("Portrait sprite for Kitty")]
     public Sprite kittySprite;
 
+    [Tooltip("Portrait sprite for Tire")]
+    public Sprite tireSprite;
+
+    [Tooltip("Portrait sprite for Ydna")]
+    public Sprite ydnaSprite;
+
+    [Tooltip("Portrait sprite for Oliver")]
+    public Sprite oliverSprite;
+
+    [Tooltip("Portrait sprite for all three friends together")]
+    public Sprite groupFriendsSprite;
+
     private Dictionary<string, DialogTree> allTrees;
     private DialogTree currentTree;
     private DialogNode currentNode;
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         // Deserialize entire JSON into Dictionary<sceneID, DialogTree>
         allTrees = JsonConvert
@@ -72,18 +92,17 @@ public class SimpleDialogManager : MonoBehaviour
 
     /// <summary>
     /// Call this to start a dialogue.
-    /// sceneID must match a top‐level key in home_scene.json (e.g., "HomeScene").
+    /// sceneID must match a top‐level key in your JSON (e.g., "HomeScene", "FriendsScene").
     /// </summary>
     public void StartDialogue(string sceneID)
     {
         if (!allTrees.ContainsKey(sceneID))
         {
-            Debug.LogWarning($"No dialogue data found for '{sceneID}'");
+            Debug.LogWarning($"No dialogue data found for sceneID '{sceneID}'");
             return;
         }
 
         currentTree = allTrees[sceneID];
-        // Load the first node
         currentNode = currentTree.nodes[currentTree.start];
 
         dialogPanel.SetActive(true);
@@ -91,12 +110,12 @@ public class SimpleDialogManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Displays the current node’s text in either npcText or playerText, 
+    /// Displays the current node’s text in either npcText or playerText,
     /// and sets the speakerIcon sprite based on currentNode.speaker.
     /// </summary>
     private void ShowCurrentNode()
     {
-        // 1) Set the speakerIcon sprite
+        // 1) Choose the correct portrait based on speaker name
         if (currentNode.speaker == "Mom Cat")
         {
             speakerIcon.sprite = momCatSprite;
@@ -105,9 +124,25 @@ public class SimpleDialogManager : MonoBehaviour
         {
             speakerIcon.sprite = kittySprite;
         }
+        else if (currentNode.speaker == "Tire")
+        {
+            speakerIcon.sprite = tireSprite;
+        }
+        else if (currentNode.speaker == "Ydna")
+        {
+            speakerIcon.sprite = ydnaSprite;
+        }
+        else if (currentNode.speaker == "Oliver")
+        {
+            speakerIcon.sprite = oliverSprite;
+        }
+        else if (currentNode.speaker == "Ydna, Tire, Oliver")
+        {
+            speakerIcon.sprite = groupFriendsSprite;
+        }
         else
         {
-            // If you add more speakers in the future, extend this if/else.
+            // If you add more characters later, extend this chain
             speakerIcon.sprite = null;
         }
 
@@ -115,7 +150,7 @@ public class SimpleDialogManager : MonoBehaviour
         npcText.text = "";
         playerText.text = "";
 
-        // 3) Put the raw line (no "Mom Cat:" prefix) into the appropriate field
+        // 3) Put the raw line into the appropriate field
         if (currentNode.speaker == "Kitty")
         {
             playerText.text = currentNode.text;
@@ -132,7 +167,7 @@ public class SimpleDialogManager : MonoBehaviour
     private void OnContinuePressed()
     {
         // If there's no next node, close dialogue
-        if (string.IsNullOrEmpty(currentNode.next))
+        if (currentNode == null || string.IsNullOrEmpty(currentNode.next))
         {
             CloseDialogue();
             return;

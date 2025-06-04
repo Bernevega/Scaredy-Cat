@@ -1,0 +1,134 @@
+{
+  "Mom": {
+    "start": "momWarn1",
+    "nodes": {
+      "momWarn1": {
+        "speaker": "Mom Cat",
+        "text": "Do not stay out too late with your friends!",
+        "next": "kittyReply1"
+      },
+      "kittyReply1": {
+        "speaker": "Kitty",
+        "text": "Alright, Alright geez.",
+        "next": "momWarn2"
+      },
+      "momWarn2": {
+        "speaker": "Mom Cat",
+        "text": "I am serious! You will be taken by ghosts if you stay out too late. Be home before sunset! Bye, I love you!!",
+        "next": "kittyReply2"
+      },
+      "kittyReply2": {
+        "speaker": "Kitty",
+        "text": "Bye mom, love you too!",
+        "next": null
+      }
+    }
+  },
+
+
+  "Friends": {
+    "start": "kittyAsk",
+    "nodes": {
+      "kittyAsk": {
+        "speaker": "Kitty",
+        "text": "Hi! What are you guys talking about?",
+        "next": "tireReply1"
+      },
+      "tireReply1": {
+        "speaker": "Tire",
+        "text": "Hey scaredy-cat!",
+        "next": "tireReply2"
+      },
+      "tireReply2": {
+        "speaker": "Tire",
+        "text": "Did you hear about the mouse who EATS Kittens?",
+        "next": "tireReply3"
+      },
+      "tireReply3": {
+        "speaker": "Tire",
+        "text": "My mother just told me the story this morning.",
+        "next": "tireReply4"
+      },
+      "tireReply4": {
+        "speaker": "Tire",
+        "text": "Apparently it lives just across the river in the park.",
+        "next": "kittyScared"
+      },
+      "kittyScared": {
+        "speaker": "Kitty",
+        "text": "!!!",
+        "next": "ydnaReply1"
+      },
+      "ydnaReply1": {
+        "speaker": "Ydna",
+        "text": "I bet scaredy-cat is too SCARED to even go near it.",
+        "next": "ydnaReply2"
+      },
+      "ydnaReply2": {
+        "speaker": "Ydna",
+        "text": "HAHAHA!",
+        "next": "ydnaReply3"
+      },
+      "ydnaReply3": {
+        "speaker": "Ydna",
+        "text": "What kind of cat is scared of a mouse anyways?",
+        "next": "ydnaReply4"
+      },
+      "ydnaReply4": {
+        "speaker": "Ydna",
+        "text": "What, do you really believe a mouse can eat a cat?",
+        "next": "ydnaReply5"
+      },
+      "ydnaReply5": {
+        "speaker": "Ydna",
+        "text": "HAHAHA!",
+        "next": "kittyReply1"
+      },
+      "kittyReply1": {
+        "speaker": "Kitty",
+        "text": "What… guys, that's so mean :(",
+        "next": "oliverReply1"
+      },
+      "oliverReply1": {
+        "speaker": "Oliver",
+        "text": "Awh Kitty, it's okay we will protect you from the cat-eating mouse, HAHAHA!",
+        "next": "allLaughing"
+      },
+      "allLaughing": {
+        "speaker": "Ydna, Tire, Oliver",
+        "text": "HAHAHA!",
+        "next": "kittyReply2"
+      },
+      "kittyReply2": {
+        "speaker": "Kitty",
+        "text": "I AM NOT SCARED OF A MOUSE >:( , I will show you all that I am brave!",
+        "next": "tireReply5"
+      },
+      "tireReply5": {
+        "speaker": "Tire",
+        "text": "Woahhh, Kitty! We were just joking.",
+        "next": "ydnaReply6"
+      },
+      "ydnaReply6": {
+        "speaker": "Ydna",
+        "text": "Yeah, Kitty– tell you what. If you go to that park way over there…",
+        "next": "oliverReply2"
+      },
+      "oliverReply2": {
+        "speaker": "Oliver",
+        "text": "And retrieve a super duper rare flower ALL alone…",
+        "next": "oliverReply3"
+      },
+      "oliverReply3": {
+        "speaker": "Oliver",
+        "text": "We will not call you scaredy-cat anymore!",
+        "next": "kittyReply3"
+      },
+      "kittyReply3": {
+        "speaker": "Kitty",
+        "text": "FINE! But you better promise! ",
+        "next": null
+      },
+    }
+  }
+}
