@@ -8,7 +8,13 @@ public class Interactable : MonoBehaviour
     public delegate void UnselectDelegate(Interactable interactable);
     public event InteractDelegate eventOnInteract;
     public event UnselectDelegate eventForceUnselect;
-    
+    public Collider coll;
+
+    private void Awake()
+    {
+        coll = GetComponent<Collider>();
+    }
+
     public void Interact(Interactor interactor)
     {
         Debug.Log("Interacted with : " + gameObject.name);
@@ -37,6 +43,9 @@ public class Interactable : MonoBehaviour
     private void OnDisable()
     {
         eventForceUnselect?.Invoke(this);
+
+        if (coll)
+            coll.enabled = false;
     }
 }
 

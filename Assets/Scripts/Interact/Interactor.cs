@@ -22,6 +22,11 @@ public class Interactor : MonoBehaviour
         interactLayer = LayerMask.GetMask("Interactable");
         interactCollider.includeLayers = interactLayer;
         interactCollider.excludeLayers = ~interactLayer;
+
+        if (owner == null && transform.parent != null)
+        {
+            owner = transform.parent.gameObject;
+        }
     }
 
 
@@ -157,4 +162,6 @@ public class Interactor : MonoBehaviour
             }
         }
     }
+
+    public GameObject GetOwner() { return owner; }
 }

@@ -10,4 +10,5 @@ public enum ItemTags
     StatusEffect = 1 << 1,
     Hidden = 1 << 2,
     NonStackable = 1 << 3,
+    Key = 1 << 4,
 }
