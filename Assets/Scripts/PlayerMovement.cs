@@ -25,13 +25,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // If a dialog is open, do not process any movement or jumping.
+        if (SimpleDialogManager.Instance != null && SimpleDialogManager.Instance.dialogPanel.activeSelf)
+        {
+            return;
+        }
+
         // Check if the player is on the ground by creating a small invisible sphere at the feet
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         // Read input axes (WASD / arrow keys).
         float moveX = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right
         float moveZ = Input.GetAxisRaw("Vertical");   // W/S or Up/Down
-        
+
         // Build a movement direction vector relative to the player’s orientation
         Vector3 moveDir = transform.right * moveX + transform.forward * moveZ;
         moveDir.Normalize(); // Make sure diagonal movement isn't faster

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 
-// 1. Mirror the JSON structure exactly.
 [System.Serializable]
 public class DialogNode
 {
@@ -16,8 +16,8 @@ public class DialogNode
 [System.Serializable]
 public class DialogTree
 {
-    public string start;                              // e.g. "momWarn1" or "kittyAsk"
-    public Dictionary<string, DialogNode> nodes;      // Maps keys to DialogNode
+    public string start;                             // e.g. "momWarn1" or "kittyAsk"
+    public Dictionary<string, DialogNode> nodes;     // Maps keys to DialogNode
 }
 
 public class SimpleDialogManager : MonoBehaviour
@@ -31,6 +31,9 @@ public class SimpleDialogManager : MonoBehaviour
     [Header("UI References")]
     [Tooltip("The parent panel (Canvas) for dialogue")]
     public GameObject dialogPanel;
+
+    [Tooltip("TextMeshPro for showing the speaker’s name")]
+    public TMP_Text speakerNameText;
 
     [Tooltip("Image component to display the speaker's icon")]
     public Image speakerIcon;
@@ -47,25 +50,28 @@ public class SimpleDialogManager : MonoBehaviour
     [Header("Speaker Portrait Sprites")]
     [Tooltip("Portrait sprite for Mom Cat")]
     public Sprite momCatSprite;
-
     [Tooltip("Portrait sprite for Kitty")]
     public Sprite kittySprite;
-
     [Tooltip("Portrait sprite for Tire")]
     public Sprite tireSprite;
-
     [Tooltip("Portrait sprite for Ydna")]
     public Sprite ydnaSprite;
-
     [Tooltip("Portrait sprite for Oliver")]
     public Sprite oliverSprite;
-
     [Tooltip("Portrait sprite for all three friends together")]
     public Sprite groupFriendsSprite;
+
+    [Header("CameraFollow Reference")]
+    [Tooltip("Assign the CameraFollow component attached to your camera")]
+    public CameraFollow cameraFollow;
+
+    [Tooltip("Pause duration at the manual offset (in seconds)")]
+    public float cameraPauseDuration = 0.3f;
 
     private Dictionary<string, DialogTree> allTrees;
     private DialogTree currentTree;
     private DialogNode currentNode;
+    private string currentKey; // Key of the current node
 
     void Awake()
     {
@@ -80,108 +86,98 @@ public class SimpleDialogManager : MonoBehaviour
             return;
         }
 
-        // Deserialize entire JSON into Dictionary<sceneID, DialogTree>
-        allTrees = JsonConvert
-            .DeserializeObject<Dictionary<string, DialogTree>>(jsonFile.text);
+        // Parse JSON into dictionary
+        allTrees = JsonConvert.DeserializeObject<Dictionary<string, DialogTree>>(jsonFile.text);
 
         dialogPanel.SetActive(false);
-
-        // Wire up Continue button
         continueButton.onClick.AddListener(OnContinuePressed);
     }
 
     /// <summary>
-    /// Call this to start a dialogue.
-    /// sceneID must match a top‐level key in your JSON (e.g., "HomeScene", "FriendsScene").
+    /// Call this to begin a dialogue. sceneID must match a top-level key in JSON.
     /// </summary>
     public void StartDialogue(string sceneID)
     {
         if (!allTrees.ContainsKey(sceneID))
         {
-            Debug.LogWarning($"No dialogue data found for sceneID '{sceneID}'");
+            Debug.LogWarning($"[SimpleDialogManager] No dialogue data for sceneID '{sceneID}'");
             return;
         }
 
         currentTree = allTrees[sceneID];
-        currentNode = currentTree.nodes[currentTree.start];
+        currentKey = currentTree.start;
+        currentNode = currentTree.nodes[currentKey];
 
         dialogPanel.SetActive(true);
         ShowCurrentNode();
     }
 
     /// <summary>
-    /// Displays the current node’s text in either npcText or playerText,
-    /// and sets the speakerIcon sprite based on currentNode.speaker.
+    /// Display the current node’s text and speaker icon/name.
     /// </summary>
     private void ShowCurrentNode()
     {
-        // 1) Choose the correct portrait based on speaker name
-        if (currentNode.speaker == "Mom Cat")
+        if (speakerNameText != null)
+            speakerNameText.text = currentNode.speaker;
+
+        switch (currentNode.speaker)
         {
-            speakerIcon.sprite = momCatSprite;
-        }
-        else if (currentNode.speaker == "Kitty")
-        {
-            speakerIcon.sprite = kittySprite;
-        }
-        else if (currentNode.speaker == "Tire")
-        {
-            speakerIcon.sprite = tireSprite;
-        }
-        else if (currentNode.speaker == "Ydna")
-        {
-            speakerIcon.sprite = ydnaSprite;
-        }
-        else if (currentNode.speaker == "Oliver")
-        {
-            speakerIcon.sprite = oliverSprite;
-        }
-        else if (currentNode.speaker == "Ydna, Tire, Oliver")
-        {
-            speakerIcon.sprite = groupFriendsSprite;
-        }
-        else
-        {
-            // If you add more characters later, extend this chain
-            speakerIcon.sprite = null;
+            case "Mom Cat": speakerIcon.sprite = momCatSprite; break;
+            case "Kitty": speakerIcon.sprite = kittySprite; break;
+            case "Tire": speakerIcon.sprite = tireSprite; break;
+            case "Ydna": speakerIcon.sprite = ydnaSprite; break;
+            case "Oliver": speakerIcon.sprite = oliverSprite; break;
+            case "Ydna, Tire, Oliver": speakerIcon.sprite = groupFriendsSprite; break;
+            default: speakerIcon.sprite = null; break;
         }
 
-        // 2) Clear both text fields
         npcText.text = "";
         playerText.text = "";
 
-        // 3) Put the raw line into the appropriate field
         if (currentNode.speaker == "Kitty")
-        {
             playerText.text = currentNode.text;
-        }
         else
-        {
             npcText.text = currentNode.text;
-        }
     }
 
     /// <summary>
-    /// Called whenever the single Continue button is pressed.
+    /// Called when Continue is pressed.
+    /// If currentKey == "ydnaReply6", hide panel and move camera.
+    /// Otherwise advance or close.
     /// </summary>
     private void OnContinuePressed()
     {
-        // If there's no next node, close dialogue
-        if (currentNode == null || string.IsNullOrEmpty(currentNode.next))
+        if (currentNode == null)
         {
             CloseDialogue();
             return;
         }
 
-        // Otherwise, step to the next node and refresh UI
+        // Special: after Ydna’s "ydnaReply6" line, do camera sequence
+        if (currentKey == "ydnaReply6" && cameraFollow != null)
+        {
+            dialogPanel.SetActive(false);
+            StartCoroutine(CameraMoveAndResumeDialog());
+            return;
+        }
+
+        // Normal flow: if no next, close
+        if (string.IsNullOrEmpty(currentNode.next))
+        {
+            CloseDialogue();
+            return;
+        }
+
+        // Advance to next
         string nextKey = currentNode.next;
         if (!currentTree.nodes.ContainsKey(nextKey))
         {
-            Debug.LogError($"Node '{nextKey}' not found in current tree");
+            Debug.LogError($"[SimpleDialogManager] Node '{nextKey}' not found");
             CloseDialogue();
             return;
         }
 
+        currentKey = nextKey;
         currentNode = currentTree.nodes[nextKey];
         ShowCurrentNode();
     }
@@ -191,5 +187,35 @@ public class SimpleDialogManager : MonoBehaviour
         dialogPanel.SetActive(false);
         currentNode = null;
         currentTree = null;
+        currentKey = null;
+    }
+
+    /// <summary>
+    /// Triggers camera movement via CameraFollow, waits only for (manualMoveDuration + pause),
+    /// then reopens dialogue on the next node.
+    /// </summary>
+    private IEnumerator CameraMoveAndResumeDialog()
+    {
+        cameraFollow.TriggerManualMove();
+
+        // Wait exactly (manualDuration + pause)
+        float totalWait = cameraFollow.manualMoveDuration + cameraPauseDuration;
+        yield return new WaitForSeconds(totalWait);
+
+        // Advance to next node if exists
+        if (currentNode != null && !string.IsNullOrEmpty(currentNode.next))
+        {
+            string nextKey = currentNode.next;
+            if (currentTree.nodes.ContainsKey(nextKey))
+            {
+                currentKey = nextKey;
+                currentNode = currentTree.nodes[nextKey];
+                dialogPanel.SetActive(true);
+                ShowCurrentNode();
+                yield break;
+            }
+        }
+
+        CloseDialogue();
     }
 }
