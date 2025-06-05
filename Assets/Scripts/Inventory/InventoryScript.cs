@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class InventoryScript : MonoBehaviour
 {
@@ -16,11 +17,11 @@ public class InventoryScript : MonoBehaviour
         int itemCount = 0;
         for (int i = 0; i < inventory.Count; i++)
         {
-            if (itemCount >= returnArray.Length) break;
             if (inventory[i] == null) continue;
             if (inventory[i].itemInfo == itemInfo)
             {
-                returnArray[itemCount] = inventory[i];
+                if (returnArray != null && itemCount < returnArray.Length)
+                    returnArray[itemCount] = inventory[i];
                 itemCount++;
             }
         }
@@ -32,11 +33,11 @@ public class InventoryScript : MonoBehaviour
         int itemCount = 0;
         for (int i = 0; i < inventory.Count; i++)
         {
-            if (itemCount >= returnArray.Length) break;
             if (inventory[i] == null) continue;
             if (inventory[i].itemInfo.tags.HasFlag(itemTags))
             {
-                returnArray[itemCount] = inventory[i];
+                if (returnArray != null && itemCount < returnArray.Length)
+                    returnArray[itemCount] = inventory[i];
                 itemCount++;
             }
         }
@@ -102,7 +103,10 @@ public class InventoryScript : MonoBehaviour
         {
             if (inventory[i] == item)
             {
-                inventory[i].AddStack(-amount);
+                if (amount > 0)
+                    inventory[i].AddStack(-amount);
+                else if (amount < 0)
+                    inventory[i].AddStack(-inventory[i].stack);
                 if (inventory[i].stack <= 0)
                 {
                     inventory.RemoveAt(i);
