@@ -842,6 +842,7 @@ GameObject:
   - component: {fileID: 1897431729}
   - component: {fileID: 1897431728}
   - component: {fileID: 1897431733}
+  - component: {fileID: 1897431734}
   m_Layer: 6
   m_Name: Crow
   m_TagString: Untagged
@@ -953,6 +954,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1897431734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897431727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543bd8969f4013c49a80d922231640cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: {fileID: 1897431728}
+  monocleScriptable: {fileID: 11400000, guid: d55312fec309c3c499ef0dc09e95d805, type: 2}
 --- !u!1 &1932259569 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8518932447436014412, guid: 84787b68efea3fa42a63b45ef1c72cc0, type: 3}
