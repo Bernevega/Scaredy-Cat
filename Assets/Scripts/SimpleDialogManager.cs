@@ -63,13 +63,6 @@ public class SimpleDialogManager : MonoBehaviour
     [Tooltip("Portrait for The Crow")]
     public Sprite crowSprite;
 
-    [Header("CameraFollow Reference")]
-    [Tooltip("Assign the CameraFollow component attached to your camera")]
-    public CameraFollow cameraFollow;
-
-    [Tooltip("Pause duration at the manual offset (in seconds)")]
-    public float cameraPauseDuration = 0.3f;
-
     private Dictionary<string, DialogTree> allTrees;
     private DialogTree currentTree;
     private DialogNode currentNode;
@@ -93,6 +86,15 @@ public class SimpleDialogManager : MonoBehaviour
 
         dialogPanel.SetActive(false);
         continueButton.onClick.AddListener(OnContinuePressed);
+    }
+
+    void Update()
+    {
+        // If dialog panel is up and Space is pressed, advance
+        if (dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        {
+            OnContinuePressed();
+        }
     }
 
     /// <summary>
@@ -144,9 +146,8 @@ public class SimpleDialogManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Called when Continue is pressed.
-    /// If currentKey == "ydnaReply6", hide panel and move camera.
-    /// Otherwise advance or close.
+    /// Called when Continue is pressed or Space is hit.
+    /// Advances to the next node or closes if there is no next.
     /// </summary>
     private void OnContinuePressed()
     {
@@ -156,15 +157,7 @@ public class SimpleDialogManager : MonoBehaviour
             return;
         }
 
-        // Special: after Ydna’s "ydnaReply6" line, do camera sequence
-        if (currentKey == "ydnaReply6" && cameraFollow != null)
-        {
-            dialogPanel.SetActive(false);
-            StartCoroutine(CameraMoveAndResumeDialog());
-            return;
-        }
-
-        // Normal flow: if no next, close
+        // If there's no next node, just close
         if (string.IsNullOrEmpty(currentNode.next))
         {
             CloseDialogue();
@@ -191,34 +184,5 @@ public class SimpleDialogManager : MonoBehaviour
         currentNode = null;
         currentTree = null;
         currentKey = null;
-    }
-
-    /// <summary>
-    /// Triggers camera movement via CameraFollow, waits only for (manualMoveDuration + pause),
-    /// then reopens dialogue on the next node.
-    /// </summary>
-    private IEnumerator CameraMoveAndResumeDialog()
-    {
-        cameraFollow.TriggerManualMove();
-
-        // Wait exactly (manualDuration + pause)
-        float totalWait = cameraFollow.manualMoveDuration + cameraPauseDuration;
-        yield return new WaitForSeconds(totalWait);
-
-        // Advance to next node if exists
-        if (currentNode != null && !string.IsNullOrEmpty(currentNode.next))
-        {
-            string nextKey = currentNode.next;
-            if (currentTree.nodes.ContainsKey(nextKey))
-            {
-                currentKey = nextKey;
-                currentNode = currentTree.nodes[nextKey];
-                dialogPanel.SetActive(true);
-                ShowCurrentNode();
-                yield break;
-            }
-        }
-
-        CloseDialogue();
     }
 }

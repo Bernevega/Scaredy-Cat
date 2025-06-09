@@ -4,13 +4,16 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float speed = 5f; // Movement speed
-    public float jumpForce = 5f; // Jumping strength
+    public float speed = 5f;
+    public float runMultiplier = 1.5f;
+    public float jumpForce = 5f;
 
     [Header("Ground Check Settings")]
-    public Transform groundCheck; // Ground check (below player's feet)
-    public float groundDistance = 0.2f; // Radius of the sphere used to check for ground
-    public LayerMask groundMask; // Which layers count as "ground"
+    public Transform groundCheck;
+    public float groundDistance = 0.2f;
+    public LayerMask groundMask;
+
+    [HideInInspector] public bool blockRightMovement = false;
 
     private Rigidbody rb;
     private bool isGrounded;
@@ -18,39 +21,41 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
-        // Make sure the Rigidbody cannot rotate (so the player doesn't tip over)
         rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     void Update()
     {
-        // If a dialog is open, do not process any movement or jumping.
         if (SimpleDialogManager.Instance != null && SimpleDialogManager.Instance.dialogPanel.activeSelf)
-        {
             return;
-        }
 
-        // Check if the player is on the ground by creating a small invisible sphere at the feet
+        // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        // Read input axes (WASD / arrow keys).
-        float moveX = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right
-        float moveZ = Input.GetAxisRaw("Vertical");   // W/S or Up/Down
+        // Read inputs
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveZ = Input.GetAxisRaw("Vertical");
+        
+        // **Block rightward input if flagged**
+        if (blockRightMovement && moveX > 0f)
+            moveX = 0f;
 
-        // Build a movement direction vector relative to the player’s orientation
-        Vector3 moveDir = transform.right * moveX + transform.forward * moveZ;
-        moveDir.Normalize(); // Make sure diagonal movement isn't faster
+        Vector3 moveDir = (transform.right * moveX + transform.forward * moveZ).normalized;
 
-        // Compute the desired horizontal velocity (keep the existing vertical velocity)
-        Vector3 currentVelocity = rb.linearVelocity;
-        Vector3 targetVelocity = moveDir * speed;
-        rb.linearVelocity = new Vector3(targetVelocity.x, currentVelocity.y, targetVelocity.z);
+        // Running
+        float currentSpeed = speed;
+        if (Input.GetKey(KeyCode.LeftShift))
+            currentSpeed *= runMultiplier;
 
-        // Jump: if the player presses Space AND is grounded, apply an upward impulse
+        // Apply velocity
+        Vector3 targetVel = new Vector3(moveDir.x * currentSpeed,
+                                        rb.linearVelocity.y,
+                                        moveDir.z * currentSpeed);
+        rb.linearVelocity = targetVel;
+
+        // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            // Zero out any small downward velocity before jumping
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
