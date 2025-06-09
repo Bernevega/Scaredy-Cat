@@ -5,7 +5,11 @@ public class Crow : MonoBehaviour
     [SerializeField] Interactable interactable;
     [SerializeField] ItemScriptable monocleScriptable;
 
+    [SerializeField] GameObject monocle1Object;
+
     Item[] itemReturnArray = new Item[1];
+
+    bool hasThanked = false;
     bool hasMonocle = false;
 
     private void Awake()
@@ -32,14 +36,18 @@ public class Crow : MonoBehaviour
             {
                 inventoryScript.RemoveItem(itemReturnArray[0], -1);
                 Destroy(itemReturnArray[0]);
+
+                monocle1Object.SetActive(true);
                 hasMonocle = true;
-                Debug.Log("MONOCLE Given!");
             }
             else
             {
                 SimpleDialogManager.Instance.StartDialogue("CrowTest");
-                Debug.Log("NO MONOCLE FOUND!");
             }
+        }
+        else if (!hasThanked)
+        {
+            SimpleDialogManager.Instance.StartDialogue("CrowThank");
         }
     }
 }
