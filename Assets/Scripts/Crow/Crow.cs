@@ -37,6 +37,7 @@ public class Crow : MonoBehaviour
             }
             else
             {
+                SimpleDialogManager.Instance.StartDialogue("CrowTest");
                 Debug.Log("NO MONOCLE FOUND!");
             }
         }

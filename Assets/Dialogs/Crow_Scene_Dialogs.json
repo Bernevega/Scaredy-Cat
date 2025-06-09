@@ -1,0 +1,27 @@
+{
+  "CrowTest": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "The Crow",
+        "text": "Caw!",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "The Crow",
+        "text": "Caw Caw!",
+        "next": "caw3"
+      },
+      "caw3": {
+        "speaker": "The Crow",
+        "text": "Caw Caw Caw!",
+        "next": "caw4"
+      },
+      "caw4": {
+        "speaker": "The Crow",
+        "text": "Caw!",
+        "next": null
+      }
+    }
+  }
+}

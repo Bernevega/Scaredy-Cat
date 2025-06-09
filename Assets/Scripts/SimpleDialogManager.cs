@@ -60,6 +60,8 @@ public class SimpleDialogManager : MonoBehaviour
     public Sprite oliverSprite;
     [Tooltip("Portrait sprite for all three friends together")]
     public Sprite groupFriendsSprite;
+    [Tooltip("Portrait for The Crow")]
+    public Sprite crowSprite;
 
     [Header("CameraFollow Reference")]
     [Tooltip("Assign the CameraFollow component attached to your camera")]
@@ -128,6 +130,7 @@ public class SimpleDialogManager : MonoBehaviour
             case "Ydna": speakerIcon.sprite = ydnaSprite; break;
             case "Oliver": speakerIcon.sprite = oliverSprite; break;
             case "Ydna, Tire, Oliver": speakerIcon.sprite = groupFriendsSprite; break;
+            case "The Crow": speakerIcon.sprite = crowSprite; break;
             default: speakerIcon.sprite = null; break;
         }
 
