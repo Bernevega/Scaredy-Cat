@@ -36,6 +36,7 @@ public class Interactable : MonoBehaviour
     private void OnDestroy()
     {
         eventForceUnselect?.Invoke(this);
+        eventOnInteract?.Invoke(null, this, InteractActionType.Deselect);
         eventOnInteract = null;
         eventForceUnselect = null;
     }
@@ -43,6 +44,7 @@ public class Interactable : MonoBehaviour
     private void OnDisable()
     {
         eventForceUnselect?.Invoke(this);
+        eventOnInteract?.Invoke(null, this, InteractActionType.Deselect);
 
         if (coll)
             coll.enabled = false;
