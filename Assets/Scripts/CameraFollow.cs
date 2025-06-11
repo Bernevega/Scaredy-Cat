@@ -1,53 +1,56 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraFollow : MonoBehaviour
 {
     [Header("Target Settings")]
     [Tooltip("The Transform of the object the camera will follow.")]
     public Transform target;
 
-    [Header("Offset & Initial Setup")]
-    [Tooltip("How quickly the camera moves toward the target. Lower = more lag.")]
-    [Range(0.01f, 1f)]
-    public float smoothSpeed = 0.125f;
+    [Header("Smoothing Settings")]
+    [Tooltip("Time (in seconds) the camera takes to catch up to the target.")]
+    [Min(0f)]
+    public float smoothTime = 0.3f;
 
-    [Header("Lag Settings")]
-    [Tooltip("How long (in seconds) the camera takes to catch up to the target.")]
-    public float followSmoothTime = 0.3f;
-
-    private Vector3 _initialOffset;
+    // Internals
     private Vector3 _velocity = Vector3.zero;
+    private Vector3 _offset;
 
     void Start()
     {
         if (target == null)
         {
-            Debug.LogError("[CameraFollow] No target assigned!");
+            Debug.LogError("[CameraFollow] No target assigned! Disabling script.");
             enabled = false;
             return;
         }
-        // Remember the offset you placed in the Inspector
-        _initialOffset = transform.position - target.position;
+
+        // Calculate initial offset based on starting positions
+        _offset = transform.position - target.position;
+
+        // If the target has a Rigidbody, turn on interpolation for smoother motion
+        var rb = target.GetComponent<Rigidbody>();
+        if (rb != null && rb.interpolation == RigidbodyInterpolation.None)
+        {
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+        }
     }
 
     void LateUpdate()
     {
         if (target == null) return;
 
-        // Desired position is target + your inspector-defined offset
-        Vector3 desiredPos = target.position + _initialOffset;
+        // Where we want the camera to end up this frame
+        Vector3 desiredPosition = target.position + _offset;
 
-        // First, do a quick Lerp to loosely track (preserves your smoothSpeed behavior)
-        Vector3 intermediatePos = Vector3.Lerp(transform.position, desiredPos, smoothSpeed);
-
-        // Then apply a SmoothDamp to introduce a bit of chase-lag
+        // Smoothly move there, framerate‐independent
         transform.position = Vector3.SmoothDamp(
             transform.position,
-            intermediatePos,
+            desiredPosition,
             ref _velocity,
-            followSmoothTime
+            smoothTime,
+            Mathf.Infinity,
+            Time.deltaTime
         );
-
-        // NOTE: We do NOT modify rotation, so your inspector-set rotation remains.
     }
 }
