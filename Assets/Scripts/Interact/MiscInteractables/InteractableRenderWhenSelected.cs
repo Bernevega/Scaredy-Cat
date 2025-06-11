@@ -30,6 +30,5 @@ public class InteractableRenderWhenSelected : MonoBehaviour
         {
             targetRenderer.enabled = false;
         }
-
     }
 }

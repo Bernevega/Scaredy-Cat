@@ -20,6 +20,8 @@ public class Crow : MonoBehaviour
     bool hasLeftMonocle = false;
     bool hasRightMonocle = false;
 
+    public static bool hasBothMonocles { get; private set; } = false;
+
     enum DialogueState
     {
         FirstTalk,
@@ -87,6 +89,7 @@ public class Crow : MonoBehaviour
                 hasRightMonocle = true;
 
                 dialogueState = DialogueState.Final;
+                hasBothMonocles = true;
             }
 
             StartDialogue();
