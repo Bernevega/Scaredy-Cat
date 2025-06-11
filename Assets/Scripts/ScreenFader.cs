@@ -5,24 +5,38 @@ using System.Collections;
 [RequireComponent(typeof(Image))]
 public class ScreenFader : MonoBehaviour
 {
-    public float fadeDuration = 0.5f;
+    [Tooltip("How long (seconds) the fade in/out takes.")]
+    public float fadeDuration = 1f;
+
     private Image img;
-	
+
     void Awake()
     {
         img = GetComponent<Image>();
-        var c = img.color;
-        c.a = 0;
+
+        // Start fully transparent & allow clicks through
+        Color c = img.color;
+        c.a = 0f;
         img.color = c;
+        img.raycastTarget = false;
+    }
+
+    void Start()
+    {
+        // Kick off fade-out coroutine properly
+        StartCoroutine(FadeIn());
     }
 
     /// <summary>
-    /// Fades the image from transparent to opaque.
+    /// Fades the image from transparent to opaque, blocking clicks during the transition.
     /// </summary>
     public IEnumerator FadeOut()
     {
+        img.raycastTarget = true;  // block everything now
+
         float elapsed = 0f;
         Color c = img.color;
+
         while (elapsed < fadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
@@ -30,15 +44,20 @@ public class ScreenFader : MonoBehaviour
             img.color = c;
             yield return null;
         }
+
+        // ensure fully opaque
+        c.a = 1f;
+        img.color = c;
     }
 
     /// <summary>
-    /// Fades the image from opaque to transparent.
+    /// Fades the image from opaque to transparent, unblocking clicks once done.
     /// </summary>
     public IEnumerator FadeIn()
     {
         float elapsed = 0f;
         Color c = img.color;
+
         while (elapsed < fadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
@@ -46,5 +65,10 @@ public class ScreenFader : MonoBehaviour
             img.color = c;
             yield return null;
         }
+
+        // ensure fully transparent & let clicks through
+        c.a = 0f;
+        img.color = c;
+        img.raycastTarget = false;
     }
 }

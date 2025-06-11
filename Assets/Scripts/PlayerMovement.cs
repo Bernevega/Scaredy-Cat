@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -17,6 +19,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private bool isGrounded;
+    
+    // Tracks if dialog was open in the previous frame
+    private bool _wasDialogActive = false;
 
     void Start()
     {
@@ -26,8 +31,27 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (SimpleDialogManager.Instance != null && SimpleDialogManager.Instance.dialogPanel && SimpleDialogManager.Instance.dialogPanel.activeSelf)
+        // 1) See if dialog is up right now
+        var dialogMgr = SimpleDialogManager.Instance;
+        bool dialogActive = dialogMgr != null
+                            && dialogMgr.dialogPanel != null
+                            && dialogMgr.dialogPanel.activeSelf;
+
+        // 2) If dialog is active, mark that and bail out
+        if (dialogActive)
+        {
+            _wasDialogActive = true;
             return;
+        }
+
+        // 3) If dialog just closed this frame, skip this Update entirely
+        if (_wasDialogActive)
+        {
+            _wasDialogActive = false;
+            return;
+        }
+
+        // --- Below here is your normal movement/jump ---
 
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -35,8 +59,8 @@ public class PlayerMovement : MonoBehaviour
         // Read inputs
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
-        
-        // **Block rightward input if flagged**
+
+        // Block rightward input if flagged
         if (blockRightMovement && moveX > 0f)
             moveX = 0f;
 
@@ -53,9 +77,10 @@ public class PlayerMovement : MonoBehaviour
                                         moveDir.z * currentSpeed);
         rb.linearVelocity = targetVel;
 
-        // Jump
+        // Jump (will never fire on the same frame the dialog closed)
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
+            // reset y‐velocity then impulse
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }

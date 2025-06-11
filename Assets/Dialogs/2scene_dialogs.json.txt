@@ -1,0 +1,37 @@
+{
+  "KittyScared": {
+    "start": "kitty1",
+    "nodes": {
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "Hmm… this is the fastest way to the other side…",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "But the water looks so dark!",
+        "next": "kitty3"
+      },
+      "kitty3": {
+        "speaker": "Kitty",
+        "text": "NO!",
+        "next": "kitty4"
+      },
+      "kitty4": {
+        "speaker": "Kitty",
+        "text": "I need to prove to my friends that I am NOT a scaredy-cat!",
+        "next": "kitty5"
+      },
+      "kitty5": {
+        "speaker": "Kitty",
+        "text": "*Kitty takes in a deep breathe*",
+        "next": "kitty6"
+      },
+     "kitty6": {
+        "speaker": "Kitty",
+        "text": "Here goes nothing!",
+        "next": null
+      },
+    }
+  }
+}

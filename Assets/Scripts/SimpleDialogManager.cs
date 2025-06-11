@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -8,16 +7,16 @@ using Newtonsoft.Json;
 [System.Serializable]
 public class DialogNode
 {
-    public string speaker;   // “Mom Cat”, “Kitty”, “Tire”, “Ydna”, “Oliver”, or "Ydna, Tire, Oliver"
-    public string text;      // The actual line
-    public string next;      // The key of the next node (or null if it ends)
+    public string speaker;
+    public string text;
+    public string next;
 }
 
 [System.Serializable]
 public class DialogTree
 {
-    public string start;                             // e.g. "momWarn1" or "kittyAsk"
-    public Dictionary<string, DialogNode> nodes;     // Maps keys to DialogNode
+    public string start;
+    public Dictionary<string, DialogNode> nodes;
 }
 
 public class SimpleDialogManager : MonoBehaviour
@@ -44,29 +43,22 @@ public class SimpleDialogManager : MonoBehaviour
     [Tooltip("TextMeshPro for showing Player (Kitty) lines")]
     public TMP_Text playerText;
 
-    [Tooltip("The Continue button (just one)")]
-    public Button continueButton;
+    // We no longer need a Continue button reference
+    // public Button continueButton;
 
     [Header("Speaker Portrait Sprites")]
-    [Tooltip("Portrait sprite for Mom Cat")]
     public Sprite momCatSprite;
-    [Tooltip("Portrait sprite for Kitty")]
     public Sprite kittySprite;
-    [Tooltip("Portrait sprite for Tire")]
     public Sprite tireSprite;
-    [Tooltip("Portrait sprite for Ydna")]
     public Sprite ydnaSprite;
-    [Tooltip("Portrait sprite for Oliver")]
     public Sprite oliverSprite;
-    [Tooltip("Portrait sprite for all three friends together")]
     public Sprite groupFriendsSprite;
-    [Tooltip("Portrait for The Crow")]
     public Sprite crowSprite;
 
     private Dictionary<string, DialogTree> allTrees;
     private DialogTree currentTree;
     private DialogNode currentNode;
-    private string currentKey; // Key of the current node
+    private string currentKey;
 
     void Awake()
     {
@@ -81,25 +73,23 @@ public class SimpleDialogManager : MonoBehaviour
             return;
         }
 
-        // Parse JSON into dictionary
         allTrees = JsonConvert.DeserializeObject<Dictionary<string, DialogTree>>(jsonFile.text);
 
         dialogPanel.SetActive(false);
-        continueButton.onClick.AddListener(OnContinuePressed);
+
+        // ▶ Remove button listener hookup
+        // continueButton.onClick.AddListener(OnContinuePressed);
     }
 
     void Update()
     {
-        // If dialog panel is up and Space is pressed, advance
-        if (dialogPanel && dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        // Advance only on Space
+        if (dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
         {
             OnContinuePressed();
         }
     }
 
-    /// <summary>
-    /// Call this to begin a dialogue. sceneID must match a top-level key in JSON.
-    /// </summary>
     public void StartDialogue(string sceneID)
     {
         if (!allTrees.ContainsKey(sceneID))
@@ -109,34 +99,30 @@ public class SimpleDialogManager : MonoBehaviour
         }
 
         currentTree = allTrees[sceneID];
-        currentKey = currentTree.start;
+        currentKey  = currentTree.start;
         currentNode = currentTree.nodes[currentKey];
 
         dialogPanel.SetActive(true);
         ShowCurrentNode();
     }
 
-    /// <summary>
-    /// Display the current node’s text and speaker icon/name.
-    /// </summary>
     private void ShowCurrentNode()
     {
-        if (speakerNameText != null)
-            speakerNameText.text = currentNode.speaker;
+        speakerNameText.text = currentNode.speaker;
 
         switch (currentNode.speaker)
         {
-            case "Mom Cat": speakerIcon.sprite = momCatSprite; break;
-            case "Kitty": speakerIcon.sprite = kittySprite; break;
-            case "Tire": speakerIcon.sprite = tireSprite; break;
-            case "Ydna": speakerIcon.sprite = ydnaSprite; break;
-            case "Oliver": speakerIcon.sprite = oliverSprite; break;
-            case "Ydna, Tire, Oliver": speakerIcon.sprite = groupFriendsSprite; break;
-            case "The Crow": speakerIcon.sprite = crowSprite; break;
-            default: speakerIcon.sprite = null; break;
+            case "Mom Cat":             speakerIcon.sprite = momCatSprite;       break;
+            case "Kitty":               speakerIcon.sprite = kittySprite;       break;
+            case "Tire":                speakerIcon.sprite = tireSprite;        break;
+            case "Ydna":                speakerIcon.sprite = ydnaSprite;        break;
+            case "Oliver":              speakerIcon.sprite = oliverSprite;      break;
+            case "Ydna, Tire, Oliver":  speakerIcon.sprite = groupFriendsSprite;break;
+            case "The Crow":            speakerIcon.sprite = crowSprite;        break;
+            default:                    speakerIcon.sprite = null;              break;
         }
 
-        npcText.text = "";
+        npcText.text    = "";
         playerText.text = "";
 
         if (currentNode.speaker == "Kitty")
@@ -145,26 +131,14 @@ public class SimpleDialogManager : MonoBehaviour
             npcText.text = currentNode.text;
     }
 
-    /// <summary>
-    /// Called when Continue is pressed or Space is hit.
-    /// Advances to the next node or closes if there is no next.
-    /// </summary>
     private void OnContinuePressed()
     {
-        if (currentNode == null)
+        if (currentNode == null || string.IsNullOrEmpty(currentNode.next))
         {
             CloseDialogue();
             return;
         }
 
-        // If there's no next node, just close
-        if (string.IsNullOrEmpty(currentNode.next))
-        {
-            CloseDialogue();
-            return;
-        }
-
-        // Advance to next
         string nextKey = currentNode.next;
         if (!currentTree.nodes.ContainsKey(nextKey))
         {
@@ -173,7 +147,7 @@ public class SimpleDialogManager : MonoBehaviour
             return;
         }
 
-        currentKey = nextKey;
+        currentKey  = nextKey;
         currentNode = currentTree.nodes[nextKey];
         ShowCurrentNode();
     }
@@ -181,8 +155,8 @@ public class SimpleDialogManager : MonoBehaviour
     private void CloseDialogue()
     {
         dialogPanel.SetActive(false);
-        currentNode = null;
-        currentTree = null;
-        currentKey = null;
+        currentNode  = null;
+        currentTree  = null;
+        currentKey   = null;
     }
 }
