@@ -91,7 +91,7 @@ public class SimpleDialogManager : MonoBehaviour
     void Update()
     {
         // If dialog panel is up and Space is pressed, advance
-        if (dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        if (dialogPanel && dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
         {
             OnContinuePressed();
         }

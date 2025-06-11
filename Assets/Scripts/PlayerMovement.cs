@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (SimpleDialogManager.Instance != null && SimpleDialogManager.Instance.dialogPanel.activeSelf)
+        if (SimpleDialogManager.Instance != null && SimpleDialogManager.Instance.dialogPanel && SimpleDialogManager.Instance.dialogPanel.activeSelf)
             return;
 
         // Ground check
