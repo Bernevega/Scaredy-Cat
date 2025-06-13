@@ -1,19 +1,15 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent (typeof(Collider))]
 public class Interactor : MonoBehaviour
 {
-    
     [SerializeField] GameObject owner;
     [SerializeField] GameObject[] interactablesInBounds = new GameObject[5];
-    
-    
-    
+
     Collider interactCollider;
     GameObject interactTarget;
     LayerMask interactLayer;
-
-
 
     private void Awake()
     {
@@ -24,12 +20,8 @@ public class Interactor : MonoBehaviour
         interactCollider.excludeLayers = ~interactLayer;
 
         if (owner == null && transform.parent != null)
-        {
             owner = transform.parent.gameObject;
-        }
     }
-
-
 
     private void OnTriggerEnter(Collider other)
     {
@@ -37,9 +29,7 @@ public class Interactor : MonoBehaviour
         for (int i = 0; i < interactablesInBounds.Length; i++)
         {
             if (nullIndex == -1 && interactablesInBounds[i] == null)
-            {
                 nullIndex = i;
-            }
             if (interactablesInBounds[i] == other.gameObject)
             {
                 nullIndex = -1;
@@ -52,11 +42,9 @@ public class Interactor : MonoBehaviour
         RecalculateClosestInteractable();
     }
 
-
-
     private void OnTriggerExit(Collider other)
     {
-        for (int i = 0;i < interactablesInBounds.Length;i++)
+        for (int i = 0; i < interactablesInBounds.Length; i++)
         {
             if (interactablesInBounds[i] == other.gameObject)
             {
@@ -68,24 +56,19 @@ public class Interactor : MonoBehaviour
         RecalculateClosestInteractable();
     }
 
-
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+        // Only fire on F—dialog‐blocking happens in Crow/DialogActor
+        if (Input.GetKeyDown(KeyCode.F))
             InteractPressed();
-        }
     }
-
-
 
     private void RecalculateClosestInteractable()
     {
-        float closestDist = 
-            interactTarget == null ? 
-            float.MaxValue : 
-            (transform.position - interactTarget.transform.position).sqrMagnitude;
+        float closestDist =
+            interactTarget == null
+                ? float.MaxValue
+                : (transform.position - interactTarget.transform.position).sqrMagnitude;
 
         int closestIndex = -1;
 
@@ -96,7 +79,6 @@ public class Interactor : MonoBehaviour
                 continue;
 
             float dist = (transform.position - interactablesInBounds[i].transform.position).sqrMagnitude;
-
             if (dist < closestDist)
             {
                 closestDist = dist;
@@ -105,16 +87,13 @@ public class Interactor : MonoBehaviour
         }
 
         InteractableTargetChanged(closestIndex);
-            
     }
-
-
 
     private void InteractPressed()
     {
         if (interactTarget)
         {
-            Interactable interactable = interactTarget.GetComponent<Interactable>();
+            var interactable = interactTarget.GetComponent<Interactable>();
             interactable?.Interact(this);
         }
     }
@@ -123,25 +102,22 @@ public class Interactor : MonoBehaviour
     {
         if (interactTarget != null)
         {
-            Interactable interactable = interactTarget.GetComponent<Interactable>();
-
-            if (interactable != null)
+            var previous = interactTarget.GetComponent<Interactable>();
+            if (previous != null)
             {
-                interactable.Deselect(this);
-                interactable.eventForceUnselect -= InteractableDisabledOrDestroyed;
+                previous.Deselect(this);
+                previous.eventForceUnselect -= InteractableDisabledOrDestroyed;
             }
         }
 
         if (targetIndex != -1)
         {
             interactTarget = interactablesInBounds[targetIndex];
-
-            Interactable targetInteractable = interactTarget.GetComponent<Interactable>();
-
-            if (targetInteractable != null)
+            var next = interactTarget.GetComponent<Interactable>();
+            if (next != null)
             {
-                targetInteractable.Select(this);
-                targetInteractable.eventForceUnselect += InteractableDisabledOrDestroyed;
+                next.Select(this);
+                next.eventForceUnselect += InteractableDisabledOrDestroyed;
             }
         }
         else
@@ -163,5 +139,5 @@ public class Interactor : MonoBehaviour
         }
     }
 
-    public GameObject GetOwner() { return owner; }
+    public GameObject GetOwner() => owner;
 }
