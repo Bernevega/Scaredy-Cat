@@ -69,22 +69,39 @@ public class SimpleDialogManager : MonoBehaviour
         }
         else
         {
+            Instance.jsonFile = jsonFile;
+            Instance.dialogPanel = dialogPanel;
+            Instance.speakerNameText = speakerNameText;
+            Instance.speakerIcon = speakerIcon;
+            Instance.npcText = npcText;
+            Instance.playerText = playerText;
+            Instance.Initialize();
             Destroy(gameObject);
             return;
         }
 
-        allTrees = JsonConvert.DeserializeObject<Dictionary<string, DialogTree>>(jsonFile.text);
+        
 
-        dialogPanel.SetActive(false);
+        Initialize();
 
         // ▶ Remove button listener hookup
         // continueButton.onClick.AddListener(OnContinuePressed);
     }
 
+    public void Initialize()
+    {
+        if (allTrees != null)
+        {
+            allTrees.Clear();
+        }
+        allTrees = JsonConvert.DeserializeObject<Dictionary<string, DialogTree>>(jsonFile.text);
+        dialogPanel.SetActive(false);
+    }
+
     void Update()
     {
         // Advance only on Space
-        if (dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        if (dialogPanel != null && dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
         {
             OnContinuePressed();
         }
@@ -101,7 +118,6 @@ public class SimpleDialogManager : MonoBehaviour
         currentTree = allTrees[sceneID];
         currentKey  = currentTree.start;
         currentNode = currentTree.nodes[currentKey];
-
         dialogPanel.SetActive(true);
         ShowCurrentNode();
     }

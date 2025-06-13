@@ -182,38 +182,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7378125937149331326, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 825239370}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2460588521859174647, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 109997950}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
---- !u!1 &109997948 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2460588521859174647, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
-  m_PrefabInstance: {fileID: 109997947}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &109997949 stripped
+--- !u!4 &109997948 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7378125937149331326, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+  m_CorrespondingSourceObject: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
   m_PrefabInstance: {fileID: 109997947}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &109997950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 109997948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 746f4af45cfc57d4d8e85f291ea468bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  reserve: 10
-  inventory: []
 --- !u!1 &133770625
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +695,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 232320961}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7ab41502232149b4ba5a9ceeae625177, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1565,7 +1543,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 797582904}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7ab41502232149b4ba5a9ceeae625177, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1678,7 +1656,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 109997949}
+  m_Father: {fileID: 109997948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &825239371
 MonoBehaviour:
@@ -1692,7 +1670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43b70dbdf1c7fb47aabeea3a2eee831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 109997948}
+  owner: {fileID: 0}
   interactablesInBounds:
   - {fileID: 0}
   - {fileID: 0}
@@ -2635,7 +2613,6 @@ MonoBehaviour:
   speakerIcon: {fileID: 943799311}
   npcText: {fileID: 1594017920}
   playerText: {fileID: 152566669}
-  continueButton: {fileID: 1974427585}
   momCatSprite: {fileID: 21300000, guid: 4d781ef6dc470ba47aa39c01fbef9dc6, type: 3}
   kittySprite: {fileID: 21300000, guid: 823628af9ccfa7a489b6ba1d317d7599, type: 3}
   tireSprite: {fileID: 21300000, guid: 06f8ec5699dbc6b48a16446bb48b2ef6, type: 3}
