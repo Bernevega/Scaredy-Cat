@@ -22,9 +22,8 @@
         "text": "I can do this!",
         "next": null
       }
-   }
-},
-
+    }
+  },
   "LogBroken": {
     "start": "kitty1",
     "nodes": {
@@ -42,7 +41,202 @@
         "speaker": "Kitty",
         "text": "I will figure out how to return later!",
         "next": null
+      }
+    }
+  },
+  "CrowFirstTalk": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "The Crow",
+        "text": "Ah, a visitor?",
+        "next": "caw2"
       },
+      "caw2": {
+        "speaker": "The Crow",
+        "text": "How… unexpected… you do not seem old enough to be here. ",
+        "next": "caw3"
+      },
+      "caw3": {
+        "speaker": "The Crow",
+        "text": "Caw.",
+        "next": "kitty1"
+      },
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "Uhm… Mr. Crow, may I ask if you happen to know where a super duper rare flower may be?",
+        "next": "caw4"
+      },
+      "caw4": {
+        "speaker": "The Crow",
+        "text": "Perhaps…",
+        "next": "caw5"
+      },
+      "caw5": {
+        "speaker": "The Crow",
+        "text": "But how do I know if you are brave enough to enter?",
+        "next": "caw6"
+      },
+      "caw5": {
+        "speaker": "The Crow",
+        "text": "Caw caw.",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "Gulp. Uh uhmm…",
+        "next": "caw7"
+      },
+      "caw7": {
+        "speaker": "The Crow",
+        "text": "Find my monocle to prove that you are worthy of venturing further.",
+        "next": "caw8"
+      },
+      "caw8": {
+        "speaker": "The Crow",
+        "text": "Unless… You are too scared?",
+        "next": "caw9"
+      },
+      "caw9": {
+        "speaker": "The Crow",
+        "text": "Caw?",
+        "next": "kitty3"
+      },
+      "kitty3": {
+        "speaker": "Kitty",
+        "text": "Nuh uh. I am not scared!",
+        "next": "kitty4"
+      },
+      "kitty4": {
+        "speaker": "Kitty",
+        "text": "Where did you lose it?",
+        "next": "caw10"
+      },     
+      "caw10": {
+        "speaker": "Kitty",
+        "text": "...",
+        "next": null
+      }, 
+    }
+  },
+  "CrowFirstMonocleWait": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "The Crow",
+        "text": "Have you found my monocle yet?",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "The Crow",
+        "text": "...",
+        "next": "caw3"
+      },
+      "caw3": {
+        "speaker": "The Crow",
+        "text": "Caw!",
+        "next": null
+      }
+    }
+  },
+  "CrowSecondMonocle": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "The Crow",
+        "text": "Caw Caw!",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "The Crow",
+        "text": "You found ONE of my monocles!!!",
+        "next": "caw3"
+      },
+      "caw3": {
+        "speaker": "The Crow",
+        "text": "Have you found the second one?",
+        "next": "kitty1"
+      },
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "There is a second one…?",
+        "next": "caw4"
+      },
+      "caw4": {
+        "speaker": "The Crow",
+        "text": "DUH!",
+        "next": "caw5"
+      },
+      "caw5": {
+        "speaker": "The Crow",
+        "text": "Now scurry off and find my other monocle!",
+        "next": "caw6"
+      },
+      "caw6": {
+        "speaker": "The Crow",
+        "text": "Caw!",
+        "next": null
+      }
+    }
+  },
+  "CrowSecondMonocleWait": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "The Crow",
+        "text": "Have you found my other monocle?",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "The Crow",
+        "text": "...",
+        "next": "caw3"
+      },
+      "caw3": {
+        "speaker": "The Crow",
+        "text": "Caw!",
+        "next": null
+      }
+    }
+  },
+  "CrowFinal": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "The Crow",
+        "text": "Have you found my other monocle?",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "The Crow",
+        "text": "...",
+        "next": "caw4"
+      },
+      "caw4": {
+        "speaker": "The Crow",
+        "text": "Thanks! The flower should be right there!",
+        "next": "caw5"
+      },
+      "caw5": {
+        "speaker": "The Crow",
+        "text": "Caw!",
+        "next": null
+      }
+    }
+  },
+  "CrowThank": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "The Crow",
+        "text": "Thanks for helping me find my monocles!",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "The Crow",
+        "text": "Caw!",
+        "next": null
+      }
     }
   }
 }
