@@ -17,6 +17,8 @@ public class NextSceneLoader : MonoBehaviour
     [Tooltip("A full-screen UI Image (black) whose alpha we'll animate.")]
     public Image fadeImage;
 
+    
+
     private void Start()
     {
         if (fadeImage != null)

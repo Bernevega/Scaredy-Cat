@@ -14,6 +14,8 @@ public class SceneTransitionZone : MonoBehaviour
     [Tooltip("If true, only the player can trigger this; otherwise any collider works")]
     public bool onlyPlayer = true;
 
+    public uint nextSceneStartPositionIndex = 0;
+
     private Collider _col;
     private bool _isTransitioning = false;
 
@@ -32,6 +34,7 @@ public class SceneTransitionZone : MonoBehaviour
         if (onlyPlayer && !other.CompareTag("Player"))
             return;
 
+        LevelDirector.targetStartPosition = (int)nextSceneStartPositionIndex;
         // Kick off the fade and load
         StartCoroutine(FadeAndLoad());
     }
