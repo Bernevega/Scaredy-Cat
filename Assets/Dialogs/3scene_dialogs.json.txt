@@ -1,0 +1,48 @@
+{
+  "KittySuccess": {
+    "start": "kitty1",
+    "nodes": {
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "Oof… My head hurts…",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "I cannot believe I actually made it across…",
+        "next": "kitty3"
+      },
+      "kitty3": {
+        "speaker": "Kitty",
+        "text": "Now I just need to find that super duper rare flower to prove that I am not a scaredy-cat.",
+        "next": "kitty4"
+      },
+      "kitty4": {
+        "speaker": "Kitty",
+        "text": "I can do this!",
+        "next": null
+      }
+   }
+},
+
+  "LogBroken": {
+    "start": "kitty1",
+    "nodes": {
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "The log is broken, I cannot go back!",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "And I also have to get that rare flower first.",
+        "next": "kitty3"
+      },
+      "kitty3": {
+        "speaker": "Kitty",
+        "text": "I will figure out how to return later!",
+        "next": null
+      },
+    }
+  }
+}
