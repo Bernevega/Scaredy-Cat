@@ -28,5 +28,6 @@ public class LevelDirector : MonoBehaviour
         }
         
         Camera.main.GetComponent<CameraFollow>().target = PlayerManager.instance.player.transform;
+        Camera.main.GetComponent<CameraFollow>().enabled = true;
     }
 }
