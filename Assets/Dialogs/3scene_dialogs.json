@@ -77,7 +77,7 @@
         "text": "But how do I know if you are brave enough to enter?",
         "next": "caw6"
       },
-      "caw5": {
+      "caw6": {
         "speaker": "The Crow",
         "text": "Caw caw.",
         "next": "kitty2"
@@ -111,12 +111,12 @@
         "speaker": "Kitty",
         "text": "Where did you lose it?",
         "next": "caw10"
-      },     
+      },
       "caw10": {
         "speaker": "Kitty",
         "text": "...",
         "next": null
-      }, 
+      }
     }
   },
   "CrowFirstMonocleWait": {
@@ -235,6 +235,51 @@
       "caw2": {
         "speaker": "The Crow",
         "text": "Caw!",
+        "next": null
+      }
+    }
+  },
+  "FlowerPickup": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "Kitty",
+        "text": "I got the flower! I should head back now...",
+        "next": null
+      }
+    }
+  },
+  "LogTurnBack": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "Kitty",
+        "text": "I have to get the flower before I go back!",
+        "next": null
+      }
+    }
+  },
+  "GhostTurnBack": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "Kitty",
+        "text": "I shouldn't go further, I could get lost!",
+        "next": null
+      }
+    }
+  },
+  "GhostPaperPickUp": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "Kitty",
+        "text": "Hmm... This paper contains directions to a festival deeper in the forest.",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "Kitty",
+        "text": "The log is broken... I should go to the festival and ask around for other directions to the city.",
         "next": null
       }
     }
