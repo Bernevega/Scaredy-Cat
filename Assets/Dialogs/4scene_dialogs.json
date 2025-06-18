@@ -1,0 +1,104 @@
+{
+  "MangleMouse": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hi, have you seen a mouse?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Mangle",
+        "text": "A mouse..? That freaky dog, John Daniel, in that ridiculous hat probably saw it. He loves rodents. A little too much maybe.",
+        "next": null
+      }
+    }
+  },
+  "MangleStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Mangle",
+        "text": "sup",
+        "next": null
+      }
+    }
+  },
+
+  // John Daniels
+  "JDMouse": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hi, I heard you knew where a mouse is.",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "John Daniel",
+        "text": "A mouse..? That freaky dog, John Daniel, in that ridiculous hat probably saw it. He loves rodents. A little too much maybe.",
+        "next": null
+      }
+    }
+  },
+  "JDStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "John Daniel",
+        "text": "sup",
+        "next": null
+      }
+    }
+  },
+  "OyenStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Oyen",
+        "text": "<b>*Looking very sad*<\b>",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "What happened?",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Oyen",
+        "text": "That mouse over there took my bracelet.",
+        "next": null
+      }
+    }
+  },
+  "OyenWait": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Oyen",
+        "text": "Have you gotten my bracelet?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Oyen",
+        "text": "...",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Oyen",
+        "text": "No? :(",
+        "next": null
+      }
+    }
+  },
+  "OyenThank": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Oyen",
+        "text": "Thanks for getting my bracelet!",
+        "next": null
+      }
+    }
+  }
+}
