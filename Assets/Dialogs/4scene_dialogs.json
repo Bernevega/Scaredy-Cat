@@ -36,7 +36,7 @@
       },
       "boo2": {
         "speaker": "John Daniel",
-        "text": "A mouse..? That freaky dog, John Daniel, in that ridiculous hat probably saw it. He loves rodents. A little too much maybe.",
+        "text": "Ohhh yes. I knew I smelled a mouse nearby… Heh. I think it might have headed in Assyla’s direction, that yellow stanker with a bib. Tell me when you find that mouse though… Heh.",
         "next": null
       }
     }
@@ -46,6 +46,31 @@
     "nodes": {
       "boo1": {
         "speaker": "John Daniel",
+        "text": "sup",
+        "next": null
+      }
+    }
+  },
+  "AssylaMouse": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hi, I heard you knew where a mouse is.",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Assyla",
+        "text": "That’s preposterous! Im scared of mice! Ugh… but if I were to guess, Chica has been smelling like cheese. Friggin Dog stuffed her pockets full of mozzarella from the buffet.",
+        "next": null
+      }
+    }
+  },
+  "AssylaStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Assyla",
         "text": "sup",
         "next": null
       }

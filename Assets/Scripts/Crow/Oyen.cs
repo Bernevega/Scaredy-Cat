@@ -7,7 +7,7 @@ public class Oyen : MonoBehaviour
 
     Item[] itemReturnArray = new Item[1];
 
-    bool waitingForBracelet = false;
+    public bool waitingForBracelet = false;
     bool hasBracelet = false;
 
     private void Awake()
@@ -34,6 +34,7 @@ public class Oyen : MonoBehaviour
         {
             dm.StartDialogue("OyenStart");
             waitingForBracelet = true;
+            BraceletQuestline.step = 1;
         }
         else if (waitingForBracelet && !hasBracelet)
         {
