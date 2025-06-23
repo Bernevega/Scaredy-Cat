@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using System;
 
 [System.Serializable]
 public class DialogNode
@@ -59,6 +60,11 @@ public class SimpleDialogManager : MonoBehaviour
     private DialogTree currentTree;
     private DialogNode currentNode;
     private string currentKey;
+    private string currentTreeName;
+
+    // event that returns the <SceneID, CurrentKey> when dialogue starts, ends or is changed.
+    // Remember to unsubscribe when object is destroyed.
+    public Action<string, string> eventDialogueChanged; 
 
     void Awake()
     {
@@ -115,10 +121,12 @@ public class SimpleDialogManager : MonoBehaviour
             return;
         }
 
+        currentTreeName = sceneID;
         currentTree = allTrees[sceneID];
         currentKey  = currentTree.start;
         currentNode = currentTree.nodes[currentKey];
         dialogPanel.SetActive(true);
+        eventDialogueChanged?.Invoke(currentTreeName, currentKey);
         ShowCurrentNode();
     }
 
@@ -151,6 +159,7 @@ public class SimpleDialogManager : MonoBehaviour
     {
         if (currentNode == null || string.IsNullOrEmpty(currentNode.next))
         {
+            eventDialogueChanged?.Invoke(currentTreeName, null);
             CloseDialogue();
             return;
         }
@@ -165,6 +174,7 @@ public class SimpleDialogManager : MonoBehaviour
 
         currentKey  = nextKey;
         currentNode = currentTree.nodes[nextKey];
+        eventDialogueChanged?.Invoke(currentTreeName, nextKey);
         ShowCurrentNode();
     }
 

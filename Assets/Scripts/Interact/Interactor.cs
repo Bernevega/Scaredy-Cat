@@ -106,7 +106,6 @@ public class Interactor : MonoBehaviour
             if (previous != null)
             {
                 previous.Deselect(this);
-                previous.eventForceUnselect -= InteractableDisabledOrDestroyed;
             }
         }
 
@@ -132,9 +131,23 @@ public class Interactor : MonoBehaviour
         {
             if (interactablesInBounds[i] == interactable.gameObject)
             {
+                interactable.eventForceUnselect -= InteractableDisabledOrDestroyed;
                 interactable.Deselect(this);
                 interactablesInBounds[i] = null;
                 interactTarget = null;
+                Debug.Log("Set the thing to null!");
+                break;
+            }
+        }
+        for (int i = 0; i < interactablesInBounds.Length; i++)
+        {
+            if (interactablesInBounds[i] != null)
+            {
+                interactablesInBounds[0] = interactablesInBounds[i];
+                interactablesInBounds[0].GetComponent<Interactable>().Select(this);
+                interactTarget = interactablesInBounds[0];
+                interactablesInBounds[i] = null;
+                break;
             }
         }
     }

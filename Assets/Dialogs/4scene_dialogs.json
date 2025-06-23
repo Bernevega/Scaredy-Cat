@@ -76,6 +76,71 @@
       }
     }
   },
+  "ChicaMouse": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hi, I heard you knew where a mouse is.",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Chica",
+        "text": "Oh.. I did see a mouse. He liked my cheese, but I think he scurried off to N’s direction near the end of that road…",
+        "next": null
+      }
+    }
+  },
+  "ChicaStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Chica",
+        "text": "sup",
+        "next": null
+      }
+    }
+  },
+  "NMouse": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Uh, I am looking for a mouse with a bracelet. Is that your mouse? Perchance?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "N",
+        "text": "Oh word. Yeah I can hook you up with me mousie. No worries dawg.",
+        "next": "MouseAppear"
+      },
+      "MouseAppear": {
+        "speaker": "Mousie",
+        "text": "You can’t just say “perchance”. Here's the bracelet.",
+        "next": "AfterMouseGivesBracelet"
+      },
+      "AfterMouseGivesBracelet": {
+        "speaker": "Kitty",
+        "text": "Oh, thank you mousie... Please do not eat me.",
+        "next": "MouseBye"
+      },
+      "MouseBye": {
+        "speaker": "Mousie",
+        "text": "HAHA, nice joke. We will see you around then, bye!",
+        "next": null
+      }
+    }
+  },
+  "NStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "N",
+        "text": "sup",
+        "next": null
+      }
+    }
+  },
   "OyenStart": {
     "start": "boo1",
     "nodes": {

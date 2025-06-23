@@ -6,6 +6,10 @@ public class BraceletQuestline : MonoBehaviour
     [SerializeField] Oyen oyen;
     [SerializeField] Interactable[] npcs; // Order of array must be the correct order of npcs to talk to
 
+    [SerializeField] GameObject mouseObject;
+    [SerializeField] GameObject NObject;
+    [SerializeField] GameObject bracelet;
+
     public static int step = 0;
 
     private void Awake()
@@ -21,7 +25,8 @@ public class BraceletQuestline : MonoBehaviour
         if (type == InteractActionType.Interact)
         {
             SimpleDialogManager dm = SimpleDialogManager.Instance;
-            if (!dm) return;
+            if (dm != null && dm.dialogPanel != null && dm.dialogPanel.activeSelf)
+                return;
 
             int targetNpcIndex = -2;
             bool correctNpc = false;
@@ -60,7 +65,45 @@ public class BraceletQuestline : MonoBehaviour
                     else
                         dm.StartDialogue("AssylaMouse");
                     break;
+                case 3:
+                    if (!correctNpc)
+                        dm.StartDialogue("ChicaStart");
+                    else
+                    {
+                        dm.StartDialogue("ChicaMouse");
+                    }
+                    break;
+                case 4:
+                    if (!correctNpc)
+                        dm.StartDialogue("NStart");
+                    else
+                    {
+                        SimpleDialogManager.Instance.eventDialogueChanged += OnDialogAdvance;
+                        dm.StartDialogue("NMouse");
+                    }
+                    break;
+            }
+        }
+    }
 
+    private void OnDialogAdvance(string sceneID, string nextNode)
+    {
+        if (sceneID == "NMouse")
+        {
+            switch (nextNode)
+            {
+                case null:
+                    SimpleDialogManager.Instance.eventDialogueChanged -= OnDialogAdvance;
+                    mouseObject.SetActive(false);
+                    NObject.SetActive(false);
+                    break;
+                case "MouseAppear":
+                    mouseObject.SetActive(true);
+                    break;
+                case "AfterMouseGivesBracelet":
+                    bracelet.SetActive(true);
+                    break;
+                    
             }
         }
     }
