@@ -185,8 +185,33 @@
     "start": "boo1",
     "nodes": {
       "boo1": {
+        "speaker": "Kitty",
+        "text": "Hey, I got your bracelet back..",
+        "next": "boo2"
+      },
+      "boo2": {
         "speaker": "Oyen",
-        "text": "Thanks for getting my bracelet!",
+        "text": "Really? You got it back? Thank you, thank you! This means a lot to me. My name is Oyen, by the way. Let us be friends!",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Kitty",
+        "text": "Friends… ? Sure! I'm Kitty. But I have to find a way back home to Kitty Town… Do you happen to know how?",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "Oyen",
+        "text": "Oh… you live in Kitty-Town across that river? … … …",
+        "next": "boo5"
+      },
+      "boo5": {
+        "speaker": "Kitty",
+        "text": "Yeah, can you take me there?",
+        "next": "boo6"
+      },
+      "boo6": {
+        "speaker": "Oyen",
+        "text": "Sure, follow me.",
         "next": null
       }
     }

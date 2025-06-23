@@ -9,6 +9,7 @@ public class BraceletQuestline : MonoBehaviour
     [SerializeField] GameObject mouseObject;
     [SerializeField] GameObject NObject;
     [SerializeField] GameObject bracelet;
+    [SerializeField] GameObject nextSceneTransition;
 
     public static int step = 0;
 
@@ -93,7 +94,6 @@ public class BraceletQuestline : MonoBehaviour
             switch (nextNode)
             {
                 case null:
-                    SimpleDialogManager.Instance.eventDialogueChanged -= OnDialogAdvance;
                     mouseObject.SetActive(false);
                     NObject.SetActive(false);
                     break;
@@ -105,6 +105,12 @@ public class BraceletQuestline : MonoBehaviour
                     break;
                     
             }
+        }
+        if (sceneID == "OyenThank" && nextNode == null)
+        {
+            Debug.Log("GO TO THE NEXT SCENE");
+            SimpleDialogManager.Instance.eventDialogueChanged -= OnDialogAdvance;
+            nextSceneTransition.SetActive(true);
         }
     }
 }
