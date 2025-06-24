@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public bool blockRightMovement = false;
 
     private Rigidbody rb;
+    private Vector3 direction = new Vector3(0, 0, 1);
+    private Camera mainCam;
     private bool isGrounded;
     
     // Tracks if dialog was open in the previous frame
@@ -27,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        mainCam = Camera.main;
     }
 
     void Update()
@@ -64,7 +68,17 @@ public class PlayerMovement : MonoBehaviour
         if (blockRightMovement && moveX > 0f)
             moveX = 0f;
 
-        Vector3 moveDir = (transform.right * moveX + transform.forward * moveZ).normalized;
+        Vector3 cameraXZ = new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z).normalized;
+        Vector3 cameraXZRight = Vector3.Cross(Vector3.up, cameraXZ);
+        Vector3 moveDir = (cameraXZ * moveZ + cameraXZRight * moveX).normalized;
+        if (moveDir != Vector3.zero)
+        {
+            direction = moveDir;
+        }
+        if (transform.forward != direction)
+        {
+            transform.forward = Vector3.RotateTowards(transform.forward, direction, Mathf.Deg2Rad * 1080 * Time.deltaTime, 0);
+        }
 
         // Running
         float currentSpeed = speed;
