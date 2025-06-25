@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.2f;
     public LayerMask groundMask;
 
-    [SerializeField] GameObject model;
+    [SerializeField] private GameObject model;
 
     [HideInInspector] public bool blockRightMovement = false;
     [HideInInspector] public bool blockJump = false;  
@@ -24,15 +24,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody rb;
     private Camera mainCam;
-<<<<<<< Updated upstream
-    private bool isGrounded;
-    private bool canMove = true; 
-    
-    // Tracks if dialog was open in the previous frame
-=======
     private Vector3 direction = Vector3.forward;
     private bool isGrounded = false;
->>>>>>> Stashed changes
+    private bool canMove = true;
     private bool _wasDialogActive = false;
     private bool hasJumped = false;
 
@@ -64,7 +58,8 @@ public class PlayerMovement : MonoBehaviour
         if (dialogActive)
         {
             _wasDialogActive = true;
-            // Stop any residual horizontal movement when dialog opens
+            canMove = false;
+            // Stop residual horizontal movement
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
             return;
         }
@@ -72,25 +67,15 @@ public class PlayerMovement : MonoBehaviour
         if (_wasDialogActive)
         {
             _wasDialogActive = false;
-            // Ensure no lingering horizontal velocity after dialog closes
+            canMove = true;
+            // Clear any lingering velocity
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
             return;
         }
 
-<<<<<<< Updated upstream
-        if (model.transform.forward != direction)
-        {
-            model.transform.rotation = Quaternion.RotateTowards(model.transform.rotation, Quaternion.LookRotation(direction, Vector3.up), 1080f * Time.deltaTime);
-        }
-
         if (!canMove) return;
 
-        // --- Below here is your normal movement/jump ---
-
-        // Ground check
-=======
         // 2) Ground check
->>>>>>> Stashed changes
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         if (isGrounded)
             hasJumped = false;
@@ -98,39 +83,46 @@ public class PlayerMovement : MonoBehaviour
         // 3) Read inputs
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
-
-        // Block rightward input if flagged
         if (blockRightMovement && moveX > 0f)
             moveX = 0f;
 
-<<<<<<< Updated upstream
-        Vector3 cameraXZ = new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z).normalized;
-        Vector3 cameraXZRight = Vector3.Cross(Vector3.up, cameraXZ);
-        Vector3 moveDir = (cameraXZ * moveZ + cameraXZRight * moveX).normalized;
-        if (moveDir != Vector3.zero)
-        {
-            direction = moveDir;
-        }
-=======
-        // Calculate movement direction relative to camera
-        Vector3 camF = new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z).normalized;
+        // 4) Calculate move direction relative to camera
+        Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
         Vector3 camR = Vector3.Cross(Vector3.up, camF);
         Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
->>>>>>> Stashed changes
-
         if (moveDir != Vector3.zero)
             direction = moveDir;
-        transform.forward = Vector3.RotateTowards(transform.forward, direction, Mathf.Deg2Rad * 1080f * Time.deltaTime, 0f);
 
-        // 4) Sprint (blocked in labyrinth)
+        // 5) Rotate the visible model (or the whole object if no model assigned)
+        if (model != null)
+        {
+            if (model.transform.forward != direction)
+                model.transform.rotation = Quaternion.RotateTowards(
+                    model.transform.rotation,
+                    Quaternion.LookRotation(direction, Vector3.up),
+                    1080f * Time.deltaTime
+                );
+        }
+        else
+        {
+            if (transform.forward != direction)
+                transform.forward = Vector3.RotateTowards(
+                    transform.forward,
+                    direction,
+                    Mathf.Deg2Rad * 1080f * Time.deltaTime,
+                    0f
+                );
+        }
+
+        // 6) Sprint (blocked in labyrinth)
         float currentSpeed = speed;
         if (Input.GetKey(KeyCode.LeftShift) && !blockSprint)
             currentSpeed *= runMultiplier;
 
-        // 5) Apply horizontal movement, preserve vertical velocity
+        // 7) Apply horizontal movement (preserve vertical velocity)
         rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
 
-        // 6) Jump (only once until grounded again)
+        // 8) Jump (only once until grounded again)
         if (!blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
@@ -139,8 +131,19 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void SetDirection(Vector3 direction)
-    { this.direction = Vector3.Normalize(direction); }
+    /// <summary>
+    /// Externally set the facing direction (normalized).
+    /// </summary>
+    public void SetDirection(Vector3 dir)
+    {
+        direction = dir.normalized;
+    }
+
+    /// <summary>
+    /// Enable or disable all movement (useful for cutscenes, dialogs, etc.).
+    /// </summary>
     public void SetCanMove(bool b)
-    { canMove = b; }
+    {
+        canMove = b;
+    }
 }
