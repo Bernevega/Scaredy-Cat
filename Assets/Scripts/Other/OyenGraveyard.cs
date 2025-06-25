@@ -106,7 +106,7 @@ public class OyenGraveyard : MonoBehaviour
                 state = State.MomCatWalkWait;
                 PlayerManager pm = PlayerManager.instance;
                 PlayerMovement pmv = pm.player.GetComponent<PlayerMovement>();
-                pmv.SetCanMove(true);
+                pmv.speed = 1f;
             }
             step++;
         }
@@ -131,7 +131,7 @@ public class OyenGraveyard : MonoBehaviour
             PlayerManager pm = PlayerManager.instance;
             PlayerMovement pmv = pm.player.GetComponent<PlayerMovement>();
             pmv.SetDirection(new Vector3(1, 0, 0));
-            pmv.SetCanMove(false);
+            pmv.speed = 0;
 
             oyenGravestone.SetSceneID("OyenOJGrave2");
         }

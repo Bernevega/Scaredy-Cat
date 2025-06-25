@@ -80,20 +80,40 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded)
             hasJumped = false;
 
-        // 3) Read inputs
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
-        if (blockRightMovement && moveX > 0f)
-            moveX = 0f;
+        if (speed > 0f)
+        {
+            // 3) Read inputs
+            float moveX = Input.GetAxisRaw("Horizontal");
+            float moveZ = Input.GetAxisRaw("Vertical");
+            if (blockRightMovement && moveX > 0f)
+                moveX = 0f;
 
-        // 4) Calculate move direction relative to camera
-        Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
-        Vector3 camR = Vector3.Cross(Vector3.up, camF);
-        Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
-        if (moveDir != Vector3.zero)
-            direction = moveDir;
+            // 4) Calculate move direction relative to camera
+            Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
+            Vector3 camR = Vector3.Cross(Vector3.up, camF);
+            Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
+            if (moveDir != Vector3.zero)
+                direction = moveDir;
 
-        // 5) Rotate the visible model (or the whole object if no model assigned)
+            // 5) Sprint (blocked in labyrinth)
+            float currentSpeed = speed;
+            if (Input.GetKey(KeyCode.LeftShift) && !blockSprint)
+                currentSpeed *= runMultiplier;
+
+            // 6) Apply horizontal movement (preserve vertical velocity)
+            rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
+
+            // 7) Jump (only once until grounded again)
+            if (!blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                hasJumped = true;
+            }
+        }
+        
+
+        // 8) Rotate the visible model (or the whole object if no model assigned)
         if (model != null)
         {
             if (model.transform.forward != direction)
@@ -112,22 +132,6 @@ public class PlayerMovement : MonoBehaviour
                     Mathf.Deg2Rad * 1080f * Time.deltaTime,
                     0f
                 );
-        }
-
-        // 6) Sprint (blocked in labyrinth)
-        float currentSpeed = speed;
-        if (Input.GetKey(KeyCode.LeftShift) && !blockSprint)
-            currentSpeed *= runMultiplier;
-
-        // 7) Apply horizontal movement (preserve vertical velocity)
-        rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
-
-        // 8) Jump (only once until grounded again)
-        if (!blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
-        {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            hasJumped = true;
         }
     }
 

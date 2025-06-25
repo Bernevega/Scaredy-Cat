@@ -18,6 +18,8 @@ public class GraveyardCutscene : MonoBehaviour
     int oyenStep = 0;
     int kittyStep = 0;
 
+    bool cutsceneActivated = false;
+
     enum CameraState
     {
         Moving,
@@ -50,11 +52,14 @@ public class GraveyardCutscene : MonoBehaviour
 
         player = PlayerManager.instance.player.GetComponent<PlayerMovement>();
         player.GetComponent<Rigidbody>().isKinematic = true;
-        player.SetCanMove(false);
+        player.speed = 0f;
+
+        cutsceneActivated = true;
     }
 
     private void Update()
     {
+
         switch (cutState)
         {
             case CutsceneState.FirstCameraPan:
