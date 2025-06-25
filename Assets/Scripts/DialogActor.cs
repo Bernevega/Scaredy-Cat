@@ -26,6 +26,8 @@ public class DialogActor : MonoBehaviour
     [Tooltip("How long (seconds) the prompt fades in/out")]
     public float promptFadeDuration = 0.25f;
 
+    bool repeatable = false;
+
     // Internal state
     private bool _hasInteracted = false;
     public bool HasInteracted => _hasInteracted;
@@ -96,7 +98,8 @@ public class DialogActor : MonoBehaviour
 
     private void TriggerDialog()
     {
-        _hasInteracted = true;
+        if (!repeatable)
+            _hasInteracted = true;
         HidePrompt();
         SimpleDialogManager.Instance.StartDialogue(sceneID);
     }

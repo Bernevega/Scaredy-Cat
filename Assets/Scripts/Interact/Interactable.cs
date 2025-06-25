@@ -45,6 +45,7 @@ public class Interactable : MonoBehaviour
     {
         eventForceUnselect?.Invoke(this);
         eventOnInteract?.Invoke(null, this, InteractActionType.Deselect);
+        eventForceUnselect = null;
 
         Debug.Log(name + " interactable has been disabled!");
         if (coll)

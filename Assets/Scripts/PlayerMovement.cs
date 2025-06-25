@@ -15,12 +15,15 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.2f;
     public LayerMask groundMask;
 
+    [SerializeField] GameObject model;
+
     [HideInInspector] public bool blockRightMovement = false;
 
     private Rigidbody rb;
     private Vector3 direction = new Vector3(0, 0, 1);
     private Camera mainCam;
     private bool isGrounded;
+    private bool canMove = true; 
     
     // Tracks if dialog was open in the previous frame
     private bool _wasDialogActive = false;
@@ -55,6 +58,13 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if (model.transform.forward != direction)
+        {
+            model.transform.rotation = Quaternion.RotateTowards(model.transform.rotation, Quaternion.LookRotation(direction, Vector3.up), 1080f * Time.deltaTime);
+        }
+
+        if (!canMove) return;
+
         // --- Below here is your normal movement/jump ---
 
         // Ground check
@@ -74,10 +84,6 @@ public class PlayerMovement : MonoBehaviour
         if (moveDir != Vector3.zero)
         {
             direction = moveDir;
-        }
-        if (transform.forward != direction)
-        {
-            transform.forward = Vector3.RotateTowards(transform.forward, direction, Mathf.Deg2Rad * 1080 * Time.deltaTime, 0);
         }
 
         // Running
@@ -99,4 +105,9 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
+
+    public void SetDirection(Vector3 direction)
+    { this.direction = Vector3.Normalize(direction); }
+    public void SetCanMove(bool b)
+    { canMove = b; }
 }

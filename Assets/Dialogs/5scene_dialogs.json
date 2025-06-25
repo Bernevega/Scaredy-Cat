@@ -9,11 +9,64 @@
       },
       "boo2": {
         "speaker": "Oyen",
-        "text": "…I think that might have to wait for a bit, Kitty… There is something I need you to see.",
+        "text": "...I think that might have to wait for a bit, Kitty... There is something I need you to see.",
+        "next": null
+      }
+    }
+  },
+  "AlexanderMGrave": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Gravestone",
+        "text": "Alexander Meowsington\n1755-1804\nDied in a duel with Aaron Purr",
+        "next": null
+      }
+    }
+  },
+  "PurrcificaWGrave": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Gravestone",
+        "text": "Purrcifica Whiskers\n1905-1932\nDied to an explosive egg",
+        "next": null
+      }
+    }
+  },
+  "OyenOJGrave": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Gravestone",
+        "text": "Oyen Orange-Juice\n2012-2022\nDied by choking on friendship beads",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "Oyen..? Is that...",
+        "next": null
+      }
+    }
+  },
+  "OyenOJGrave2": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Gravestone",
+        "text": "Oyen Orange-Juice\n2012-2022\nDied by choking on friendship beads",
+        "next": null
+      }
+    }
+  },
+  "MomCall": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "MOMMA, I'M HERE!!!",
         "next": null
       }
     }
   }
-
-
 }
