@@ -1028,16 +1028,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eff81d34fd6b4644997eecd2dda73f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1.2
-  runMultiplier: 2
-  jumpForce: 3.2
-  groundCheck: {fileID: 3306576882529241225}
-  groundDistance: 0.5
+  speed: 1
+  runMultiplier: 1.5
+  jumpForce: 3
   groundMask:
     serializedVersion: 2
     m_Bits: 8
   model: {fileID: 4342455666290620579}
   blockRightMovement: 0
+  blockJump: 0
+  blockSprint: 0
 --- !u!65 &3100652151565243510
 BoxCollider:
   m_ObjectHideFlags: 0

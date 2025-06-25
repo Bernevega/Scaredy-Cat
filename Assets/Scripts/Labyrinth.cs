@@ -1,3 +1,4 @@
+// Labyrinth.cs
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -41,9 +42,21 @@ public class Labyrinth : MonoBehaviour
         {
             isPlayerInside = true;
 
+            // Block jumping & sprinting while inside
+            var pm = other.GetComponent<PlayerMovement>();
+            if (pm != null)
+            {
+                pm.blockJump = true;
+                pm.blockSprint = true;
+            }
+
+            // Stop any ongoing fade-out and timer
             if (vignetteFadeOutCoroutine != null)
                 StopCoroutine(vignetteFadeOutCoroutine);
+            if (timerCoroutine != null)
+                StopCoroutine(timerCoroutine);
 
+            // Reset visuals
             vignetteEffect.intensity.value = 0f;
             volume.weight = 0f;
 
@@ -53,14 +66,24 @@ public class Labyrinth : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && timerCoroutine != null)
+        if (other.CompareTag("Player"))
         {
             isPlayerInside = false;
 
-            StopCoroutine(timerCoroutine);
-            timerCoroutine = null;
+            // Unblock jumping & sprinting on exit
+            var pm = other.GetComponent<PlayerMovement>();
+            if (pm != null)
+            {
+                pm.blockJump = false;
+                pm.blockSprint = false;
+            }
 
-            vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
+            if (timerCoroutine != null)
+            {
+                StopCoroutine(timerCoroutine);
+                timerCoroutine = null;
+                vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
+            }
         }
     }
 
@@ -75,7 +98,7 @@ public class Labyrinth : MonoBehaviour
             yield return null;
         }
 
-        // Increase vignette intensity
+        // Increase vignette intensity over triggerTime
         while (elapsed < triggerTime)
         {
             if (!isPlayerInside) yield break;
@@ -88,28 +111,32 @@ public class Labyrinth : MonoBehaviour
 
         yield return StartCoroutine(FadeIn());
 
-        // ✅ Ensure respawn works correctly
+        // Respawn
         if (spawnPoint != null)
             player.transform.position = spawnPoint.position;
         else
             Debug.LogWarning("Spawn point not assigned!");
 
         ResetEffects();
-
         yield return StartCoroutine(FadeOut());
     }
 
     IEnumerator FadeOutVignetteSmoothly()
     {
-        float start = vignetteEffect.intensity.value;
-
+        // Smoothly ramp intensity back to zero
         while (vignetteEffect.intensity.value > 0f)
         {
             vignetteEffect.intensity.value -= Time.deltaTime * vignetteFadeOutSpeed;
-            vignetteEffect.intensity.value = Mathf.Max(vignetteEffect.intensity.value, 0f);
             yield return null;
         }
+        vignetteEffect.intensity.value = 0f;
 
+        // And lower the volume
+        while (volume.weight > 0f)
+        {
+            volume.weight -= Time.deltaTime / 0.5f;
+            yield return null;
+        }
         volume.weight = 0f;
     }
 
@@ -124,7 +151,6 @@ public class Labyrinth : MonoBehaviour
             fadeImage.color = c;
             yield return null;
         }
-        fadeImage.color = new Color(c.r, c.g, c.b, 1f);
     }
 
     IEnumerator FadeOut()
@@ -138,15 +164,38 @@ public class Labyrinth : MonoBehaviour
             fadeImage.color = c;
             yield return null;
         }
-        fadeImage.color = new Color(c.r, c.g, c.b, 0f);
     }
 
     void ResetEffects()
     {
         if (vignetteEffect != null)
             vignetteEffect.intensity.value = 0f;
-
         if (volume != null)
             volume.weight = 0f;
+    }
+
+    // Called by LightPart to pause & smoothly fade out the timer/vignette
+    public void PauseFadeTimer()
+    {
+        if (timerCoroutine != null)
+        {
+            StopCoroutine(timerCoroutine);
+            timerCoroutine = null;
+        }
+        if (vignetteFadeOutCoroutine != null)
+            StopCoroutine(vignetteFadeOutCoroutine);
+
+        vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
+    }
+
+    // Called by LightPart to restart the fade timer from zero
+    public void ResumeFadeTimer(GameObject player)
+    {
+        if (isPlayerInside && timerCoroutine == null)
+        {
+            vignetteEffect.intensity.value = 0f;
+            volume.weight = 0f;
+            timerCoroutine = StartCoroutine(TriggerTimer(player));
+        }
     }
 }

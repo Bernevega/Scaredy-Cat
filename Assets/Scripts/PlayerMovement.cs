@@ -1,8 +1,9 @@
+// PlayerMovement.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -18,46 +19,65 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject model;
 
     [HideInInspector] public bool blockRightMovement = false;
+    [HideInInspector] public bool blockJump = false;  
+    [HideInInspector] public bool blockSprint = false;
 
     private Rigidbody rb;
-    private Vector3 direction = new Vector3(0, 0, 1);
     private Camera mainCam;
+<<<<<<< Updated upstream
     private bool isGrounded;
     private bool canMove = true; 
     
     // Tracks if dialog was open in the previous frame
+=======
+    private Vector3 direction = Vector3.forward;
+    private bool isGrounded = false;
+>>>>>>> Stashed changes
     private bool _wasDialogActive = false;
+    private bool hasJumped = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-
         mainCam = Camera.main;
+
+        // Zero‐friction so the player slides along walls
+        Collider col = GetComponent<Collider>();
+        var slideMat = new PhysicsMaterial("SlideMat")
+        {
+            staticFriction = 0f,
+            dynamicFriction = 0f,
+            frictionCombine = PhysicsMaterialCombine.Minimum
+        };
+        col.material = slideMat;
     }
 
     void Update()
     {
-        // 1) See if dialog is up right now
+        // 1) Dialog check
         var dialogMgr = SimpleDialogManager.Instance;
         bool dialogActive = dialogMgr != null
                             && dialogMgr.dialogPanel != null
                             && dialogMgr.dialogPanel.activeSelf;
 
-        // 2) If dialog is active, mark that and bail out
         if (dialogActive)
         {
             _wasDialogActive = true;
+            // Stop any residual horizontal movement when dialog opens
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
             return;
         }
 
-        // 3) If dialog just closed this frame, skip this Update entirely
         if (_wasDialogActive)
         {
             _wasDialogActive = false;
+            // Ensure no lingering horizontal velocity after dialog closes
+            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
             return;
         }
 
+<<<<<<< Updated upstream
         if (model.transform.forward != direction)
         {
             model.transform.rotation = Quaternion.RotateTowards(model.transform.rotation, Quaternion.LookRotation(direction, Vector3.up), 1080f * Time.deltaTime);
@@ -68,9 +88,14 @@ public class PlayerMovement : MonoBehaviour
         // --- Below here is your normal movement/jump ---
 
         // Ground check
+=======
+        // 2) Ground check
+>>>>>>> Stashed changes
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (isGrounded)
+            hasJumped = false;
 
-        // Read inputs
+        // 3) Read inputs
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveZ = Input.GetAxisRaw("Vertical");
 
@@ -78,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
         if (blockRightMovement && moveX > 0f)
             moveX = 0f;
 
+<<<<<<< Updated upstream
         Vector3 cameraXZ = new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z).normalized;
         Vector3 cameraXZRight = Vector3.Cross(Vector3.up, cameraXZ);
         Vector3 moveDir = (cameraXZ * moveZ + cameraXZRight * moveX).normalized;
@@ -85,24 +111,31 @@ public class PlayerMovement : MonoBehaviour
         {
             direction = moveDir;
         }
+=======
+        // Calculate movement direction relative to camera
+        Vector3 camF = new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z).normalized;
+        Vector3 camR = Vector3.Cross(Vector3.up, camF);
+        Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
+>>>>>>> Stashed changes
 
-        // Running
+        if (moveDir != Vector3.zero)
+            direction = moveDir;
+        transform.forward = Vector3.RotateTowards(transform.forward, direction, Mathf.Deg2Rad * 1080f * Time.deltaTime, 0f);
+
+        // 4) Sprint (blocked in labyrinth)
         float currentSpeed = speed;
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && !blockSprint)
             currentSpeed *= runMultiplier;
 
-        // Apply velocity
-        Vector3 targetVel = new Vector3(moveDir.x * currentSpeed,
-                                        rb.linearVelocity.y,
-                                        moveDir.z * currentSpeed);
-        rb.linearVelocity = targetVel;
+        // 5) Apply horizontal movement, preserve vertical velocity
+        rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
 
-        // Jump (will never fire on the same frame the dialog closed)
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        // 6) Jump (only once until grounded again)
+        if (!blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
         {
-            // reset y‐velocity then impulse
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            hasJumped = true;
         }
     }
 

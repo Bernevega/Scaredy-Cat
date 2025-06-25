@@ -193,6 +193,9 @@ public class Crow : MonoBehaviour
         {
             dialogueState = DialogueState.FirstMonocleWait;
             SimpleDialogManager.Instance.StartDialogue("CrowFirstTalk");
+            // Disable the bust (bush) once the first dialogue starts
+            if (bushObject != null)
+                bushObject.SetActive(false);
         }
         else
         {
