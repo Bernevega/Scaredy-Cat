@@ -68,5 +68,30 @@
         "next": null
       }
     }
+  },
+  "GoodbyeDialogue": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Oyen",
+        "text": "Are you brave enough to say goodbye, Kitty?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "...Yeah.",
+        "next": null
+      }
+    }
+  },
+  "FinalTitleDrop": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "I'm not a scaredy cat anymore.",
+        "next": null
+      }
+    }
   }
 }

@@ -31,6 +31,9 @@ public class GraveyardCutscene : MonoBehaviour
         Idle,
         FirstCameraPan,
         KittyOyenWalk1,
+        KittyPlaceFlower,
+        KittyPlaceFlower2,
+        KittyOyenWalkOff,
     }
 
     CameraState camState = CameraState.Idle;
@@ -41,6 +44,11 @@ public class GraveyardCutscene : MonoBehaviour
         mainCam = Camera.main;
         camFollow = mainCam.GetComponent<CameraFollow>();
         triggerCollider = GetComponent<Collider>();
+    }
+
+    private void Start()
+    {
+        SimpleDialogManager.Instance.eventDialogueChanged += OnDialogueAdvance;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -68,6 +76,15 @@ public class GraveyardCutscene : MonoBehaviour
             case CutsceneState.KittyOyenWalk1:
                 KittyOyenWalk1State(); 
                 break;
+            case CutsceneState.KittyPlaceFlower:
+                KittyPlaceFlowerState();
+                break;
+            case CutsceneState.KittyPlaceFlower2:
+                KittyPlaceFlower2State();
+                break;
+            case CutsceneState.KittyOyenWalkOff:
+                KittyOyenWalkOffState();
+                break;
         }
     }
 
@@ -83,7 +100,8 @@ public class GraveyardCutscene : MonoBehaviour
             camState = CameraState.Idle;
             cutState = CutsceneState.KittyOyenWalk1;
 
-            player.transform.position = kittyWaypoints[0].position;
+            
+            player.GetComponent<Rigidbody>().MovePosition(kittyWaypoints[0].position);
             player.SetDirection((kittyWaypoints[1].position - player.transform.position).normalized);
 
             oyen.transform.position = oyenWaypoints[0].position;
@@ -97,10 +115,13 @@ public class GraveyardCutscene : MonoBehaviour
     {
         if (kittyStep < 2 && player.transform.position != kittyWaypoints[kittyStep].position)
         {
+            if (kittyStep == 0)
+                player.transform.position = kittyWaypoints[kittyStep].position;
+            else
             player.transform.position =
                 Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
         }
-        else
+        else if (kittyStep < 2)
         {
             if (kittyStep == 1)
             {
@@ -120,7 +141,7 @@ public class GraveyardCutscene : MonoBehaviour
             oyen.transform.position =
                 Vector3.MoveTowards(oyen.transform.position, oyenWaypoints[oyenStep].position, 1f * Time.deltaTime);
         }
-        else
+        else if (oyenStep < 3)
         {
             if (oyenStep == 2)
             {
@@ -136,8 +157,137 @@ public class GraveyardCutscene : MonoBehaviour
 
         if (oyenStep == 3 && kittyStep == 2)
         {
-            Debug.Log("OYEN STEP AND KITTY STEP IS 1");
             cutState = CutsceneState.Idle;
+            Invoke("KittyOyenWalkWait", 1f);
+        }
+    }
+
+    private void KittyOyenWalkWait()
+    {
+        SimpleDialogManager.Instance.StartDialogue("GoodbyeDialogue");
+        cutState = CutsceneState.Idle;
+    }
+
+    private void TransitionToKittyPlaceFlower()
+    {
+        cutState = CutsceneState.KittyPlaceFlower;
+        if (kittyStep - 1 > 0)
+        {
+            player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep - 1].position).normalized);
+        }
+    }
+
+    private void KittyPlaceFlowerState()
+    {
+        if (player.transform.position != kittyWaypoints[kittyStep].position)
+        {
+            player.transform.position =
+                Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
+        }
+        else
+        {
+            player.SetDirection(kittyWaypoints[kittyStep].forward);
+            cutState = CutsceneState.Idle;
+            Invoke("KittyFlowerPlace2StateTransition", 1f);
+
+            kittyStep++;
+        }
+    }
+
+    private void KittyFlowerPlace2StateTransition()
+    {
+        cutState = CutsceneState.KittyPlaceFlower2;
+        if (kittyStep - 1 > 0)
+        {
+            player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep - 1].position).normalized);
+        }
+    }
+
+    private void KittyPlaceFlower2State()
+    {
+        if (player.transform.position != kittyWaypoints[kittyStep].position)
+        {
+            player.transform.position =
+                Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
+        }
+        else
+        {
+            player.SetDirection(kittyWaypoints[kittyStep].forward);
+            cutState = CutsceneState.Idle;
+            Invoke("SayTitleDrop", 1f);
+
+            kittyStep++;
+        }
+    }
+
+    private void KittyOyenWalkOffState()
+    {
+        if (kittyStep < kittyWaypoints.Length && player.transform.position != kittyWaypoints[kittyStep].position)
+        {
+            player.transform.position =
+                Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
+        }
+        else if (kittyStep < kittyWaypoints.Length)
+        {
+            if (kittyStep + 1 < kittyWaypoints.Length)
+                player.SetDirection((kittyWaypoints[kittyStep + 1].position - kittyWaypoints[kittyStep].position).normalized);
+            
+            kittyStep++;
+
+            if (kittyStep == kittyWaypoints.Length)
+                player.SetDirection(kittyWaypoints[^1].forward);
+        }
+
+        // Oyen Movement
+        if (oyenStep < oyenWaypoints.Length && oyen.transform.position != oyenWaypoints[oyenStep].position)
+        {
+            oyen.transform.position =
+                Vector3.MoveTowards(oyen.transform.position, oyenWaypoints[oyenStep].position, 1f * Time.deltaTime);
+        }
+        else if (oyenStep < oyenWaypoints.Length)
+        {
+            if (oyenStep + 1 < oyenWaypoints.Length)
+            {
+                oyen.targetDirection = (oyenWaypoints[oyenStep + 1].position - oyenWaypoints[oyenStep].position).normalized;
+            }
+
+            oyenStep++;
+
+            if (oyenStep == oyenWaypoints.Length)
+            {
+                oyen.targetDirection = oyenWaypoints[^1].forward;
+            }
+        }
+        
+        if (kittyStep == kittyWaypoints.Length &&
+            oyenStep == oyenWaypoints.Length)
+        {
+            cutState = CutsceneState.Idle;
+        }
+    }
+
+    private void SayTitleDrop()
+    {
+        SimpleDialogManager.Instance.StartDialogue("FinalTitleDrop");
+    }
+
+    private void OnDialogueAdvance(string sceneID, string currentKey)
+    {
+        if (sceneID == "GoodbyeDialogue")
+        {
+            if (currentKey == null)
+            {
+                TransitionToKittyPlaceFlower();
+            }
+        }
+        else if (sceneID == "FinalTitleDrop")
+        {
+            if (currentKey == null)
+            {
+                player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep].position).normalized);
+                oyen.targetDirection = (oyenWaypoints[oyenStep].position - oyenWaypoints[oyenStep].position).normalized;
+                cutState = CutsceneState.KittyOyenWalkOff;
+            }
         }
     }
 }
