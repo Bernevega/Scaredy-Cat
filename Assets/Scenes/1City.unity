@@ -124,6 +124,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6222036381167161601, guid: 84787b68efea3fa42a63b45ef1c72cc0, type: 3}
   m_PrefabInstance: {fileID: 2786076672505948401}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &65482823 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3306576882529241225, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+  m_PrefabInstance: {fileID: 290229417}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &104229791 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5618343741330012172, guid: 3556b8795a40ce048b2a02099eabb40f, type: 3}
@@ -271,6 +276,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8825587145721537332, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 65482823}
     - target: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.297
@@ -394,7 +403,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -756,7 +765,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: df239e5d015599647a8e5d23201e56c2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -869,7 +878,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1193,7 +1202,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 91863d30f71675a4abf59cdffc9539ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1347,7 +1356,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1382,6 +1391,125 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6961392463624246220, guid: 84787b68efea3fa42a63b45ef1c72cc0, type: 3}
   m_PrefabInstance: {fileID: 2786076672505948401}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1087583660
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1087583663}
+  - component: {fileID: 1087583662}
+  - component: {fileID: 1087583661}
+  m_Layer: 0
+  m_Name: WeatherManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1087583661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087583660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d51a812d712c649bdb962dd6a598d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cloudCoverage: 0.45
+  cloudScale: 0.47
+  cloudChange: 0.01
+  cloudMovement: {x: -0.1, y: 0.01}
+  cloudStep: {x: 10, y: 10}
+  shades: 100
+  cloudStrength: 3.5
+  brightness: 80
+  miminumDarkness: 0.6
+  Materials:
+  - {fileID: 2100000, guid: d50a40cb47ec86444b898d9121bbe0f7, type: 2}
+  - {fileID: 2100000, guid: a194cb4ce6027c246af528b83b728a15, type: 2}
+  - {fileID: 2100000, guid: 77d84437c100f274aad603219110357d, type: 2}
+  - {fileID: 2100000, guid: 479e9a9d893b1ec48909c98262d08324, type: 2}
+  - {fileID: 2100000, guid: 460e6d5cb2d4c42419ff7a31f9e3f82c, type: 2}
+  - {fileID: 2100000, guid: 1bc542ca95527c44293bbc98b9a519f2, type: 2}
+  - {fileID: 2100000, guid: 6f362eb575a274c4aa0e43fb37098c4f, type: 2}
+  - {fileID: 2100000, guid: 91863d30f71675a4abf59cdffc9539ab, type: 2}
+  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
+  - {fileID: 2100000, guid: 719df871080742445b86937d1b9977c9, type: 2}
+  - {fileID: 2100000, guid: 669b1bc48c1bc8c4cbba4d86cb8a68f6, type: 2}
+  - {fileID: 2100000, guid: df239e5d015599647a8e5d23201e56c2, type: 2}
+  - {fileID: 2100000, guid: 5a36b2bc5eacb6b4a9bb2802c2da017f, type: 2}
+  overrideMatValues: 1
+  cookieClouds: 0
+  additionalCookieSize: {x: 20, y: 20}
+--- !u!114 &1087583662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087583660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d353f47f283f7b546ac9ab70625dfeb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightColor: {r: 1, g: 0.5513562, b: 0, a: 0}
+  lightStrength: 0.4
+  lightRamps: 5
+  fadeStart: 0.4
+  fadeStrength: 0.33
+  directionalFading: 1
+  shadowStrength: 0.6
+  shadowRamps: 5
+  directionalDisappearance: 0.32
+  cloudAreaNearClipPlane: 1
+  cloudAreaFarClipPlane: 2.36
+  showCloudAreaInEditor: 1
+  shadowMarchStepSize: 0.18
+  shadowMarchSteps: 48
+  cloudDataResolution: 700
+  autoApplySettings: 1
+  _preComputedCloudTexture: {fileID: 0}
+  cloudDataTexture: {fileID: 0}
+  godrayMat: {fileID: 0}
+  cloudDataWriterMat: {fileID: 0}
+  mainCamera: {fileID: 0}
+  mainLightTrans: {fileID: 0}
+  anchorTrans: {fileID: 0}
+  planeOrigo: {x: 0, y: 0, z: 0}
+  cloudMovement: {x: 0, y: 0}
+  cloudStep: {x: 0, y: 0}
+  planeWidthWorldUnits: 0
+  planeHeightWorldUnits: 0
+  screenWidthWorldUnits: 0
+  screenHeightWorldUnits: 0
+  cloudCoverage: 0
+  cloudScale: 0
+  cloudChange: 0
+  dataWriterMultiplier: 2.7
+  dataWriterAdditive: 0
+  brightness: 0.25
+--- !u!4 &1087583663
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087583660}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.748898, y: -15.04199, z: 11.371826}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1109238566
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,7 +1978,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2144,7 +2272,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2268,7 +2396,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2949,6 +3077,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1525894187473177350, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
+      propertyPath: m_RendererIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1525894187473177350, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4203837595240964730, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.25
@@ -3127,3 +3263,4 @@ SceneRoots:
   - {fileID: 9033446319151892686}
   - {fileID: 316359179}
   - {fileID: 1517194864}
+  - {fileID: 1087583663}

@@ -1,4 +1,3 @@
-// Labyrinth.cs
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -10,7 +9,7 @@ public class Labyrinth : MonoBehaviour
     [Header("References")]
     public Transform spawnPoint;
     public Image fadeImage;
-    public Volume volume; // Reference to the Volume component directly
+    public Volume volume; // Leave this alone now
 
     [Header("Settings")]
     public float fadeDuration = 1f;
@@ -25,14 +24,12 @@ public class Labyrinth : MonoBehaviour
 
     void Start()
     {
-        if (volume != null)
+        // Grab the Vignette from the profile and disable it initially
+        if (volume != null && volume.profile.TryGet(out Vignette v))
         {
-            volume.weight = 0f;
-            if (volume.profile.TryGet(out Vignette vignette))
-            {
-                vignetteEffect = vignette;
-                vignetteEffect.intensity.value = 0f;
-            }
+            vignetteEffect = v;
+            vignetteEffect.intensity.value = 0f;
+            vignetteEffect.active = false;
         }
     }
 
@@ -43,22 +40,19 @@ public class Labyrinth : MonoBehaviour
             isPlayerInside = true;
 
             // Block jumping & sprinting while inside
-            var pm = other.GetComponent<PlayerMovement>();
-            if (pm != null)
+            if (other.TryGetComponent<PlayerMovement>(out var pm))
             {
                 pm.blockJump = true;
                 pm.blockSprint = true;
             }
 
-            // Stop any ongoing fade-out and timer
-            if (vignetteFadeOutCoroutine != null)
-                StopCoroutine(vignetteFadeOutCoroutine);
-            if (timerCoroutine != null)
-                StopCoroutine(timerCoroutine);
+            // Stop any fades/timers
+            if (vignetteFadeOutCoroutine != null) StopCoroutine(vignetteFadeOutCoroutine);
+            if (timerCoroutine != null) StopCoroutine(timerCoroutine);
 
-            // Reset visuals
+            // Reset vignette
             vignetteEffect.intensity.value = 0f;
-            volume.weight = 0f;
+            vignetteEffect.active = true;
 
             timerCoroutine = StartCoroutine(TriggerTimer(other.gameObject));
         }
@@ -66,18 +60,18 @@ public class Labyrinth : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && vignetteEffect != null)
         {
             isPlayerInside = false;
 
             // Unblock jumping & sprinting on exit
-            var pm = other.GetComponent<PlayerMovement>();
-            if (pm != null)
+            if (other.TryGetComponent<PlayerMovement>(out var pm))
             {
                 pm.blockJump = false;
                 pm.blockSprint = false;
             }
 
+            // Stop the timer and fade the vignette out
             if (timerCoroutine != null)
             {
                 StopCoroutine(timerCoroutine);
@@ -91,14 +85,7 @@ public class Labyrinth : MonoBehaviour
     {
         float elapsed = 0f;
 
-        // Gradually enable volume weight
-        while (volume.weight < 1f)
-        {
-            volume.weight += Time.deltaTime / 0.5f;
-            yield return null;
-        }
-
-        // Increase vignette intensity over triggerTime
+        // Ramp up vignette intensity over triggerTime
         while (elapsed < triggerTime)
         {
             if (!isPlayerInside) yield break;
@@ -109,6 +96,7 @@ public class Labyrinth : MonoBehaviour
             yield return null;
         }
 
+        // Full-screen fade to black
         yield return StartCoroutine(FadeIn());
 
         // Respawn
@@ -117,7 +105,10 @@ public class Labyrinth : MonoBehaviour
         else
             Debug.LogWarning("Spawn point not assigned!");
 
-        ResetEffects();
+        // Reset vignette immediately before fading back in
+        vignetteEffect.intensity.value = 0f;
+        vignetteEffect.active = false;
+
         yield return StartCoroutine(FadeOut());
     }
 
@@ -129,15 +120,9 @@ public class Labyrinth : MonoBehaviour
             vignetteEffect.intensity.value -= Time.deltaTime * vignetteFadeOutSpeed;
             yield return null;
         }
-        vignetteEffect.intensity.value = 0f;
 
-        // And lower the volume
-        while (volume.weight > 0f)
-        {
-            volume.weight -= Time.deltaTime / 0.5f;
-            yield return null;
-        }
-        volume.weight = 0f;
+        vignetteEffect.intensity.value = 0f;
+        vignetteEffect.active = false;
     }
 
     IEnumerator FadeIn()
@@ -166,14 +151,6 @@ public class Labyrinth : MonoBehaviour
         }
     }
 
-    void ResetEffects()
-    {
-        if (vignetteEffect != null)
-            vignetteEffect.intensity.value = 0f;
-        if (volume != null)
-            volume.weight = 0f;
-    }
-
     // Called by LightPart to pause & smoothly fade out the timer/vignette
     public void PauseFadeTimer()
     {
@@ -194,7 +171,7 @@ public class Labyrinth : MonoBehaviour
         if (isPlayerInside && timerCoroutine == null)
         {
             vignetteEffect.intensity.value = 0f;
-            volume.weight = 0f;
+            vignetteEffect.active = true;
             timerCoroutine = StartCoroutine(TriggerTimer(player));
         }
     }
