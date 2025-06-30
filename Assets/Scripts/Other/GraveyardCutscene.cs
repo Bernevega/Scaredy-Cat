@@ -34,6 +34,7 @@ public class GraveyardCutscene : MonoBehaviour
         KittyPlaceFlower,
         KittyPlaceFlower2,
         KittyOyenWalkOff,
+        SecondCameraPan,
     }
 
     CameraState camState = CameraState.Idle;
@@ -59,7 +60,9 @@ public class GraveyardCutscene : MonoBehaviour
         camState = CameraState.Moving;
 
         player = PlayerManager.instance.player.GetComponent<PlayerMovement>();
-        player.GetComponent<Rigidbody>().isKinematic = true;
+        Rigidbody playerRb = player.GetComponent<Rigidbody>();
+        playerRb.linearVelocity = new Vector3(0, playerRb.linearVelocity.y, 0);
+
         player.speed = 0f;
 
         cutsceneActivated = true;
@@ -85,6 +88,9 @@ public class GraveyardCutscene : MonoBehaviour
             case CutsceneState.KittyOyenWalkOff:
                 KittyOyenWalkOffState();
                 break;
+            case CutsceneState.SecondCameraPan:
+                SecondCameraPanState();
+                break;
         }
     }
 
@@ -100,7 +106,10 @@ public class GraveyardCutscene : MonoBehaviour
             camState = CameraState.Idle;
             cutState = CutsceneState.KittyOyenWalk1;
 
+            Rigidbody playerRb = player.GetComponent<Rigidbody>();
+            playerRb.isKinematic = true;
             
+
             player.GetComponent<Rigidbody>().MovePosition(kittyWaypoints[0].position);
             player.SetDirection((kittyWaypoints[1].position - player.transform.position).normalized);
 
@@ -262,7 +271,43 @@ public class GraveyardCutscene : MonoBehaviour
         if (kittyStep == kittyWaypoints.Length &&
             oyenStep == oyenWaypoints.Length)
         {
-            cutState = CutsceneState.Idle;
+            cutState = CutsceneState.SecondCameraPan;
+        }
+    }
+
+    private void SecondCameraPanState()
+    {
+        bool positionReached = false;
+        bool rotationReached = false;
+        if (mainCam.transform.position != cameraWaypoints[cameraStep].position)
+        {
+            mainCam.transform.position =
+                Vector3.MoveTowards(mainCam.transform.position, cameraWaypoints[cameraStep].position, 0.2f * Time.deltaTime);
+        }
+        else
+        {
+            positionReached = true;
+        }
+
+        if (mainCam.transform.rotation != cameraWaypoints[cameraStep].rotation)
+        {
+            mainCam.transform.rotation =
+                Quaternion.Lerp(
+                    cameraWaypoints[cameraStep - 1].rotation,
+                    cameraWaypoints[cameraStep].rotation,
+                    1 - ((cameraWaypoints[cameraStep].position - mainCam.transform.position).sqrMagnitude /
+                    (cameraWaypoints[cameraStep].position - cameraWaypoints[cameraStep - 1].position).sqrMagnitude)
+                );
+        }
+        else
+        {
+            rotationReached = true;
+        }
+
+        if (rotationReached &&
+            positionReached)
+        {
+            cutState |= CutsceneState.Idle;
         }
     }
 
@@ -284,8 +329,8 @@ public class GraveyardCutscene : MonoBehaviour
         {
             if (currentKey == null)
             {
-                player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep].position).normalized);
-                oyen.targetDirection = (oyenWaypoints[oyenStep].position - oyenWaypoints[oyenStep].position).normalized;
+                player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep - 1].position).normalized);
+                oyen.targetDirection = (oyenWaypoints[oyenStep].position - oyenWaypoints[oyenStep - 1].position).normalized;
                 cutState = CutsceneState.KittyOyenWalkOff;
             }
         }
