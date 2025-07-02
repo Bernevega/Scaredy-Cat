@@ -113,13 +113,6 @@ public class GraveyardCutscene : MonoBehaviour
 
             Rigidbody playerRb = player.GetComponent<Rigidbody>();
             playerRb.isKinematic = true;
-            
-
-            //player.GetComponent<Rigidbody>().MovePosition(kittyWaypoints[0].position);
-            //player.SetDirection((kittyWaypoints[1].position - player.transform.position).normalized);
-
-            //oyen.transform.position = oyenWaypoints[0].position;
-            //oyen.targetDirection = (oyenWaypoints[0].position - oyen.transform.position).normalized;
 
             cameraStep++;
         }
