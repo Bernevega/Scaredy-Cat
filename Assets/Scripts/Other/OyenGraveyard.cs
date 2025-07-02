@@ -11,6 +11,7 @@ public class OyenGraveyard : MonoBehaviour
     [SerializeField] Gravestone oyenGravestone;
 
     [SerializeField] Transform[] waypoints;
+    [SerializeField] GraveyardCutscene graveyardCutscene;
     int step = 0;
     float moveSpeed = 0.85f;
 
@@ -60,6 +61,10 @@ public class OyenGraveyard : MonoBehaviour
             case "OyenOJGrave":
                 OyenOJGraveDialogue(key);
                 break;
+            case "MomCall":
+                MomCallDialogue(key);
+                break;
+
         }
     }
 
@@ -104,9 +109,7 @@ public class OyenGraveyard : MonoBehaviour
             else if (step == 4)
             {
                 state = State.MomCatWalkWait;
-                PlayerManager pm = PlayerManager.instance;
-                PlayerMovement pmv = pm.player.GetComponent<PlayerMovement>();
-                pmv.speed = 1f;
+                
             }
             step++;
         }
@@ -134,6 +137,15 @@ public class OyenGraveyard : MonoBehaviour
             pmv.speed = 0;
 
             oyenGravestone.SetSceneID("OyenOJGrave2");
+            
+        }
+    }
+
+    private void MomCallDialogue(string key)
+    {
+        if (key == null)
+        {
+            graveyardCutscene.StartCutscene();
         }
     }
 }

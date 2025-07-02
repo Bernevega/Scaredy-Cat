@@ -54,6 +54,11 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        StartCutscene();
+    }
+
+    public void StartCutscene()
+    {
         triggerCollider.enabled = false;
         camFollow.enabled = false;
         cutState = CutsceneState.FirstCameraPan;
@@ -110,11 +115,11 @@ public class GraveyardCutscene : MonoBehaviour
             playerRb.isKinematic = true;
             
 
-            player.GetComponent<Rigidbody>().MovePosition(kittyWaypoints[0].position);
-            player.SetDirection((kittyWaypoints[1].position - player.transform.position).normalized);
+            //player.GetComponent<Rigidbody>().MovePosition(kittyWaypoints[0].position);
+            //player.SetDirection((kittyWaypoints[1].position - player.transform.position).normalized);
 
-            oyen.transform.position = oyenWaypoints[0].position;
-            oyen.targetDirection = (oyenWaypoints[0].position - oyen.transform.position).normalized;
+            //oyen.transform.position = oyenWaypoints[0].position;
+            //oyen.targetDirection = (oyenWaypoints[0].position - oyen.transform.position).normalized;
 
             cameraStep++;
         }
@@ -124,9 +129,6 @@ public class GraveyardCutscene : MonoBehaviour
     {
         if (kittyStep < 2 && player.transform.position != kittyWaypoints[kittyStep].position)
         {
-            if (kittyStep == 0)
-                player.transform.position = kittyWaypoints[kittyStep].position;
-            else
             player.transform.position =
                 Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
         }
@@ -140,7 +142,7 @@ public class GraveyardCutscene : MonoBehaviour
             {
                 player.SetDirection((kittyWaypoints[kittyStep + 1].position - kittyWaypoints[kittyStep].position).normalized);
             }
-
+            
             kittyStep++;
         }
 
@@ -333,6 +335,43 @@ public class GraveyardCutscene : MonoBehaviour
                 oyen.targetDirection = (oyenWaypoints[oyenStep].position - oyenWaypoints[oyenStep - 1].position).normalized;
                 cutState = CutsceneState.KittyOyenWalkOff;
             }
+        }
+    }
+
+    private float Waypoint_GetSqrMagnitude(Vector3 origin, Vector3 target)
+    {
+        return (target - origin).sqrMagnitude;
+    }
+
+    private Vector3 Waypoint_GetDirectionTo(Vector3 origin, Vector3 target)
+    {
+        return (origin - target).normalized;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+        for (int i = 0; i < kittyWaypoints.Length; i++)
+        {
+            Gizmos.DrawSphere(kittyWaypoints[i].position, 0.075f);
+            Gizmos.DrawLine(kittyWaypoints[i].position, kittyWaypoints[i].position + kittyWaypoints[i].forward);
+        }
+
+        Gizmos.color = Color.red;
+
+        for (int i = 0; i < oyenWaypoints.Length; i++)
+        {
+            Gizmos.DrawSphere(oyenWaypoints[i].position, 0.075f);
+            Gizmos.DrawLine(oyenWaypoints[i].position, oyenWaypoints[i].position + oyenWaypoints[i].forward);
+        }
+
+        Gizmos.color = Color.cyan;
+
+        for (int i = 0; i < cameraWaypoints.Length; i++)
+        {
+            Gizmos.DrawSphere(cameraWaypoints[i].position, 0.075f);
+            Gizmos.DrawLine(cameraWaypoints[i].position, cameraWaypoints[i].position + cameraWaypoints[i].forward);
         }
     }
 }
