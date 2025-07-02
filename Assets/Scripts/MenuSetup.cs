@@ -5,11 +5,11 @@ using System.Collections;
 public class MenuSetup : MonoBehaviour
 {
     [Header("UI References")]
-    [Tooltip("The panel you want to slide")]
+    [Tooltip("The whole panel (title + company name) you want to slide")]
     public RectTransform uiElement;
     [Tooltip("The “Press any key” text")]
     public RectTransform pressAnyKeyText;
-    [Tooltip("Your 4 menu buttons (assign in Inspector)")]
+    [Tooltip("Your 4 menu button GameObjects (assign in Inspector)")]
     public GameObject[] buttons;
 
     [Header("Movement & Timing")]
@@ -26,12 +26,12 @@ public class MenuSetup : MonoBehaviour
 
     void Awake()
     {
-        // Ensure the PressAnyKey text has a CanvasGroup
-        _pressCG = pressAnyKeyText.gameObject.GetComponent<CanvasGroup>();
+        // Ensure the PressAnyKey text has a CanvasGroup for fading
+        _pressCG = pressAnyKeyText.GetComponent<CanvasGroup>();
         if (_pressCG == null)
             _pressCG = pressAnyKeyText.gameObject.AddComponent<CanvasGroup>();
 
-        // Ensure each button has a CanvasGroup
+        // Ensure each button has a CanvasGroup for fading
         _buttonCGs = new CanvasGroup[buttons.Length];
         for (int i = 0; i < buttons.Length; i++)
         {
@@ -43,7 +43,7 @@ public class MenuSetup : MonoBehaviour
 
     void Start()
     {
-        // Initial states
+        // “Press any key” visible; buttons hidden
         _pressCG.alpha = 1f;
         foreach (var cg in _buttonCGs)
         {
@@ -63,7 +63,7 @@ public class MenuSetup : MonoBehaviour
 
     IEnumerator DoTransition()
     {
-        // 1) Slide your panel & fade out “Press any key”
+        // 1) Slide panel & fade out “Press any key”
         Vector2 startPos = uiElement.anchoredPosition;
         float distance = Vector2.Distance(startPos, targetPosition);
         float duration = distance / slideSpeed;
@@ -77,7 +77,7 @@ public class MenuSetup : MonoBehaviour
             _pressCG.alpha = 1f - t;
             yield return null;
         }
-
+        // Finalize
         uiElement.anchoredPosition = targetPosition;
         _pressCG.alpha = 0f;
         pressAnyKeyText.gameObject.SetActive(false);
