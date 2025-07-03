@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8116722993917768676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5884706928401299637}
+  - component: {fileID: 716142102637216827}
+  m_Layer: 0
+  m_Name: DialogManager 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5884706928401299637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8116722993917768676}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.42538086, y: 0.43963346, z: 0.71499324}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &716142102637216827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8116722993917768676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f237bfc7f008a164ca5de4df0a6e10af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jsonFile: {fileID: 4900000, guid: f1ebeeba9f6edcf4ea96df0862b8c664, type: 3}
+  dialogPanel: {fileID: 0}
+  speakerNameText: {fileID: 0}
+  speakerIcon: {fileID: 0}
+  npcText: {fileID: 0}
+  playerText: {fileID: 0}
+  momCatSprite: {fileID: 21300000, guid: 4d781ef6dc470ba47aa39c01fbef9dc6, type: 3}
+  kittySprite: {fileID: 21300000, guid: 823628af9ccfa7a489b6ba1d317d7599, type: 3}
+  tireSprite: {fileID: 21300000, guid: 06f8ec5699dbc6b48a16446bb48b2ef6, type: 3}
+  ydnaSprite: {fileID: 21300000, guid: 48d014421b3256d49923e828a6c5f729, type: 3}
+  oliverSprite: {fileID: 21300000, guid: 5bda5d667d29ebf4eacab869c2831912, type: 3}
+  groupFriendsSprite: {fileID: 21300000, guid: b24f1090f9523d141bb50855882b996b, type: 3}
+  crowSprite: {fileID: 21300000, guid: fa1a480a073aff34b8000463136fdb4f, type: 3}
+  assylaSprite: {fileID: 21300000, guid: e40462e62ed47a0419b105c9c187b4df, type: 3}
+  johnDanielSprite: {fileID: 21300000, guid: 4823e49b1db544449affb57b640bf344, type: 3}
+  mangleSprite: {fileID: 21300000, guid: a9d87d3fc0f66f8428ef721e9f9cf1f1, type: 3}
+  nSprite: {fileID: 21300000, guid: 6913e7b4c12b0104b92a2d5a53415a95, type: 3}
+  chicaSprite: {fileID: 21300000, guid: 264d2a1e215df2242b96640f3ecd71d3, type: 3}

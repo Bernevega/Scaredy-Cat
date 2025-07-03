@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Newtonsoft.Json;
-using System;
 
-[System.Serializable]
+[Serializable]
 public class DialogNode
 {
     public string speaker;
@@ -13,7 +13,7 @@ public class DialogNode
     public string next;
 }
 
-[System.Serializable]
+[Serializable]
 public class DialogTree
 {
     public string start;
@@ -31,21 +31,14 @@ public class SimpleDialogManager : MonoBehaviour
     [Header("UI References")]
     [Tooltip("The parent panel (Canvas) for dialogue")]
     public GameObject dialogPanel;
-
     [Tooltip("TextMeshPro for showing the speaker’s name")]
     public TMP_Text speakerNameText;
-
     [Tooltip("Image component to display the speaker's icon")]
     public Image speakerIcon;
-
     [Tooltip("TextMeshPro for showing NPC lines (Mom Cat, Tire, Ydna, Oliver, etc.)")]
     public TMP_Text npcText;
-
     [Tooltip("TextMeshPro for showing Player (Kitty) lines")]
     public TMP_Text playerText;
-
-    // We no longer need a Continue button reference
-    // public Button continueButton;
 
     [Header("Speaker Portrait Sprites")]
     public Sprite momCatSprite;
@@ -56,15 +49,25 @@ public class SimpleDialogManager : MonoBehaviour
     public Sprite groupFriendsSprite;
     public Sprite crowSprite;
 
+    // New character sprites
+    public Sprite assylaSprite;
+    public Sprite johnDanielSprite;
+    public Sprite mangleSprite;
+    public Sprite nSprite;
+    public Sprite chicaSprite;
+    public Sprite oyenSprite;      // Added Oyen
+
     private Dictionary<string, DialogTree> allTrees;
     private DialogTree currentTree;
     private DialogNode currentNode;
     private string currentKey;
     private string currentTreeName;
 
-    // event that returns the <SceneID, CurrentKey> when dialogue starts, ends or is changed.
-    // Remember to unsubscribe when object is destroyed.
-    public Action<string, string> eventDialogueChanged; 
+    /// <summary>
+    /// Event invoked whenever dialogue starts, ends, or advances.
+    /// Parameters: sceneID, currentNodeKey (or null if dialogue ended)
+    /// </summary>
+    public Action<string, string> eventDialogueChanged;
 
     void Awake()
     {
@@ -72,47 +75,51 @@ public class SimpleDialogManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            Initialize();
         }
         else
         {
-            Instance.jsonFile = jsonFile;
-            Instance.dialogPanel = dialogPanel;
+            // Transfer references on duplicate
+            Instance.jsonFile        = jsonFile;
+            Instance.dialogPanel     = dialogPanel;
             Instance.speakerNameText = speakerNameText;
-            Instance.speakerIcon = speakerIcon;
-            Instance.npcText = npcText;
-            Instance.playerText = playerText;
+            Instance.speakerIcon     = speakerIcon;
+            Instance.npcText         = npcText;
+            Instance.playerText      = playerText;
+
+            // Transfer new sprites as well
+            Instance.assylaSprite       = assylaSprite;
+            Instance.johnDanielSprite   = johnDanielSprite;
+            Instance.mangleSprite       = mangleSprite;
+            Instance.nSprite            = nSprite;
+            Instance.chicaSprite        = chicaSprite;
+            Instance.oyenSprite         = oyenSprite;
+
             Instance.Initialize();
             Destroy(gameObject);
-            return;
         }
-
-        
-
-        Initialize();
-
-        // ▶ Remove button listener hookup
-        // continueButton.onClick.AddListener(OnContinuePressed);
     }
 
     public void Initialize()
     {
         if (allTrees != null)
-        {
             allTrees.Clear();
-        }
+
         allTrees = JsonConvert.DeserializeObject<Dictionary<string, DialogTree>>(jsonFile.text);
         dialogPanel.SetActive(false);
     }
 
     void Update()
     {
-        // Advance only on Space
-        if (dialogPanel != null && dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        if (dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
         {
             OnContinuePressed();
         }
     }
 
+    /// <summary>
+    /// Begin dialogue for a given sceneID (key in JSON).
+    /// </summary>
     public void StartDialogue(string sceneID)
     {
         if (!allTrees.ContainsKey(sceneID))
@@ -122,9 +129,10 @@ public class SimpleDialogManager : MonoBehaviour
         }
 
         currentTreeName = sceneID;
-        currentTree = allTrees[sceneID];
-        currentKey  = currentTree.start;
-        currentNode = currentTree.nodes[currentKey];
+        currentTree     = allTrees[sceneID];
+        currentKey      = currentTree.start;
+        currentNode     = currentTree.nodes[currentKey];
+
         dialogPanel.SetActive(true);
         eventDialogueChanged?.Invoke(currentTreeName, currentKey);
         ShowCurrentNode();
@@ -143,7 +151,16 @@ public class SimpleDialogManager : MonoBehaviour
             case "Oliver":              speakerIcon.sprite = oliverSprite;      break;
             case "Ydna, Tire, Oliver":  speakerIcon.sprite = groupFriendsSprite;break;
             case "The Crow":            speakerIcon.sprite = crowSprite;        break;
-            default:                    speakerIcon.sprite = null;              break;
+
+            // New characters
+            case "Assyla":               speakerIcon.sprite = assylaSprite;      break;
+            case "John Daniel":          speakerIcon.sprite = johnDanielSprite;  break;
+            case "Mangle":               speakerIcon.sprite = mangleSprite;      break;
+            case "N":                    speakerIcon.sprite = nSprite;           break;
+            case "Chica":                speakerIcon.sprite = chicaSprite;       break;
+            case "Oyen":                 speakerIcon.sprite = oyenSprite;        break;
+
+            default:                     speakerIcon.sprite = null;              break;
         }
 
         npcText.text    = "";
@@ -164,7 +181,7 @@ public class SimpleDialogManager : MonoBehaviour
             return;
         }
 
-        string nextKey = currentNode.next;
+        var nextKey = currentNode.next;
         if (!currentTree.nodes.ContainsKey(nextKey))
         {
             Debug.LogError($"[SimpleDialogManager] Node '{nextKey}' not found");
@@ -174,7 +191,8 @@ public class SimpleDialogManager : MonoBehaviour
 
         currentKey  = nextKey;
         currentNode = currentTree.nodes[nextKey];
-        eventDialogueChanged?.Invoke(currentTreeName, nextKey);
+
+        eventDialogueChanged?.Invoke(currentTreeName, currentKey);
         ShowCurrentNode();
     }
 
