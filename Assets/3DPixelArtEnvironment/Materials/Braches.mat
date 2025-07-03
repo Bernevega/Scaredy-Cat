@@ -20,18 +20,17 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SandStone
+  m_Name: Braches
   m_Shader: {fileID: -6465566751694194690, guid: 378227f8a69213e419dfb0d889d8dd2f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _CLOUDSENABLED
   - _OUTLINESENABLED
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses:
@@ -105,11 +104,11 @@ Material:
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _AmbientStrength: 0.1
-    - _Blend: 0
+    - _Blend: 2
     - _BlendModePreserveSpecular: 1
-    - _Brightness: 80
+    - _Brightness: 5
     - _BumpScale: 1
-    - _CLOUDSENABLED: 1
+    - _CLOUDSENABLED: 0
     - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -117,10 +116,10 @@ Material:
     - _Cloud_Cover: 0.45
     - _Cloud_Density: 0.47
     - _Cloud_Strength: 3.5
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
-    - _DepthEdgeStrength: 1.25
-    - _DepthThreshold: 0.011
+    - _DepthEdgeStrength: 1
+    - _DepthThreshold: 1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -131,15 +130,15 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _MinimumDarkness: 0.6
-    - _NormalEdgeStrength: -0.29
-    - _NormalThreshold: 0.35
+    - _NormalEdgeStrength: 1
+    - _NormalThreshold: 0.2
     - _OUTLINESENABLED: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Shades: 100
+    - _Shades: 5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -155,11 +154,11 @@ Material:
     - _Cloud_Movement: {r: -0.1, g: 0.01, b: 0, a: 0}
     - _Cloud_Step: {r: 10, g: 10, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DiffuseColor: {r: 0.7735849, g: 0.74112815, b: 0.72614807, a: 0}
+    - _DiffuseColor: {r: 0.7735849, g: 0.59118694, b: 0.4415272, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _NormalBias: {r: 1, g: 1, b: 1, a: 0}
-    - _Outline: {r: 1, g: 1, b: 1, a: 0}
-    - _ShadowDiffuseColor: {r: 0.40329415, g: 0.3994749, b: 0.4433962, a: 0}
+    - _Outline: {r: 0.33962262, g: 0.15967244, b: 0.11374155, a: 0}
+    - _ShadowDiffuseColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

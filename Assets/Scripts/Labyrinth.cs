@@ -17,13 +17,24 @@ public class Labyrinth : MonoBehaviour
     public float maxVignetteIntensity = 0.6f;
     public float vignetteFadeOutSpeed = 1f;
 
+    [Header("Jump-block Buffer")]
+    [Tooltip("How far outside the trigger the jump/sprint block should still apply")]
+    public float jumpDisableRadius = 1.2f;
+
     private Coroutine timerCoroutine;
     private Coroutine vignetteFadeOutCoroutine;
     private Vignette vignetteEffect;
     private bool isPlayerInside = false;
 
+    // for buffering the jump block outside the collider
+    private Collider zoneCollider;
+    private PlayerMovement trackedPM;
+
     void Start()
     {
+        // cache our trigger collider
+        zoneCollider = GetComponent<Collider>();
+
         // Grab the Vignette from the profile and disable it initially
         if (volume != null && volume.profile.TryGet(out Vignette v))
         {
@@ -33,51 +44,76 @@ public class Labyrinth : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        // advance fade/timer
+        if (fadeImage != null && fadeImage.gameObject.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        {
+            // not needed here, your triggers handle Space in Fade coroutines
+        }
+
+        // If we have a PlayerMovement to track, enforce jump/sprint block until they're outside buffer
+        if (trackedPM != null)
+        {
+            Vector3 playerPos = trackedPM.transform.position;
+            // get closest point on the trigger bounds
+            Vector3 closest = zoneCollider.ClosestPoint(playerPos);
+            float dist = Vector3.Distance(closest, playerPos);
+
+            if (dist <= jumpDisableRadius)
+            {
+                // still within buffer: keep blocked
+                trackedPM.blockJump = true;
+                trackedPM.blockSprint = true;
+            }
+            else
+            {
+                // outside buffer: restore
+                trackedPM.blockJump = false;
+                trackedPM.blockSprint = false;
+                trackedPM = null;
+            }
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && vignetteEffect != null)
+        if (!other.CompareTag("Player") || vignetteEffect == null) return;
+
+        isPlayerInside = true;
+
+        // block jump/sprint immediately
+        if (other.TryGetComponent<PlayerMovement>(out var pm))
         {
-            isPlayerInside = true;
-
-            // Block jumping & sprinting while inside
-            if (other.TryGetComponent<PlayerMovement>(out var pm))
-            {
-                pm.blockJump = true;
-                pm.blockSprint = true;
-            }
-
-            // Stop any fades/timers
-            if (vignetteFadeOutCoroutine != null) StopCoroutine(vignetteFadeOutCoroutine);
-            if (timerCoroutine != null) StopCoroutine(timerCoroutine);
-
-            // Reset vignette
-            vignetteEffect.intensity.value = 0f;
-            vignetteEffect.active = true;
-
-            timerCoroutine = StartCoroutine(TriggerTimer(other.gameObject));
+            pm.blockJump = true;
+            pm.blockSprint = true;
+            trackedPM = pm; // start tracking for buffer
         }
+
+        // Stop any fades/timers
+        if (vignetteFadeOutCoroutine != null) StopCoroutine(vignetteFadeOutCoroutine);
+        if (timerCoroutine != null) StopCoroutine(timerCoroutine);
+
+        // Reset vignette
+        vignetteEffect.intensity.value = 0f;
+        vignetteEffect.active = true;
+
+        timerCoroutine = StartCoroutine(TriggerTimer(other.gameObject));
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && vignetteEffect != null)
+        if (!other.CompareTag("Player") || vignetteEffect == null) return;
+
+        isPlayerInside = false;
+
+        // we no longer immediately unblock here—Update will wait until outside jumpDisableRadius
+        // Stop the timer and fade the vignette out
+        if (timerCoroutine != null)
         {
-            isPlayerInside = false;
-
-            // Unblock jumping & sprinting on exit
-            if (other.TryGetComponent<PlayerMovement>(out var pm))
-            {
-                pm.blockJump = false;
-                pm.blockSprint = false;
-            }
-
-            // Stop the timer and fade the vignette out
-            if (timerCoroutine != null)
-            {
-                StopCoroutine(timerCoroutine);
-                timerCoroutine = null;
-                vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
-            }
+            StopCoroutine(timerCoroutine);
+            timerCoroutine = null;
+            vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
         }
     }
 
