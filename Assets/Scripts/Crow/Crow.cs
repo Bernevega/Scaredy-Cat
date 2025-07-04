@@ -218,7 +218,7 @@ public class Crow : MonoBehaviour
                 monocleLeftObject.SetActive(true);
                 bushObject.SetActive(false);
                 hasLeftMonocle = true;
-                dialogueState = DialogueState.SecondMonocle;
+                dialogueState = DialogueState.SecondMonocleWait;
                 SimpleDialogManager.Instance.StartDialogue("CrowSecondMonocle");
             }
             else
