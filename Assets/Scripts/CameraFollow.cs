@@ -1,16 +1,18 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
-public class CameraFollow : MonoBehaviour
+public class CameraFollow : MonoBehaviour, ICameraBehaviour
 {
     [Header("Target Settings")]
     [Tooltip("The Transform of the object the camera will follow.")]
     public Transform target;
+    public Vector3 targetRotation;
 
     [Header("Smoothing Settings")]
     [Tooltip("Time (in seconds) the camera takes to catch up to the target.")]
     [Min(0f)]
     public float smoothTime = 0.3f;
+    public float rotationSpeed = 100f;
 
     // Internals
     private Vector3 _velocity = Vector3.zero;
@@ -36,7 +38,7 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
-    void LateUpdate()
+    public void OnLateUpdate()
     {
         if (target == null) return;
 
@@ -52,5 +54,11 @@ public class CameraFollow : MonoBehaviour
             Mathf.Infinity,
             Time.deltaTime
         );
+
+        if (transform.rotation.eulerAngles != targetRotation)
+        {
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), Time.deltaTime * rotationSpeed);
+        }
     }
 }
