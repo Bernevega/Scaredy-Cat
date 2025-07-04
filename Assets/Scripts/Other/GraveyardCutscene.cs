@@ -43,7 +43,6 @@ public class GraveyardCutscene : MonoBehaviour
     private void Awake()
     {
         mainCam = Camera.main;
-        camFollow = mainCam.GetComponent<CameraFollow>();
         triggerCollider = GetComponent<Collider>();
     }
 
@@ -60,7 +59,7 @@ public class GraveyardCutscene : MonoBehaviour
     public void StartCutscene()
     {
         triggerCollider.enabled = false;
-        camFollow.enabled = false;
+        mainCam.GetComponent<CameraController>().SetCamBehaviour(null);
         cutState = CutsceneState.FirstCameraPan;
         camState = CameraState.Moving;
 
