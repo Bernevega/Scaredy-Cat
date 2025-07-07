@@ -24,7 +24,7 @@ public class PauseMenu : MonoBehaviour
     public TMP_Dropdown resolutionDropdown;
     public TMP_Dropdown screenModeDropdown;
 
-    private bool isPaused = false;
+    public static bool isPaused { get; private set; } = false;
     private Resolution[] resolutions;
 
     private void Start()

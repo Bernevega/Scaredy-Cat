@@ -38,6 +38,11 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
         }
     }
 
+    public void OnActivate()
+    {
+
+    }
+
     public void OnLateUpdate()
     {
         if (target == null) return;

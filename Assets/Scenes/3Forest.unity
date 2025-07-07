@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1011490231}
+    - target: {fileID: 4491349336775685932, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
+      propertyPath: rotationSpeed
+      value: 360
+      objectReference: {fileID: 0}
     - target: {fileID: 4938062452509402609, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: m_Name
       value: Main Camera
@@ -9523,7 +9527,7 @@ MonoBehaviour:
   centerTransform: {fileID: 556158640}
   eyeTransform: {fileID: 0}
   moveSpeed: 9
-  rotateSpeed: 50
+  rotateSpeed: 360
 --- !u!114 &1957176425
 MonoBehaviour:
   m_ObjectHideFlags: 0

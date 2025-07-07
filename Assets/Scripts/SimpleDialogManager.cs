@@ -174,6 +174,7 @@ public class SimpleDialogManager : MonoBehaviour
 
     private void OnContinuePressed()
     {
+        if (PauseMenu.isPaused) return;
         if (currentNode == null || string.IsNullOrEmpty(currentNode.next))
         {
             eventDialogueChanged?.Invoke(currentTreeName, null);
