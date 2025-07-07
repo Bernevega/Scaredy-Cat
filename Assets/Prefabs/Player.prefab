@@ -962,9 +962,9 @@ GameObject:
   - component: {fileID: 9038015778958891198}
   - component: {fileID: 450627906819067737}
   - component: {fileID: 8825587145721537332}
-  - component: {fileID: 3100652151565243510}
   - component: {fileID: 4666442182400616798}
   - component: {fileID: 5625331880092350555}
+  - component: {fileID: 5767518742010189959}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1031,6 +1031,8 @@ MonoBehaviour:
   speed: 1
   runMultiplier: 1.5
   jumpForce: 3
+  groundCheck: {fileID: 0}
+  groundDistance: 0.2
   groundMask:
     serializedVersion: 2
     m_Bits: 8
@@ -1038,27 +1040,6 @@ MonoBehaviour:
   blockRightMovement: 0
   blockJump: 0
   blockSprint: 0
---- !u!65 &3100652151565243510
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8513681105655169540}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.8200604, y: 5.1304317, z: 2.3580883}
-  m_Center: {x: 0.04814705, y: 2.589382, z: -0.11990834}
 --- !u!114 &4666442182400616798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1086,3 +1067,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 8513681105655169540}
+--- !u!136 &5767518742010189959
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8513681105655169540}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.23
+  m_Height: 4.99
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.44, z: 0}

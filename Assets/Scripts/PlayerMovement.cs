@@ -49,6 +49,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (mainCam == null)
+            mainCam = Camera.main;
         // 1) Dialog check
         var dialogMgr = SimpleDialogManager.Instance;
         bool dialogActive = dialogMgr != null

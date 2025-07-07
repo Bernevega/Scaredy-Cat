@@ -4,6 +4,8 @@ public class Oyen : MonoBehaviour
 {
     [SerializeField] Interactable interactable;
     [SerializeField] ItemScriptable braceletItemScriptable;
+    [SerializeField] GameObject nextSceneTransition;
+
 
     Item[] itemReturnArray = new Item[1];
 
