@@ -7,7 +7,9 @@ using UnityEngine.Rendering.Universal;
 public class Labyrinth : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private Interactable monoclePickup;
     public Transform spawnPoint;
+    public Transform spawnPoint2;
     public Image fadeImage;
     public Volume volume; // Leave this alone now
 
@@ -41,6 +43,24 @@ public class Labyrinth : MonoBehaviour
             vignetteEffect = v;
             vignetteEffect.intensity.value = 0f;
             vignetteEffect.active = false;
+        }
+
+        monoclePickup.eventOnInteract += OnMonocleInteract;
+    }
+
+    private void OnDestroy()
+    {
+        if (monoclePickup != null)
+        {
+            monoclePickup.eventOnInteract -= OnMonocleInteract;
+        }
+    }
+
+    void OnMonocleInteract(Interactor interactor, Interactable interactable, InteractActionType action)
+    {
+        if (action == InteractActionType.Interact)
+        {
+            spawnPoint = spawnPoint2;
         }
     }
 
@@ -137,7 +157,11 @@ public class Labyrinth : MonoBehaviour
 
         // Respawn
         if (spawnPoint != null)
-            player.transform.position = spawnPoint.position;
+        {
+            //player.transform.position = spawnPoint.position;
+            player.GetComponent<Rigidbody>().Move(spawnPoint.position, player.transform.rotation);
+        }
+            
         else
             Debug.LogWarning("Spawn point not assigned!");
 
