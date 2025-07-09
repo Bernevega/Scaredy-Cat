@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private GameObject model;
     [SerializeField] private Animator animator;
+    [SerializeField] private AnimEventInvoker animEvents;
 
     [HideInInspector] public bool blockRightMovement = false;
     [HideInInspector] public bool blockJump = false;  
@@ -30,12 +31,14 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;
     private bool _wasDialogActive = false;
     private bool hasJumped = false;
-    private AnimState animState = AnimState.Idle; 
+    private MoveState moveState = MoveState.Idle; 
 
-    private enum AnimState : byte
+    public enum MoveState : byte
     {
         Idle,
         Walk,
+        Jumping,
+        Landing,
     }
 
     void Start()
@@ -53,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
             frictionCombine = PhysicsMaterialCombine.Minimum
         };
         col.material = slideMat;
+        animEvents.stringEvent += AnimStringEvent;
     }
 
     void Update()
@@ -88,23 +92,37 @@ public class PlayerMovement : MonoBehaviour
         // 2) Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         if (isGrounded)
+        {
             hasJumped = false;
+           
+            animator.SetBool("grounded", true);
+        }
+        else
+        {
+            animator.SetBool("grounded", false);
+        }
+            
 
         if (speed > 0f)
         {
             // 3) Read inputs
-            float moveX = Input.GetAxisRaw("Horizontal");
-            float moveZ = Input.GetAxisRaw("Vertical");
+            float moveX = 0;
+            float moveZ = 0;
+            if (moveState == MoveState.Idle)
+            {
+                moveX = Input.GetAxisRaw("Horizontal");
+                moveZ = Input.GetAxisRaw("Vertical");
+            }
+            
             if (blockRightMovement && moveX > 0f)
                 moveX = 0f;
-            if (moveX > 0f && moveZ > 0f)
+            if (moveX == 0 && moveZ == 0)
             {
-       
-                animator.CrossFadeInFixedTime("Walk", 0.1f);
+                animator.SetBool("moveInput", false);
             }
             else
             {
-                animator.CrossFadeInFixedTime("Idle", 0.1f);
+                animator.SetBool("moveInput", true);
             }
 
             // 4) Calculate move direction relative to camera
@@ -119,16 +137,20 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && !blockSprint)
                 currentSpeed *= runMultiplier;
 
-            // 6) Apply horizontal movement (preserve vertical velocity)
             rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
 
-            // 7) Jump (only once until grounded again)
-            if (!blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
+            // 6) Apply horizontal movement (preserve vertical velocity)
+            if (moveState == MoveState.Idle)
             {
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                hasJumped = true;
+                // 7) Jump (only once until grounded again)
+                if (!blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
+                {
+                    moveState = MoveState.Jumping;
+                    hasJumped = true;
+                    animator.SetTrigger("jump");
+                }
             }
+            
         }
         
 
@@ -170,20 +192,34 @@ public class PlayerMovement : MonoBehaviour
         canMove = b;
     }
 
-    public void ChangeAnimState(AnimState newState)
+    public void AnimStringEvent(string str)
     {
-        if (animState == newState) return;
-
-        switch (newState)
+        switch (str)
         {
-            case AnimState.Idle:
-                animator.CrossFadeInFixedTime("Idle", 0.1f);
+            case "JumpLiftOff":
+                JumpLiftOff();
                 break;
-            case AnimState.Walk:
-                animator.CrossFadeInFixedTime("Walk", 0.1f);
+            case "LandStart":
+                LandStart();
+                break;
+            case "LandEnd":
+                LandEnd();
                 break;
         }
+    }
 
-        animState = newState;
+    public void JumpLiftOff()
+    {
+        moveState = MoveState.Idle;
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+    public void LandStart()
+    {
+        moveState = MoveState.Landing;
+    }
+    public void LandEnd()
+    {
+        moveState = MoveState.Idle;
     }
 }
