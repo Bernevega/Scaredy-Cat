@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
 
     [SerializeField] private GameObject model;
+    [SerializeField] private Animator animator;
 
     [HideInInspector] public bool blockRightMovement = false;
     [HideInInspector] public bool blockJump = false;  
@@ -29,6 +30,13 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;
     private bool _wasDialogActive = false;
     private bool hasJumped = false;
+    private AnimState animState = AnimState.Idle; 
+
+    private enum AnimState : byte
+    {
+        Idle,
+        Walk,
+    }
 
     void Start()
     {
@@ -89,6 +97,15 @@ public class PlayerMovement : MonoBehaviour
             float moveZ = Input.GetAxisRaw("Vertical");
             if (blockRightMovement && moveX > 0f)
                 moveX = 0f;
+            if (moveX > 0f && moveZ > 0f)
+            {
+       
+                animator.CrossFadeInFixedTime("Walk", 0.1f);
+            }
+            else
+            {
+                animator.CrossFadeInFixedTime("Idle", 0.1f);
+            }
 
             // 4) Calculate move direction relative to camera
             Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
@@ -151,5 +168,22 @@ public class PlayerMovement : MonoBehaviour
     public void SetCanMove(bool b)
     {
         canMove = b;
+    }
+
+    public void ChangeAnimState(AnimState newState)
+    {
+        if (animState == newState) return;
+
+        switch (newState)
+        {
+            case AnimState.Idle:
+                animator.CrossFadeInFixedTime("Idle", 0.1f);
+                break;
+            case AnimState.Walk:
+                animator.CrossFadeInFixedTime("Walk", 0.1f);
+                break;
+        }
+
+        animState = newState;
     }
 }
