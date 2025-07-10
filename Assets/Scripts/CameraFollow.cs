@@ -38,6 +38,24 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
         }
     }
 
+    public void RecalculateOffset()
+    {
+        if (target == null)
+        {
+            Debug.LogError("[CameraFollow] No target assigned! Disabling script.");
+            enabled = false;
+            return;
+        }
+
+        _offset = transform.position - target.position;
+
+        var rb = target.GetComponent<Rigidbody>();
+        if (rb != null && rb.interpolation == RigidbodyInterpolation.None)
+        {
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+        }
+    }
+
     public void OnActivate()
     {
 

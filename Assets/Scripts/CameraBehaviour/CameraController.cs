@@ -24,6 +24,11 @@ public class CameraController : MonoBehaviour
     public void SetCamBehaviour(ICameraBehaviour camBehaviour)
     { 
         this.camBehaviour = camBehaviour;
-        this.camBehaviour.OnActivate();
+
+        if (camBehaviour != null)
+        {
+            this.camBehaviour.OnActivate();
+        }
+        
     }
 }
