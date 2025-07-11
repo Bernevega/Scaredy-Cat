@@ -15,7 +15,7 @@ public class LightZone : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && labyrinth != null)
+        if (other.CompareTag("Player") && labyrinth != null && !labyrinth.reviving)
         {
             labyrinth.PauseFadeTimer();
         }

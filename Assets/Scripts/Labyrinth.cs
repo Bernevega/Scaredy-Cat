@@ -31,7 +31,7 @@ public class Labyrinth : MonoBehaviour
     // for buffering the jump block outside the collider
     private Collider zoneCollider;
     private PlayerMovement trackedPM;
-
+    public bool reviving { get; private set; } = false;
     void Start()
     {
         // cache our trigger collider
@@ -153,8 +153,9 @@ public class Labyrinth : MonoBehaviour
         }
 
         // Full-screen fade to black
+        reviving = true;
         yield return StartCoroutine(FadeIn());
-
+        reviving = false;
         // Respawn
         if (spawnPoint != null)
         {

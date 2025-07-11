@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private Camera mainCam;
     private Vector3 direction = Vector3.forward;
-    private bool isGrounded = false;
+    private bool isGrounded = true;
     private bool canMove = true;
     private bool _wasDialogActive = false;
     private bool hasJumped = false;
@@ -39,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         Walk,
         Jumping,
         Landing,
+        WakingUp,
     }
 
     void Start()
@@ -63,6 +64,20 @@ public class PlayerMovement : MonoBehaviour
     {
         if (mainCam == null)
             mainCam = Camera.main;
+
+        // 2) Ground check
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        if (isGrounded)
+        {
+            hasJumped = false;
+
+            animator.SetBool("grounded", true);
+        }
+        else
+        {
+            animator.SetBool("grounded", false);
+        }
+
         // 1) Dialog check
         var dialogMgr = SimpleDialogManager.Instance;
         bool dialogActive = dialogMgr != null
@@ -88,20 +103,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (!canMove) return;
-
-        // 2) Ground check
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        if (isGrounded)
-        {
-            hasJumped = false;
-           
-            animator.SetBool("grounded", true);
-        }
-        else
-        {
-            animator.SetBool("grounded", false);
-        }
-            
 
         if (speed > 0f)
         {
@@ -192,6 +193,12 @@ public class PlayerMovement : MonoBehaviour
         canMove = b;
     }
 
+    public void WakeUp()
+    {
+        moveState = MoveState.WakingUp;
+        animator.SetTrigger("WakeUp");
+    }
+
     public void AnimStringEvent(string str)
     {
         switch (str)
@@ -205,6 +212,10 @@ public class PlayerMovement : MonoBehaviour
             case "LandEnd":
                 LandEnd();
                 break;
+            case "WakeUpEnd":
+                WakeUpEnd(); 
+                break;
+
         }
     }
 
@@ -221,5 +232,10 @@ public class PlayerMovement : MonoBehaviour
     public void LandEnd()
     {
         moveState = MoveState.Idle;
+    }
+    public void WakeUpEnd()
+    {
+        moveState = MoveState.Idle;
+        Debug.Log("Wake up end");
     }
 }
