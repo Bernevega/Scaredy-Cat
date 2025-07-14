@@ -24,6 +24,12 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public bool blockJump = false;  
     [HideInInspector] public bool blockSprint = false;
 
+    [Header("Rotation Reset Settings")]
+    [Tooltip("Seconds to ease model back to last direction when dialog ends. If ≤0, uses rotationReturnSpeed.")]
+    public float rotationReturnDuration = 0.5f;
+    [Tooltip("Degrees per second to rotate model if rotationReturnDuration ≤ 0.")]
+    public float rotationReturnSpeed = 1080f;
+
     private Rigidbody rb;
     private Camera mainCam;
     private Vector3 direction = Vector3.forward;
@@ -70,7 +76,6 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded)
         {
             hasJumped = false;
-
             animator.SetBool("grounded", true);
         }
         else
@@ -99,6 +104,15 @@ public class PlayerMovement : MonoBehaviour
             canMove = true;
             // Clear any lingering velocity
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+
+            // ── Smoothly rotate model back to last direction ──
+            StopAllCoroutines();
+            if (rotationReturnDuration > 0f)
+                StartCoroutine(RotateModelOverTime(rotationReturnDuration));
+            else
+                StartCoroutine(RotateModelAtSpeed());
+            // ───────────────────────────────────────────────────
+
             return;
         }
 
@@ -150,11 +164,9 @@ public class PlayerMovement : MonoBehaviour
                     hasJumped = true;
                     animator.SetTrigger("jump");
                 }
-            }
-            
+            }   
         }
         
-
         // 8) Rotate the visible model (or the whole object if no model assigned)
         if (model != null)
         {
@@ -215,7 +227,6 @@ public class PlayerMovement : MonoBehaviour
             case "WakeUpEnd":
                 WakeUpEnd(); 
                 break;
-
         }
     }
 
@@ -225,17 +236,59 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+
     public void LandStart()
     {
         moveState = MoveState.Landing;
     }
+
     public void LandEnd()
     {
         moveState = MoveState.Idle;
     }
+
     public void WakeUpEnd()
     {
         moveState = MoveState.Idle;
         Debug.Log("Wake up end");
     }
+
+    // ───────────────────────────────────────────────────────────────────────────
+    // ROTATION COROUTINES (for dialog-end reset)
+    private IEnumerator RotateModelOverTime(float duration)
+    {
+        Transform target = model != null ? model.transform : transform;
+        Quaternion startRot = target.rotation;
+        Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            // ease-in/out
+            t = t * t * (3f - 2f * t);
+            target.rotation = Quaternion.Slerp(startRot, targetRot, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        target.rotation = targetRot;
+    }
+
+    private IEnumerator RotateModelAtSpeed()
+    {
+        Transform target = model != null ? model.transform : transform;
+        Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
+
+        while (Quaternion.Angle(target.rotation, targetRot) > 0.1f)
+        {
+            target.rotation = Quaternion.RotateTowards(
+                target.rotation,
+                targetRot,
+                rotationReturnSpeed * Time.deltaTime
+            );
+            yield return null;
+        }
+        target.rotation = targetRot;
+    }
+    // ───────────────────────────────────────────────────────────────────────────
 }
