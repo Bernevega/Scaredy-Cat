@@ -17,7 +17,7 @@ public class QuestManager : MonoBehaviour
         Update
     }
 
-    private void Awake()
+    private void Start()
     {
         if (instance == null)
         {
@@ -30,6 +30,13 @@ public class QuestManager : MonoBehaviour
         }
 
         UpdateUI();
+    }
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
     public void AddQuest(Quest quest)
     {
@@ -44,6 +51,7 @@ public class QuestManager : MonoBehaviour
 
         if (shouldAddQuest)
         {
+            Debug.Log("Added quest");
             quests.Add(quest);
             quest.OnStart();
         }
