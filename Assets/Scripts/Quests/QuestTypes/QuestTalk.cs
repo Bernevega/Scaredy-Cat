@@ -4,7 +4,7 @@ using UnityEngine;
 // For quests that only involve dialogue
 public class QuestTalk : MonoBehaviour, IQuestBehaviour
 {
-    public Quest quest = new Quest();
+    public Quest quest;
     public QuestTalkStep[] steps;
     public uint step = 0;
 

@@ -1028,7 +1028,6 @@ GameObject:
   m_Component:
   - component: {fileID: 316359179}
   - component: {fileID: 316359178}
-  - component: {fileID: 316359180}
   m_Layer: 0
   m_Name: LevelDirector
   m_TagString: Untagged
@@ -1067,19 +1066,6 @@ Transform:
   - {fileID: 979893136}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &316359180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 316359177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad6f627144c5e5d4bb0213c5201aea02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startingQuest: {fileID: 508579670}
 --- !u!1 &345999959
 GameObject:
   m_ObjectHideFlags: 0
@@ -1383,6 +1369,7 @@ GameObject:
   m_Component:
   - component: {fileID: 508579671}
   - component: {fileID: 508579670}
+  - component: {fileID: 508579672}
   m_Layer: 0
   m_Name: TalkQuest
   m_TagString: Untagged
@@ -1402,14 +1389,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b9b7ced406066469a2f56fa8e28f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quest:
-    questName: Scaredy Cat!
-    description: 
-    completed: 0
+  quest: {fileID: 508579672}
   steps:
   - sceneId: Friends
     keyName: null
     description: Talk to your friends
+  - sceneId: Bingzoid
+    keyName: null
+    description: Find the rare flower
   step: 0
 --- !u!4 &508579671
 Transform:
@@ -1426,6 +1413,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &508579672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508579669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17b9a170ccffd364f924252ca1055282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questName: Scaredy Cat!
+  description: 
+  completed: 0
 --- !u!1 &543759624
 GameObject:
   m_ObjectHideFlags: 0
@@ -5097,6 +5099,8 @@ MonoBehaviour:
   - {fileID: 1415437610}
   - {fileID: 659827104}
   - {fileID: 1688169293}
+  startingQuests:
+  - {fileID: 508579672}
 --- !u!4 &1596594756
 Transform:
   m_ObjectHideFlags: 0

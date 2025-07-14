@@ -9,6 +9,7 @@ public class QuestManager : MonoBehaviour
     List<Quest> quests = new List<Quest>(3);
     [SerializeField] List<QuestInfoBox> questInfos = new List<QuestInfoBox>();
     public Action<Quest, UpdateType> eventQuestUpdated;
+    [SerializeField] Quest[] startingQuests;
     public enum UpdateType
     {
         Added,
@@ -21,6 +22,11 @@ public class QuestManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+        }
+
+        for (int i = 0; i < startingQuests.Length; i++)
+        {
+            AddQuest(startingQuests[i]);
         }
 
         UpdateUI();
