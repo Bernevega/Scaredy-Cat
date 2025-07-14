@@ -10,6 +10,8 @@ public class QuestManager : MonoBehaviour
     [SerializeField] List<QuestInfoBox> questInfos = new List<QuestInfoBox>();
     public Action<Quest, UpdateType> eventQuestUpdated;
     [SerializeField] Quest[] startingQuests;
+    [SerializeField] GameObject questPanels;
+    
     public enum UpdateType
     {
         Added,
@@ -30,6 +32,13 @@ public class QuestManager : MonoBehaviour
         }
 
         UpdateUI();
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            questPanels.SetActive(!questPanels.activeSelf);
+        }
     }
     private void OnDestroy()
     {
