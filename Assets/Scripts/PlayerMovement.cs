@@ -63,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
             frictionCombine = PhysicsMaterialCombine.Minimum
         };
         col.material = slideMat;
+
         animEvents.stringEvent += AnimStringEvent;
     }
 
@@ -128,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
                 moveX = Input.GetAxisRaw("Horizontal");
                 moveZ = Input.GetAxisRaw("Vertical");
             }
-            
+
             if (blockRightMovement && moveX > 0f)
                 moveX = 0f;
             if (moveX == 0 && moveZ == 0)
@@ -147,14 +148,19 @@ public class PlayerMovement : MonoBehaviour
             if (moveDir != Vector3.zero)
                 direction = moveDir;
 
-            // 5) Sprint (blocked in labyrinth)
+            // 5) Sprint (blocked in labyrinth) & running animation
             float currentSpeed = speed;
-            if (Input.GetKey(KeyCode.LeftShift) && !blockSprint)
+            bool isRunning = false;
+            if (Input.GetKey(KeyCode.LeftShift) && !blockSprint && moveDir != Vector3.zero)
+            {
                 currentSpeed *= runMultiplier;
-
-            rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
+                isRunning = true;
+            }
+            animator.SetBool("isRunning", isRunning);
 
             // 6) Apply horizontal movement (preserve vertical velocity)
+            rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
+
             if (moveState == MoveState.Idle)
             {
                 // 7) Jump (only once until grounded again)
@@ -166,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }   
         }
-        
+
         // 8) Rotate the visible model (or the whole object if no model assigned)
         if (model != null)
         {

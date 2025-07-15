@@ -1,0 +1,371 @@
+fileFormatVersion: 2
+guid: 75a1f40e0bce3014fa20aac6df2fb7a8
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Run
+      takeName: Run
+      internalID: 5522812681064789136
+      firstFrame: 0
+      lastFrame: 19
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: KittyRun(Clone)
+      parentName: 
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:Hips_jnt
+      parentName: KittyRun(Clone)
+      position: {x: -0.00440076, y: 1.2935922, z: -0.08138707}
+      rotation: {x: -0.008658396, y: -0.021742743, z: 0.03293151, w: 0.9991836}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:spine01_jnt
+      parentName: Kitty_Rig:Hips_jnt
+      position: {x: -0, y: 0.2513441, z: 0}
+      rotation: {x: -0.009602208, y: 0.044077285, z: -0.04307267, w: 0.99805295}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:spine02_jnt
+      parentName: Kitty_Rig:spine01_jnt
+      position: {x: -5.684342e-16, y: 0.29654685, z: 0}
+      rotation: {x: 0.03857202, y: -0, z: -0, w: 0.99925584}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_upperarm_jnt
+      parentName: Kitty_Rig:spine02_jnt
+      position: {x: -0.3336321, y: 0.4681288, z: 0.08272631}
+      rotation: {x: -0.19891079, y: 0.17811316, z: 0.6902709, w: 0.67248523}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_lowerarm_jnt
+      parentName: Kitty_Rig:L_upperarm_jnt
+      position: {x: 5.852312e-17, y: 0.6839274, z: 0}
+      rotation: {x: 0.026798286, y: 0.0014265701, z: -0.007260956, w: 0.9996135}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_wrist_jnt
+      parentName: Kitty_Rig:L_lowerarm_jnt
+      position: {x: 1.3505304e-15, y: 0.3737081, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_hand_jnt
+      parentName: Kitty_Rig:L_wrist_jnt
+      position: {x: -3.5908183e-16, y: 0.15713987, z: 0}
+      rotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_upperarm_jnt
+      parentName: Kitty_Rig:spine02_jnt
+      position: {x: 0.333632, y: 0.4681271, z: 0.08272631}
+      rotation: {x: -0.7003962, y: 0.698776, z: 0.09614007, w: 0.10915373}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_lowerarm_jnt
+      parentName: Kitty_Rig:R_upperarm_jnt
+      position: {x: -8.5265126e-16, y: -0.68392795, z: 8.375702e-17}
+      rotation: {x: 0.03824563, y: -0.05312983, z: -0.01930928, w: 0.99766815}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_wrist_jnt
+      parentName: Kitty_Rig:R_lowerarm_jnt
+      position: {x: -2.842171e-16, y: -0.37370998, z: 4.5766272e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_hand_jnt
+      parentName: Kitty_Rig:R_wrist_jnt
+      position: {x: -2.842171e-16, y: -0.15713999, z: 1.9244099e-17}
+      rotation: {x: 0, y: -8.659561e-17, z: -0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:head_jnt
+      parentName: Kitty_Rig:spine02_jnt
+      position: {x: 1.1368684e-15, y: 0.7033217, z: 0}
+      rotation: {x: 0, y: -0, z: -0.043619387, w: 0.99904823}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:head_jnte
+      parentName: Kitty_Rig:head_jnt
+      position: {x: -5.684342e-16, y: 1.4028053, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_earbase_jnt
+      parentName: Kitty_Rig:head_jnt
+      position: {x: -0.51670164, y: 1.3971046, z: -0.16251458}
+      rotation: {x: 0.04848109, y: 0.0025249273, z: 0.051948845, w: 0.9974691}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ear_jnt
+      parentName: Kitty_Rig:L_earbase_jnt
+      position: {x: -4.1143934e-17, y: 0.39150447, z: -7.105427e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ear_jnte
+      parentName: Kitty_Rig:L_ear_jnt
+      position: {x: 3.4861001e-16, y: 0.62153935, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_earbase_jnt
+      parentName: Kitty_Rig:head_jnt
+      position: {x: 0.516702, y: 1.3971053, z: -0.16251469}
+      rotation: {x: 0.9974691, y: -0.05194884, z: 0.00252493, w: -0.048481144}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ear_jnt
+      parentName: Kitty_Rig:R_earbase_jnt
+      position: {x: -0.0000006821146, y: -0.391508, z: 3.5527136e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ear_jnte
+      parentName: Kitty_Rig:R_ear_jnt
+      position: {x: 0.0000004742266, y: -0.6215326, z: 0.000000013097821}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:tailbase_jnt
+      parentName: Kitty_Rig:spine01_jnt
+      position: {x: -0, y: -0.077831216, z: -0.4397582}
+      rotation: {x: -8.652877e-17, y: 0.7343376, z: -0.6787844, w: -3.4016543e-18}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:tail01_jnt
+      parentName: Kitty_Rig:tailbase_jnt
+      position: {x: -3.481053e-17, y: 0.28512952, z: 6.331147e-17}
+      rotation: {x: 0.12986088, y: 0.9664805, z: 0.22108452, w: 0.013162536}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:tail02_jnt
+      parentName: Kitty_Rig:tail01_jnt
+      position: {x: -0, y: 0.3708397, z: 1.110223e-16}
+      rotation: {x: 0.3336029, y: 0.02712573, z: 0.077516295, w: 0.9391297}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:tail03_jnt
+      parentName: Kitty_Rig:tail02_jnt
+      position: {x: -0, y: 0.48277527, z: 9.148237e-16}
+      rotation: {x: 0.57732606, y: -0, z: -0, w: 0.8165138}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:tail_jnte
+      parentName: Kitty_Rig:tail03_jnt
+      position: {x: -0, y: 0.7064217, z: 2.842171e-16}
+      rotation: {x: 0.3545552, y: -0, z: -0, w: 0.9350351}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ribbonbase_jnt
+      parentName: Kitty_Rig:spine01_jnt
+      position: {x: -0.04550125, y: 0.25404125, z: -0.48885}
+      rotation: {x: 0.70325994, y: -0.70325994, z: 0.07365789, w: -0.07365789}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ribbon_jnt
+      parentName: Kitty_Rig:L_ribbonbase_jnt
+      position: {x: 1.1739132e-16, y: 0.29340172, z: -2.5237176e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ribbon_jnte
+      parentName: Kitty_Rig:L_ribbon_jnt
+      position: {x: -5.116402e-15, y: 0.28032446, z: 7.105427e-17}
+      rotation: {x: 0.7071068, y: -0.7071068, z: -8.2834407e-16, w: 8.2834407e-16}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ribbonbase_jnt
+      parentName: Kitty_Rig:spine01_jnt
+      position: {x: 0.0455013, y: 0.25404394, z: -0.48884967}
+      rotation: {x: 0.07365789, y: 0.07365789, z: 0.70325994, w: 0.70325994}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ribbon_jnt
+      parentName: Kitty_Rig:R_ribbonbase_jnt
+      position: {x: 4.263256e-15, y: -0.2934015, z: -0.000000019984494}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ribbon_jnte
+      parentName: Kitty_Rig:R_ribbon_jnt
+      position: {x: 4.263256e-15, y: -0.28032443, z: -0.00000039021592}
+      rotation: {x: 0.7071068, y: -0.7071068, z: -2.0030707e-16, w: -1.1371146e-16}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ribbontailbase_jnt
+      parentName: Kitty_Rig:spine01_jnt
+      position: {x: -0.15960789, y: 0.18032959, z: -0.52997625}
+      rotation: {x: 0.92265445, y: -0.19037123, z: -0.039246544, w: -0.33305743}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ribbontail_jnt
+      parentName: Kitty_Rig:L_ribbontailbase_jnt
+      position: {x: -1.5557316e-16, y: 0.42546928, z: 2.568063e-16}
+      rotation: {x: 0.25165817, y: -0.053116977, z: 0.0057714633, w: 0.96634024}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ribbontail_jnte
+      parentName: Kitty_Rig:L_ribbontail_jnt
+      position: {x: 2.800217e-17, y: 0.44649062, z: -1.5303535e-16}
+      rotation: {x: 0.99686605, y: 0.0022134366, z: -0.030189812, w: 0.07308756}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ribbontailbase_jnt
+      parentName: Kitty_Rig:spine01_jnt
+      position: {x: 0.15960799, y: 0.18033393, z: -0.52997667}
+      rotation: {x: 0.33305743, y: -0.039246544, z: 0.19037123, w: 0.92265445}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ribbontail_jnt
+      parentName: Kitty_Rig:R_ribbontailbase_jnt
+      position: {x: -0.000000088624226, y: -0.42546886, z: 0.00000053508404}
+      rotation: {x: 0.25165817, y: -0.053116977, z: 0.0057714633, w: 0.96634024}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ribbontail_jnte
+      parentName: Kitty_Rig:R_ribbontail_jnt
+      position: {x: -0.0000010997014, y: -0.44649404, z: 0.0000011225036}
+      rotation: {x: 0.99686605, y: 0.0022134366, z: -0.030189812, w: 0.07308756}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_upperleg_jnt
+      parentName: Kitty_Rig:Hips_jnt
+      position: {x: -0.27804327, y: -0.12291413, z: 0.08272631}
+      rotation: {x: 0.03957846, y: -0.1259032, z: 0.98858076, w: 0.07273328}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_lowerleg_jnt
+      parentName: Kitty_Rig:L_upperleg_jnt
+      position: {x: -1.2629312e-16, y: 0.74707305, z: -5.8619773e-16}
+      rotation: {x: -0.10764719, y: 0.0043898993, z: 0.00967251, w: 0.99413246}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_ankle_jnt
+      parentName: Kitty_Rig:L_lowerleg_jnt
+      position: {x: 7.105427e-17, y: 0.3885547, z: -7.105427e-17}
+      rotation: {x: 0.50135523, y: 0.00041734884, z: 0.014789741, w: 0.8651151}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:L_foot_jnt
+      parentName: Kitty_Rig:L_ankle_jnt
+      position: {x: 4.6185276e-16, y: 0.1899488, z: 3.5527136e-17}
+      rotation: {x: -0.29855394, y: -0.29855394, z: -0.640988, w: 0.640988}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_upperleg_jnt
+      parentName: Kitty_Rig:Hips_jnt
+      position: {x: 0.278043, y: -0.12291195, z: 0.08272631}
+      rotation: {x: 0.013845989, y: 0.9941243, z: -0.087754466, w: -0.061841138}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_lowerleg_jnt
+      parentName: Kitty_Rig:R_upperleg_jnt
+      position: {x: 3.5527136e-17, y: -0.7470755, z: 0.00000027399076}
+      rotation: {x: -0.3101495, y: -0.0118544325, z: -0.012052497, w: 0.9505375}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_ankle_jnt
+      parentName: Kitty_Rig:R_lowerleg_jnt
+      position: {x: -3.5527136e-17, y: -0.3885543, z: 0.00000017865396}
+      rotation: {x: 0.89254224, y: 0.017321771, z: 0.031958774, w: 0.44949636}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:R_foot_jnt
+      parentName: Kitty_Rig:R_ankle_jnt
+      position: {x: -0, y: -0.18994887, z: 0.00000009115655}
+      rotation: {x: -0.29855394, y: -0.29855394, z: -0.640988, w: 0.640988}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:skirt01_jnt
+      parentName: Kitty_Rig:Hips_jnt
+      position: {x: -0, y: -0.06511336, z: 1.6953011e-10}
+      rotation: {x: -6.4974144e-18, y: 0.106110826, z: 0.9943543, w: -6.088664e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Kitty_Rig:skirt02_jnt
+      parentName: Kitty_Rig:skirt01_jnt
+      position: {x: 5.9660534e-17, y: 0.4871652, z: 0}
+      rotation: {x: 0, y: 0, z: 1, w: -6.123234e-17}
+      scale: {x: 1, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
