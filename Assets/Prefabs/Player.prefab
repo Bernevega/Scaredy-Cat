@@ -4306,7 +4306,7 @@ MonoBehaviour:
   runMultiplier: 1.5
   jumpForce: 3
   groundCheck: {fileID: 3306576882529241225}
-  groundDistance: 0.2
+  groundDistance: 0.5
   groundMask:
     serializedVersion: 2
     m_Bits: 8
@@ -4316,6 +4316,8 @@ MonoBehaviour:
   blockRightMovement: 0
   blockJump: 0
   blockSprint: 0
+  rotationReturnDuration: 0.3
+  rotationReturnSpeed: 1080
 --- !u!114 &4666442182400616798
 MonoBehaviour:
   m_ObjectHideFlags: 0
