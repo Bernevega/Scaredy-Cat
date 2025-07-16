@@ -1,4 +1,65 @@
 {
+  "MouseStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hi",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Mousie",
+        "text": "Who are you.",
+        "next": null
+      }
+    }
+  },
+  "MouseCheese": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hi, can you return the bracelet you stole?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Mousie",
+        "text": "Give me <b>cheese<\b>.",
+        "next": null
+      }
+    }
+  },
+  "MouseCheeseWait": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Mousie",
+        "text": "Have you found my cheese?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "no.",
+        "next": null
+      }
+    }
+  },
+  "JohnDanielCheese": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hi, can you return the cheese you stole?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Mousie",
+        "text": "Give me hat and tie.",
+        "next": null
+      }
+    }
+  },
+
   "MangleMouse": {
     "start": "boo1",
     "nodes": {
@@ -51,17 +112,27 @@
       }
     }
   },
-  "AssylaMouse": {
+  "JDCheese": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Kitty",
-        "text": "Hi, I heard you knew where a mouse is.",
+        "text": "Hi, can i have some cheeese?",
         "next": "boo2"
       },
       "boo2": {
-        "speaker": "Assyla",
-        "text": "That’s preposterous! Im scared of mice! Ugh… but if I were to guess, Chica has been smelling like cheese. Friggin Dog stuffed her pockets full of mozzarella from the buffet.",
+        "speaker": "John Daniel",
+        "text": "Sure, just bring me a silly hat and a tie.",
+        "next": null
+      }
+    }
+  },
+  "JDWait": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "John Daniel",
+        "text": "Have you gotten the hat and tie?",
         "next": null
       }
     }
@@ -71,7 +142,17 @@
     "nodes": {
       "boo1": {
         "speaker": "Assyla",
-        "text": "sup",
+        "text": "Oh ignore me.. I have no one to dance with.",
+        "next": null
+      }
+    }
+  },
+  "AssylaDance": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Assyla",
+        "text": "Dance minigame",
         "next": null
       }
     }

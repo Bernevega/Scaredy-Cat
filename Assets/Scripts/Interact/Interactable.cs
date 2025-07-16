@@ -51,5 +51,10 @@ public class Interactable : MonoBehaviour
         if (coll)
             coll.enabled = false;
     }
+
+    private void OnEnable()
+    {
+        if (coll) coll.enabled = true;
+    }
 }
 

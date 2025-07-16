@@ -36,7 +36,6 @@ public class Oyen : MonoBehaviour
         {
             dm.StartDialogue("OyenStart");
             waitingForBracelet = true;
-            BraceletQuestline.step = 1;
         }
         else if (waitingForBracelet && !hasBracelet)
         {
