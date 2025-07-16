@@ -11,7 +11,7 @@ public class QuestManager : MonoBehaviour
     public Action<Quest, UpdateType> eventQuestUpdated;
     [SerializeField] Quest[] startingQuests;
     [SerializeField] GameObject questPanels;
-    
+    [SerializeField] GameObject questUI;
     public enum UpdateType
     {
         Added,
@@ -115,5 +115,11 @@ public class QuestManager : MonoBehaviour
                 questInfos[i].SetQuest(null);
             }
         }
+    }
+
+    public void SetUIEnabled(bool b)
+    {
+        if (questUI)
+            questUI.SetActive(b);
     }
 }
