@@ -161,6 +161,10 @@ PrefabInstance:
       propertyPath: m_RenderPostProcessing
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3992597124348819470, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1011490231}
     - target: {fileID: 4203837595240964730, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.49
@@ -4293,7 +4297,7 @@ MonoBehaviour:
   fadeImage: {fileID: 1839482659}
   volume: {fileID: 1658692585}
   fadeDuration: 1
-  triggerTime: 5
+  triggerTime: 7
   maxVignetteIntensity: 0.6
   vignetteFadeOutSpeed: 1
   jumpDisableRadius: 1.2
@@ -10084,6 +10088,7 @@ MonoBehaviour:
   startingQuests:
   - {fileID: 1876521558}
   questPanels: {fileID: 2136504183}
+  questUI: {fileID: 0}
 --- !u!4 &1541364908
 Transform:
   m_ObjectHideFlags: 0
