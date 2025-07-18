@@ -17,11 +17,29 @@ public class Oyen : MonoBehaviour
         interactable.eventOnInteract += OnInteract;
     }
 
+    private void Start()
+    {
+        SimpleDialogManager.Instance.eventDialogueChanged += OnDialogueAdvance;
+    }
+
+    private void OnDestroy()
+    {
+        SimpleDialogManager.Instance.eventDialogueChanged -= OnDialogueAdvance;
+    }
+
     private void OnInteract(Interactor interactor, Interactable interactable, InteractActionType type)
     {
         if (type == InteractActionType.Interact)
         {
             CheckBracelet(interactor);
+        }
+    }
+
+    private void OnDialogueAdvance(string sceneId, string currKey)
+    {
+        if (sceneId == "OyenThank" && currKey == null)
+        {
+            nextSceneTransition.SetActive(true);
         }
     }
 
