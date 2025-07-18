@@ -21,4 +21,11 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public static GameObject PM_GetPlayer()
+    {
+        if (instance)
+            return instance.player;
+        return null;
+    }
 }

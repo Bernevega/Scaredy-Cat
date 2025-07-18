@@ -223,6 +223,81 @@
       }
     }
   },
+  "NerdStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Can I have your tie?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Nerd",
+        "text": "Sure, but you have to play a game.",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Nerd",
+        "text": "I'll give you a sequence of colours and you have to memorize it.",
+        "next": null
+      }
+    }
+  },
+  "NerdOver": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Nerd",
+        "text": "You chose the wrong color! Better luck next time!",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "):",
+        "next": null
+      }
+    }
+  },
+  "NerdRestart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Nerd",
+        "text": "Wanna try again?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "Yes.",
+        "next": null
+      }
+    }
+  },
+  "NerdWin": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Nerd",
+        "text": "Thanks for playing with me! Heres my bowtie.",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "Thank you.",
+        "next": null
+      }
+    }
+  },
+  "NerdThank": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Nerd",
+        "text": "Thanks for playing with me!",
+        "next": null
+      }
+    }
+  },
   "NMouse": {
     "start": "boo1",
     "nodes": {
