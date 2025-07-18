@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 using Newtonsoft.Json;
 
 [Serializable]
@@ -55,13 +56,20 @@ public class SimpleDialogManager : MonoBehaviour
     public Sprite mangleSprite;
     public Sprite nSprite;
     public Sprite chicaSprite;
-    public Sprite oyenSprite;      // Added Oyen
+    public Sprite oyenSprite;
 
+    [Header("Transition")]
+    [Tooltip("Seconds to fade in/out dialog panel")]
+    public float fadeDuration = 0.25f;
+
+    // Internals
     private Dictionary<string, DialogTree> allTrees;
     private DialogTree currentTree;
     private DialogNode currentNode;
     private string currentKey;
     private string currentTreeName;
+    private Graphic[] graphicsUnderPanel;
+    private bool isFading = false;
 
     /// <summary>
     /// Event invoked whenever dialogue starts, ends, or advances.
@@ -87,7 +95,14 @@ public class SimpleDialogManager : MonoBehaviour
             Instance.npcText         = npcText;
             Instance.playerText      = playerText;
 
-            // Transfer new sprites as well
+            Instance.momCatSprite       = momCatSprite;
+            Instance.kittySprite        = kittySprite;
+            Instance.tireSprite         = tireSprite;
+            Instance.ydnaSprite         = ydnaSprite;
+            Instance.oliverSprite       = oliverSprite;
+            Instance.groupFriendsSprite = groupFriendsSprite;
+            Instance.crowSprite         = crowSprite;
+
             Instance.assylaSprite       = assylaSprite;
             Instance.johnDanielSprite   = johnDanielSprite;
             Instance.mangleSprite       = mangleSprite;
@@ -95,23 +110,38 @@ public class SimpleDialogManager : MonoBehaviour
             Instance.chicaSprite        = chicaSprite;
             Instance.oyenSprite         = oyenSprite;
 
+            Instance.fadeDuration       = fadeDuration;
+
             Instance.Initialize();
             Destroy(gameObject);
+            return;
         }
     }
 
     public void Initialize()
     {
+        // Load all dialog trees
         if (allTrees != null)
             allTrees.Clear();
-
         allTrees = JsonConvert.DeserializeObject<Dictionary<string, DialogTree>>(jsonFile.text);
+
+        // Prepare fading: collect all UI graphics and set invisible
+        graphicsUnderPanel = dialogPanel.GetComponentsInChildren<Graphic>(true);
+        foreach (var g in graphicsUnderPanel)
+        {
+            var c = g.color;
+            c.a = 0f;
+            g.color = c;
+        }
+        isFading = false;
+
         dialogPanel.SetActive(false);
     }
 
     void Update()
     {
-        if (dialogPanel.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        // Only advance when dialogue is visible and not mid-fade
+        if (dialogPanel.activeSelf && !isFading && Input.GetKeyDown(KeyCode.Space))
         {
             OnContinuePressed();
         }
@@ -133,7 +163,8 @@ public class SimpleDialogManager : MonoBehaviour
         currentKey      = currentTree.start;
         currentNode     = currentTree.nodes[currentKey];
 
-        dialogPanel.SetActive(true);
+        // Fade in panel then show text
+        StartCoroutine(FadePanel(0f, 1f));
         eventDialogueChanged?.Invoke(currentTreeName, currentKey);
         ShowCurrentNode();
     }
@@ -142,6 +173,7 @@ public class SimpleDialogManager : MonoBehaviour
     {
         speakerNameText.text = currentNode.speaker;
 
+        // Set correct portrait
         switch (currentNode.speaker)
         {
             case "Mom Cat":             speakerIcon.sprite = momCatSprite;       break;
@@ -152,13 +184,12 @@ public class SimpleDialogManager : MonoBehaviour
             case "Ydna, Tire, Oliver":  speakerIcon.sprite = groupFriendsSprite;break;
             case "The Crow":            speakerIcon.sprite = crowSprite;        break;
 
-            // New characters
-            case "Assyla":               speakerIcon.sprite = assylaSprite;      break;
-            case "John Daniel":          speakerIcon.sprite = johnDanielSprite;  break;
-            case "Mangle":               speakerIcon.sprite = mangleSprite;      break;
-            case "N":                    speakerIcon.sprite = nSprite;           break;
-            case "Chica":                speakerIcon.sprite = chicaSprite;       break;
-            case "Oyen":                 speakerIcon.sprite = oyenSprite;        break;
+            case "Assyla":              speakerIcon.sprite = assylaSprite;      break;
+            case "John Daniel":         speakerIcon.sprite = johnDanielSprite;  break;
+            case "Mangle":              speakerIcon.sprite = mangleSprite;      break;
+            case "N":                   speakerIcon.sprite = nSprite;           break;
+            case "Chica":               speakerIcon.sprite = chicaSprite;       break;
+            case "Oyen":                speakerIcon.sprite = oyenSprite;        break;
 
             default:                     speakerIcon.sprite = null;              break;
         }
@@ -199,9 +230,45 @@ public class SimpleDialogManager : MonoBehaviour
 
     private void CloseDialogue()
     {
-        dialogPanel.SetActive(false);
-        currentNode  = null;
-        currentTree  = null;
-        currentKey   = null;
+        // Fade out panel
+        StartCoroutine(FadePanel(1f, 0f));
+
+        currentNode = null;
+        currentTree = null;
+        currentKey  = null;
+    }
+
+    private IEnumerator FadePanel(float from, float to)
+    {
+        isFading = true;
+        dialogPanel.SetActive(true);
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            float alpha = Mathf.Lerp(from, to, elapsed / fadeDuration);
+            foreach (var g in graphicsUnderPanel)
+            {
+                var c = g.color;
+                c.a = alpha;
+                g.color = c;
+            }
+
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // Guarantee final alpha
+        foreach (var g in graphicsUnderPanel)
+        {
+            var c = g.color;
+            c.a = to;
+            g.color = c;
+        }
+
+        if (to == 0f)
+            dialogPanel.SetActive(false);
+
+        isFading = false;
     }
 }

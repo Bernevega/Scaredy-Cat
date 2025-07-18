@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Collider))]
 public class DialogActor : MonoBehaviour
 {
     [Tooltip("Must match a top-level key in your JSON, e.g. \"HomeScene\", \"FriendsScene\"")]
@@ -13,20 +14,30 @@ public class DialogActor : MonoBehaviour
     [Tooltip("If true, this dialog fires immediately on Start (ignoring distance).")]
     public bool autoStartOnLoad = false;
 
+    [Tooltip("Delay (in seconds) before auto-starting dialog on load.")]
+    public float autoStartDelay = 1f;
+
     [Tooltip("If true, RequireKeyPress must be pressed while in range to trigger.")]
     public bool requireKeyPress = true;
 
     [Tooltip("The Key to press when requireKeyPress is true.")]
     public KeyCode interactionKey = KeyCode.F;
 
+    [Tooltip("If true, the Player will face the NPC when dialog starts.")]
+    public bool facePlayerOnInteract = true;
+
+    [Tooltip("Speed at which the player rotates to face the NPC.")]
+    public float rotationSpeed = 5f;
+
     [Header("Prompt UI (must have a CanvasGroup)")]
     [Tooltip("Drag your 'Press F to interact' UI GameObject here (initially disabled)")]
     public GameObject interactionPrompt;
 
-    [Tooltip("How long (seconds) the prompt fades in/out")]
+    [Tooltip("How long (seconds) the prompt fades in/out")]    
     public float promptFadeDuration = 0.25f;
 
-    bool repeatable = false;
+    [Tooltip("If true, dialog can be triggered multiple times.")]
+    public bool repeatable = false;
 
     // Internal state
     private bool _hasInteracted = false;
@@ -35,10 +46,13 @@ public class DialogActor : MonoBehaviour
     private Transform _playerTransform;
     private CanvasGroup _promptCanvasGroup;
     private Coroutine _fadeRoutine;
+    private Coroutine _rotateRoutine;
+    private Collider _npcCollider;
 
     void Start()
     {
-        // Cache the Player transform
+        // Cache components
+        _npcCollider = GetComponent<Collider>();
         var playerGO = GameObject.FindGameObjectWithTag("Player");
         if (playerGO != null)
             _playerTransform = playerGO.transform;
@@ -60,33 +74,30 @@ public class DialogActor : MonoBehaviour
             Debug.LogError($"[{name}] interactionPrompt not assigned.");
         }
 
-        // Auto-play override
+        // Auto-play override with delay
         if (autoStartOnLoad && !_hasInteracted)
         {
             _hasInteracted = true;
-            SimpleDialogManager.Instance.StartDialogue(sceneID);
+            StartCoroutine(AutoStartAfterDelay());
         }
     }
 
     void Update()
     {
-        // If we've already run this or there's no player, bail
         if (_hasInteracted || _playerTransform == null || autoStartOnLoad)
         {
             HidePrompt();
             return;
         }
 
-        float dist = Vector3.Distance(transform.position, _playerTransform.position);
+        float dist = Vector3.Distance(GetNPCenter(), _playerTransform.position);
         bool inRange = dist <= triggerRadius;
 
-        // Show or hide prompt based on state
         if (requireKeyPress && inRange)
             ShowPrompt();
         else
             HidePrompt();
 
-        // Trigger logic
         if (inRange)
         {
             if (requireKeyPress && Input.GetKeyDown(interactionKey))
@@ -96,35 +107,84 @@ public class DialogActor : MonoBehaviour
         }
     }
 
+    private IEnumerator AutoStartAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(autoStartDelay);
+        if (facePlayerOnInteract)
+            StartSmoothLook();
+        SimpleDialogManager.Instance.StartDialogue(sceneID);
+    }
+
     private void TriggerDialog()
     {
         if (!repeatable)
             _hasInteracted = true;
+
         HidePrompt();
+
+        if (facePlayerOnInteract)
+            StartSmoothLook();
+
         SimpleDialogManager.Instance.StartDialogue(sceneID);
+    }
+
+    private void StartSmoothLook()
+    {
+        if (_playerTransform == null) return;
+        if (_rotateRoutine != null)
+            StopCoroutine(_rotateRoutine);
+
+        _rotateRoutine = StartCoroutine(SmoothLookAtCenter());
+    }
+
+    private IEnumerator SmoothLookAtCenter()
+    {
+        Vector3 npcCenter = GetNPCenter();
+        Vector3 direction = npcCenter - _playerTransform.position;
+        direction.y = 0f;
+        if (direction.sqrMagnitude < 0.001f) yield break;
+
+        Quaternion startRot = _playerTransform.rotation;
+        Quaternion targetRot = Quaternion.LookRotation(direction);
+
+        float angle = Quaternion.Angle(startRot, targetRot);
+        float duration = angle / rotationSpeed;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            _playerTransform.rotation = Quaternion.Slerp(startRot, targetRot, t);
+            yield return null;
+        }
+        _playerTransform.rotation = targetRot;
+    }
+
+    private Vector3 GetNPCenter()
+    {
+        if (_npcCollider != null)
+            return _npcCollider.bounds.center;
+        return transform.position;
     }
 
     private void ShowPrompt()
     {
         if (interactionPrompt == null) return;
-
         interactionPrompt.SetActive(true);
-        StartFade( _promptCanvasGroup.alpha, 1f );
+        StartFade(_promptCanvasGroup.alpha, 1f);
     }
 
     private void HidePrompt()
     {
         if (interactionPrompt == null) return;
-
-        StartFade( _promptCanvasGroup.alpha, 0f );
+        StartFade(_promptCanvasGroup.alpha, 0f);
     }
 
     private void StartFade(float from, float to)
     {
-        // stop any ongoing fade
         if (_fadeRoutine != null)
             StopCoroutine(_fadeRoutine);
-
         _fadeRoutine = StartCoroutine(FadeCanvasGroup(from, to));
     }
 
@@ -139,8 +199,6 @@ public class DialogActor : MonoBehaviour
             yield return null;
         }
         _promptCanvasGroup.alpha = end;
-
-        // if we've faded out fully, deactivate
         if (Mathf.Approximately(end, 0f))
             interactionPrompt.SetActive(false);
     }

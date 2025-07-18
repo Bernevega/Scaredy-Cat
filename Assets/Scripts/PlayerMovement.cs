@@ -1,4 +1,3 @@
-// PlayerMovement.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,19 +71,13 @@ public class PlayerMovement : MonoBehaviour
         if (mainCam == null)
             mainCam = Camera.main;
 
-        // 2) Ground check
+        // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        animator.SetBool("grounded", isGrounded);
         if (isGrounded)
-        {
             hasJumped = false;
-            animator.SetBool("grounded", true);
-        }
-        else
-        {
-            animator.SetBool("grounded", false);
-        }
 
-        // 1) Dialog check
+        // Dialog check
         var dialogMgr = SimpleDialogManager.Instance;
         bool dialogActive = dialogMgr != null
                             && dialogMgr.dialogPanel != null
@@ -94,8 +87,14 @@ public class PlayerMovement : MonoBehaviour
         {
             _wasDialogActive = true;
             canMove = false;
-            // Stop residual horizontal movement
+
+            // Stop residual movement
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+
+            // Play idle animation
+            animator.SetBool("moveInput", false);
+            animator.SetBool("isRunning", false);
+            animator.Play("Idle");
             return;
         }
 
@@ -103,17 +102,16 @@ public class PlayerMovement : MonoBehaviour
         {
             _wasDialogActive = false;
             canMove = true;
-            // Clear any lingering velocity
+
+            // Clear lingering velocity
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
 
-            // ── Smoothly rotate model back to last direction ──
+            // Smooth rotation reset
             StopAllCoroutines();
             if (rotationReturnDuration > 0f)
                 StartCoroutine(RotateModelOverTime(rotationReturnDuration));
             else
                 StartCoroutine(RotateModelAtSpeed());
-            // ───────────────────────────────────────────────────
-
             return;
         }
 
@@ -121,180 +119,107 @@ public class PlayerMovement : MonoBehaviour
 
         if (speed > 0f)
         {
-            // 3) Read inputs
-            float moveX = 0;
-            float moveZ = 0;
-            if (moveState == MoveState.Idle)
-            {
-                moveX = Input.GetAxisRaw("Horizontal");
-                moveZ = Input.GetAxisRaw("Vertical");
-            }
+            // Read inputs
+            float moveX = Input.GetAxisRaw("Horizontal");
+            float moveZ = Input.GetAxisRaw("Vertical");
 
             if (blockRightMovement && moveX > 0f)
                 moveX = 0f;
-            if (moveX == 0 && moveZ == 0)
-            {
-                animator.SetBool("moveInput", false);
-            }
-            else
-            {
-                animator.SetBool("moveInput", true);
-            }
 
-            // 4) Calculate move direction relative to camera
+            bool hasInput = moveX != 0f || moveZ != 0f;
+            animator.SetBool("moveInput", hasInput);
+
+            // Direction relative to camera
             Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
             Vector3 camR = Vector3.Cross(Vector3.up, camF);
             Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
             if (moveDir != Vector3.zero)
                 direction = moveDir;
 
-            // 5) Sprint (blocked in labyrinth) & running animation
+            // Sprint
             float currentSpeed = speed;
             bool isRunning = false;
-            if (Input.GetKey(KeyCode.LeftShift) && !blockSprint && moveDir != Vector3.zero)
+            if (hasInput && Input.GetKey(KeyCode.LeftShift) && !blockSprint)
             {
                 currentSpeed *= runMultiplier;
                 isRunning = true;
             }
             animator.SetBool("isRunning", isRunning);
 
-            // 6) Apply horizontal movement (preserve vertical velocity)
+            // Apply movement
             rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
 
-            if (moveState == MoveState.Idle)
+            // Jump
+            if (moveState == MoveState.Idle && !blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
             {
-                // 7) Jump (only once until grounded again)
-                if (!blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
-                {
-                    moveState = MoveState.Jumping;
-                    hasJumped = true;
-                    animator.SetTrigger("jump");
-                }
-            }   
+                moveState = MoveState.Jumping;
+                hasJumped = true;
+                animator.SetTrigger("jump");
+            }
         }
 
-        // 8) Rotate the visible model (or the whole object if no model assigned)
-        if (model != null)
-        {
-            if (model.transform.forward != direction)
-                model.transform.rotation = Quaternion.RotateTowards(
-                    model.transform.rotation,
-                    Quaternion.LookRotation(direction, Vector3.up),
-                    1080f * Time.deltaTime
-                );
-        }
-        else
-        {
-            if (transform.forward != direction)
-                transform.forward = Vector3.RotateTowards(
-                    transform.forward,
-                    direction,
-                    Mathf.Deg2Rad * 1080f * Time.deltaTime,
-                    0f
-                );
-        }
+        // Rotate model or object
+        Transform targetTransform = model != null ? model.transform : transform;
+        Quaternion desiredRot = Quaternion.LookRotation(direction, Vector3.up);
+        if (targetTransform.rotation != desiredRot)
+            targetTransform.rotation = Quaternion.RotateTowards(
+                targetTransform.rotation,
+                desiredRot,
+                1080f * Time.deltaTime
+            );
     }
 
-    /// <summary>
-    /// Externally set the facing direction (normalized).
-    /// </summary>
-    public void SetDirection(Vector3 dir)
-    {
-        direction = dir.normalized;
-    }
+    public void SetDirection(Vector3 dir) => direction = dir.normalized;
+    public void SetCanMove(bool b) => canMove = b;
 
-    /// <summary>
-    /// Enable or disable all movement (useful for cutscenes, dialogs, etc.).
-    /// </summary>
-    public void SetCanMove(bool b)
-    {
-        canMove = b;
-    }
-
-    public void WakeUp()
-    {
-        moveState = MoveState.WakingUp;
-        animator.SetTrigger("WakeUp");
-    }
+    public void WakeUp() { moveState = MoveState.WakingUp; animator.SetTrigger("WakeUp"); }
 
     public void AnimStringEvent(string str)
     {
         switch (str)
         {
-            case "JumpLiftOff":
-                JumpLiftOff();
-                break;
-            case "LandStart":
-                LandStart();
-                break;
-            case "LandEnd":
-                LandEnd();
-                break;
-            case "WakeUpEnd":
-                WakeUpEnd(); 
-                break;
+            case "JumpLiftOff": JumpLiftOff(); break;
+            case "LandStart":   LandStart();   break;
+            case "LandEnd":     LandEnd();     break;
+            case "WakeUpEnd":   WakeUpEnd();   break;
         }
     }
 
-    public void JumpLiftOff()
+    void JumpLiftOff()
     {
         moveState = MoveState.Idle;
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+    void LandStart() => moveState = MoveState.Landing;
+    void LandEnd()   => moveState = MoveState.Idle;
+    void WakeUpEnd() { moveState = MoveState.Idle; Debug.Log("Wake up end"); }
 
-    public void LandStart()
-    {
-        moveState = MoveState.Landing;
-    }
-
-    public void LandEnd()
-    {
-        moveState = MoveState.Idle;
-    }
-
-    public void WakeUpEnd()
-    {
-        moveState = MoveState.Idle;
-        Debug.Log("Wake up end");
-    }
-
-    // ───────────────────────────────────────────────────────────────────────────
-    // ROTATION COROUTINES (for dialog-end reset)
     private IEnumerator RotateModelOverTime(float duration)
     {
-        Transform target = model != null ? model.transform : transform;
-        Quaternion startRot = target.rotation;
-        Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
+        Transform t = model != null ? model.transform : transform;
+        Quaternion start = t.rotation;
+        Quaternion end   = Quaternion.LookRotation(direction, Vector3.up);
         float elapsed = 0f;
-
         while (elapsed < duration)
         {
-            float t = elapsed / duration;
-            // ease-in/out
-            t = t * t * (3f - 2f * t);
-            target.rotation = Quaternion.Slerp(startRot, targetRot, t);
+            float tNorm = elapsed / duration;
+            tNorm = tNorm * tNorm * (3f - 2f * tNorm);
+            t.rotation = Quaternion.Slerp(start, end, tNorm);
             elapsed += Time.deltaTime;
             yield return null;
         }
-        target.rotation = targetRot;
+        t.rotation = end;
     }
-
     private IEnumerator RotateModelAtSpeed()
     {
-        Transform target = model != null ? model.transform : transform;
-        Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
-
-        while (Quaternion.Angle(target.rotation, targetRot) > 0.1f)
+        Transform t = model != null ? model.transform : transform;
+        Quaternion end = Quaternion.LookRotation(direction, Vector3.up);
+        while (Quaternion.Angle(t.rotation, end) > 0.1f)
         {
-            target.rotation = Quaternion.RotateTowards(
-                target.rotation,
-                targetRot,
-                rotationReturnSpeed * Time.deltaTime
-            );
+            t.rotation = Quaternion.RotateTowards(t.rotation, end, rotationReturnSpeed * Time.deltaTime);
             yield return null;
         }
-        target.rotation = targetRot;
+        t.rotation = end;
     }
-    // ───────────────────────────────────────────────────────────────────────────
 }
