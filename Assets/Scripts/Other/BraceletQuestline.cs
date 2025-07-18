@@ -9,6 +9,7 @@ public class BraceletQuestline : MonoBehaviour
     [SerializeField] DialogueOnInteract mouse;
     [SerializeField] DialogueOnInteract jD;
     [SerializeField] DialogueOnInteract assyla;
+    [SerializeField] GameObject braceletObject;
     [SerializeField] GameObject nextSceneTransition;
 
     private void Start()
@@ -40,6 +41,21 @@ public class BraceletQuestline : MonoBehaviour
                 break;
             case "JDCheese":
                 assyla.sceneId = "AssylaDance";
+                break;
+            case "AssylaGive":
+                jD.sceneId = "JDGive";
+                break;
+            case "JDGive":
+                jD.sceneId = "JDThank";
+                mouse.sceneId = "MouseBraceletGive";
+                break;
+            case "MouseBraceletGive":
+                if (nextNode == null)
+                {
+                    braceletObject.SetActive(true);
+                    mouse.sceneId = "MouseThank";
+                    mouse.gameObject.SetActive(false);
+                }
                 break;
         }
     }

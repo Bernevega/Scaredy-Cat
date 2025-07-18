@@ -4138,6 +4138,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 129.40906, y: 244.95984, z: 129.47266}
   m_Center: {x: -0.00048828125, y: -0.000061035156, z: 0.0000076293945}
+--- !u!1 &754606609 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7471488563759779073, guid: 5e91e313fe886074db93fda8cbd91094, type: 3}
+  m_PrefabInstance: {fileID: 6666112247228239627}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &771177399 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8061698426354319692, guid: d439b653199e810479bc3d72c59dfe8d, type: 3}
@@ -6840,7 +6845,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: {fileID: 1690252258}
   braceletItemScriptable: {fileID: 11400000, guid: 15015aaf45970ef4db812636ba287afd, type: 2}
-  nextSceneTransition: {fileID: 0}
+  nextSceneTransition: {fileID: 1459619132}
   waitingForBracelet: 0
 --- !u!1 &1192633057
 GameObject:
@@ -8776,7 +8781,7 @@ Transform:
   m_GameObject: {fileID: 1459619132}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.399, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12302,6 +12307,7 @@ MonoBehaviour:
   mouse: {fileID: 1006053019}
   jD: {fileID: 872161076}
   assyla: {fileID: 1023587222}
+  braceletObject: {fileID: 754606609}
   nextSceneTransition: {fileID: 0}
 --- !u!224 &2125525535 stripped
 RectTransform:
@@ -12559,15 +12565,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1174783562397973945, guid: 5e91e313fe886074db93fda8cbd91094, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.003
+      value: 6.884
       objectReference: {fileID: 0}
     - target: {fileID: 1174783562397973945, guid: 5e91e313fe886074db93fda8cbd91094, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.734
+      value: 1.547
       objectReference: {fileID: 0}
     - target: {fileID: 1174783562397973945, guid: 5e91e313fe886074db93fda8cbd91094, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.1570001
+      value: 0.451
       objectReference: {fileID: 0}
     - target: {fileID: 1174783562397973945, guid: 5e91e313fe886074db93fda8cbd91094, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12603,7 +12609,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7471488563759779073, guid: 5e91e313fe886074db93fda8cbd91094, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

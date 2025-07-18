@@ -44,6 +44,31 @@
       }
     }
   },
+  "MouseBraceletGive": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Mousie",
+        "text": "Have you found my cheese? ...",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Mousie",
+        "text": "Thanks! Here's the bracelet. Bye now.",
+        "next": null
+      }
+    }
+  },
+  "MouseThank": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Mousie",
+        "text": "Thanks for the cheese",
+        "next": null
+      }
+    }
+  },
   "JohnDanielCheese": {
     "start": "boo1",
     "nodes": {
@@ -133,6 +158,26 @@
       "boo1": {
         "speaker": "John Daniel",
         "text": "Have you gotten the hat and tie?",
+        "next": null
+      }
+    }
+  },
+  "JDGive": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "John Daniel",
+        "text": "Thanks! Here's the Cheese.",
+        "next": null
+      }
+    }
+  },
+  "JDThank": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "John Daniel",
+        "text": "Thanks!",
         "next": null
       }
     }
