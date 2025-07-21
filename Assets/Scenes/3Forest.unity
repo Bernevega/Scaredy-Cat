@@ -442,10 +442,14 @@ MonoBehaviour:
   sceneID: LogBroken
   triggerRadius: 0.87
   autoStartOnLoad: 0
+  autoStartDelay: 1
   requireKeyPress: 1
   interactionKey: 102
+  facePlayerOnInteract: 1
+  rotationSpeed: 5
   interactionPrompt: {fileID: 0}
   promptFadeDuration: 0.25
+  repeatable: 0
 --- !u!1 &27526474
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,10 +771,14 @@ MonoBehaviour:
   sceneID: LogBroken
   triggerRadius: 0.5
   autoStartOnLoad: 0
+  autoStartDelay: 1
   requireKeyPress: 1
   interactionKey: 102
+  facePlayerOnInteract: 1
+  rotationSpeed: 5
   interactionPrompt: {fileID: 2021194556}
   promptFadeDuration: 0.25
+  repeatable: 0
 --- !u!1 &119837138 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1923583556922916545, guid: e98ff9940c632d84a9f08f0253025b85, type: 3}
@@ -7471,7 +7479,7 @@ Transform:
   m_GameObject: {fileID: 1143572350}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.6, y: -0.4, z: -2.325}
+  m_LocalPosition: {x: 2.6, y: -0.363, z: -2.325}
   m_LocalScale: {x: 1.825857, y: 1, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9477,10 +9485,14 @@ MonoBehaviour:
   sceneID: KittySuccess
   triggerRadius: 1
   autoStartOnLoad: 1
+  autoStartDelay: 1
   requireKeyPress: 0
   interactionKey: 102
+  facePlayerOnInteract: 1
+  rotationSpeed: 5
   interactionPrompt: {fileID: 0}
   promptFadeDuration: 0.25
+  repeatable: 0
 --- !u!4 &1476009162
 Transform:
   m_ObjectHideFlags: 0
@@ -10233,6 +10245,7 @@ MonoBehaviour:
   nSprite: {fileID: 21300000, guid: 6913e7b4c12b0104b92a2d5a53415a95, type: 3}
   chicaSprite: {fileID: 21300000, guid: 264d2a1e215df2242b96640f3ecd71d3, type: 3}
   oyenSprite: {fileID: 21300000, guid: 5ae986846052c054b9cdb0ae77d63459, type: 3}
+  fadeDuration: 0.25
 --- !u!4 &1557344767
 Transform:
   m_ObjectHideFlags: 0
@@ -11244,7 +11257,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   targetRotation: {x: 0, y: 0, z: 0}
+  extraRightOffset: {x: 0, y: 0, z: 0}
+  returnSpeed: 5
   smoothTime: 0.3
+  introSmoothTime: 1
   rotationSpeed: 50
 --- !u!20 &1629617848
 Camera:
@@ -12197,7 +12213,7 @@ Transform:
   m_GameObject: {fileID: 1770487747}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.28731617, z: -0, w: 0.9578358}
-  m_LocalPosition: {x: 8.39, y: -0.4, z: 0.33}
+  m_LocalPosition: {x: 8.39, y: -0.37, z: 0.33}
   m_LocalScale: {x: 6.0001874, y: 1, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13260,7 +13276,7 @@ Transform:
   m_GameObject: {fileID: 1915860088}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.0602, y: -0.4, z: -1.27}
+  m_LocalPosition: {x: 3.0602, y: -0.38, z: -1.27}
   m_LocalScale: {x: 6.0001874, y: 1, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14629,7 +14645,7 @@ Transform:
   m_GameObject: {fileID: 2076077474}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 3.0602, y: -0.4, z: -0.27}
+  m_LocalPosition: {x: 3.0602, y: -0.38, z: -0.27}
   m_LocalScale: {x: 1.825857, y: 1, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
