@@ -51,7 +51,7 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
         if (_playerMovement != null)
             _playerMovement.SetCanMove(false);
 
-        StartCoroutine(EndIntroAfterDelay(7f));
+        StartCoroutine(EndIntroAfterDelay(5f));
     }
 
     private IEnumerator EndIntroAfterDelay(float delay)
