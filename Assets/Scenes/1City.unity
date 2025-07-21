@@ -3080,7 +3080,7 @@ MonoBehaviour:
   sceneID: Mom
   triggerRadius: 0.6
   autoStartOnLoad: 1
-  autoStartDelay: 1
+  autoStartDelay: 8
   requireKeyPress: 0
   interactionKey: 102
   facePlayerOnInteract: 1
@@ -15196,12 +15196,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 143758672}
     - target: {fileID: 4491349336775685932, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
+      propertyPath: smoothTime
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4491349336775685932, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: returnSpeed
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4491349336775685932, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: introSmoothTime
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4491349336775685932, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: extraRightOffset
