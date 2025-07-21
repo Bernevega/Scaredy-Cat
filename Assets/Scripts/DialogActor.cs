@@ -10,8 +10,11 @@ public class DialogActor : MonoBehaviour
     [Tooltip("How close the Player has to be to trigger this NPC’s dialog (in world units).")]
     public float triggerRadius = 3f;
 
-    [Tooltip("If true, this dialog fires immediately on Start (ignoring distance).")]
+    [Tooltip("If true, this dialog fires automatically on Start (ignoring distance).")]
     public bool autoStartOnLoad = false;
+
+    [Tooltip("Delay (in seconds) before auto-starting the dialog when autoStartOnLoad is true.")]
+    public float autoStartDelay = 0f;
 
     [Tooltip("If true, RequireKeyPress must be pressed while in range to trigger.")]
     public bool requireKeyPress = true;
@@ -47,6 +50,16 @@ public class DialogActor : MonoBehaviour
 
         // Auto-start dialog on load if configured
         if (autoStartOnLoad && !_hasInteracted)
+            StartCoroutine(AutoStartAfterDelay());
+    }
+
+    private IEnumerator AutoStartAfterDelay()
+    {
+        // wait the specified delay
+        yield return new WaitForSeconds(autoStartDelay);
+
+        // guard again (in case repeatable was toggled mid-delay)
+        if (!_hasInteracted)
         {
             _hasInteracted = true;
             SimpleDialogManager.Instance.StartDialogue(sceneID);
