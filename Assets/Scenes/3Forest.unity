@@ -1960,6 +1960,7 @@ GameObject:
   - component: {fileID: 257678156}
   - component: {fileID: 257678155}
   - component: {fileID: 257678154}
+  - component: {fileID: 257678157}
   m_Layer: 7
   m_Name: TreeZone
   m_TagString: Untagged
@@ -1986,8 +1987,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2, y: 1, z: 2.2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 3.4, y: 1.04, z: 3.29}
+  m_Center: {x: 0, y: 0, z: 0.5501131}
 --- !u!33 &257678155
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2005,12 +2006,28 @@ Transform:
   m_GameObject: {fileID: 257678153}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.414545, y: 2.7261963, z: 1.8187604}
+  m_LocalPosition: {x: 11.933, y: 2.7261963, z: 1.7}
   m_LocalScale: {x: 1, y: 5.5657, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &257678157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257678153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfbe665fe262270469dba35b01d086fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextSceneName: 3Parkour1
+  screenFader: {fileID: 583483955}
+  onlyPlayer: 1
+  nextSceneStartPositionIndex: 0
 --- !u!1 &269069740 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6633042164620095511, guid: e98ff9940c632d84a9f08f0253025b85, type: 3}
@@ -2777,8 +2794,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 382168490}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.585455, y: -33.866604, z: -4.3212395}
+  m_LocalRotation: {x: -0, y: -0.71339023, z: -0, w: 0.70076704}
+  m_LocalPosition: {x: 18.916, y: -33.866604, z: -30.489}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2806,7 +2823,7 @@ Transform:
   - {fileID: 1957176423}
   - {fileID: 1968762401}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -91.023, z: 0}
 --- !u!1 &395386354
 GameObject:
   m_ObjectHideFlags: 0

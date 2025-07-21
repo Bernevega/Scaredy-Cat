@@ -76,17 +76,26 @@ public class WaterRespawn : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         // 6) Reset any leftover velocity & unfreeze physics
-        rb.linearVelocity      = Vector3.zero;
+        rb.linearVelocity        = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic   = false;
+        rb.isKinematic     = false;
 
         // 7) One-frame buffer
         yield return null;
 
-        // 8) Fade back in
+        // 8) Reset animation state to Idle BEFORE fade-in
+        var animator = movement.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("moveInput", false);
+            animator.SetBool("isRunning", false);
+            animator.Play("Idle");
+        }
+
+        // 9) Fade back in
         yield return StartCoroutine(screenFader.FadeIn());
 
-        // 9) Re-enable player movement & clear flag
+        // 10) Re-enable movement
         movement.enabled   = true;
         _isRespawning      = false;
     }

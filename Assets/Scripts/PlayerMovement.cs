@@ -152,9 +152,11 @@ public class PlayerMovement : MonoBehaviour
             // Jump
             if (moveState == MoveState.Idle && !blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
             {
-                moveState = MoveState.Jumping;
-                hasJumped = true;
                 animator.SetTrigger("jump");
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // reset Y velocity
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);      // instant jump
+                hasJumped = true;
+                moveState = MoveState.Jumping;
             }
         }
 
@@ -187,10 +189,9 @@ public class PlayerMovement : MonoBehaviour
 
     void JumpLiftOff()
     {
-        moveState = MoveState.Idle;
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        // No longer used for jumping physics, but can be used for FX
     }
+
     void LandStart() => moveState = MoveState.Landing;
     void LandEnd()   => moveState = MoveState.Idle;
     void WakeUpEnd() { moveState = MoveState.Idle; Debug.Log("Wake up end"); }
@@ -211,6 +212,7 @@ public class PlayerMovement : MonoBehaviour
         }
         t.rotation = end;
     }
+
     private IEnumerator RotateModelAtSpeed()
     {
         Transform t = model != null ? model.transform : transform;
