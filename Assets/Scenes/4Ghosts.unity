@@ -1585,6 +1585,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 283975624}
+  - component: {fileID: 283975625}
+  - component: {fileID: 283975626}
   m_Layer: 0
   m_Name: N
   m_TagString: Untagged
@@ -1609,6 +1611,35 @@ Transform:
   - {fileID: 829429307}
   m_Father: {fileID: 2118295273}
   m_LocalEulerAnglesHint: {x: 0, y: -182.081, z: 0}
+--- !u!114 &283975625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283975623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d86309cf40e1e64b98b63f8bcf3762e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId:
+    value: NStart
+  rotator: {fileID: 283975626}
+--- !u!114 &283975626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283975623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8de0b6c5ea7141b48b789b0e6c467de0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetDirection: {x: 0, y: 0, z: 1}
+  rotationSpeed: 1080
 --- !u!1 &299166278
 GameObject:
   m_ObjectHideFlags: 0
@@ -4740,7 +4771,7 @@ MonoBehaviour:
   interactable: {fileID: 872161072}
   sceneId:
     value: JDStart
-  rotateToPlayer: {fileID: 0}
+  rotateToPlayer: {fileID: 928882581}
 --- !u!1001 &883180223
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5302,6 +5333,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 928882580}
+  - component: {fileID: 928882582}
+  - component: {fileID: 928882581}
   m_Layer: 0
   m_Name: JohnDaniels
   m_TagString: Untagged
@@ -5326,6 +5359,35 @@ Transform:
   - {fileID: 581540712}
   m_Father: {fileID: 2118295273}
   m_LocalEulerAnglesHint: {x: 0, y: 229.37, z: 0}
+--- !u!114 &928882581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928882579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d86309cf40e1e64b98b63f8bcf3762e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId:
+    value: JDStart
+  rotator: {fileID: 928882582}
+--- !u!114 &928882582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928882579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8de0b6c5ea7141b48b789b0e6c467de0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetDirection: {x: 0, y: 0, z: 1}
+  rotationSpeed: 360
 --- !u!1 &933878125
 GameObject:
   m_ObjectHideFlags: 0
@@ -5658,7 +5720,7 @@ MonoBehaviour:
   interactable: {fileID: 1006053020}
   sceneId:
     value: MouseStart
-  rotateToPlayer: {fileID: 0}
+  rotateToPlayer: {fileID: 1225072452}
 --- !u!114 &1006053020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6857,6 +6919,7 @@ GameObject:
   - component: {fileID: 1192633058}
   - component: {fileID: 1192633060}
   - component: {fileID: 1192633059}
+  - component: {fileID: 1192633061}
   m_Layer: 6
   m_Name: N
   m_TagString: Untagged
@@ -6913,6 +6976,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.32
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1192633061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192633057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a85bceb70a2df045806ba36e4bb9fb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: {fileID: 1192633059}
+  sceneId:
+    value: NStart
+  rotateToPlayer: {fileID: 283975625}
 --- !u!1001 &1194942338
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7215,6 +7294,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1225072451}
+  - component: {fileID: 1225072452}
+  - component: {fileID: 1225072453}
   m_Layer: 0
   m_Name: Mousie
   m_TagString: Untagged
@@ -7239,6 +7320,35 @@ Transform:
   - {fileID: 1264790181}
   m_Father: {fileID: 2118295273}
   m_LocalEulerAnglesHint: {x: 0, y: 177.128, z: 0}
+--- !u!114 &1225072452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225072450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d86309cf40e1e64b98b63f8bcf3762e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId:
+    value: MouseStart
+  rotator: {fileID: 1225072453}
+--- !u!114 &1225072453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225072450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8de0b6c5ea7141b48b789b0e6c467de0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetDirection: {x: 0, y: 0, z: 1}
+  rotationSpeed: 360
 --- !u!1 &1247285370 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5880312570150257314, guid: d439b653199e810479bc3d72c59dfe8d, type: 3}
