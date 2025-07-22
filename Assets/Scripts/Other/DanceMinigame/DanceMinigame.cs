@@ -89,13 +89,13 @@ public class DanceMinigame : MonoBehaviour
         if (win)
         {
             dm.StartDialogue("AssylaGive");
-            assyla.sceneId = "AssylaThank";
+            assyla.sceneId.value = "AssylaThank";
             hatObject.SetActive(false);
         }
         else
         {
             dm.StartDialogue("AssylaBetterLuck");
-            assyla.sceneId = "AssylaRestart";
+            assyla.sceneId.value = "AssylaRestart";
         }
     }
 

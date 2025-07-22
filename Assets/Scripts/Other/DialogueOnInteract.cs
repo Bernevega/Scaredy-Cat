@@ -3,11 +3,17 @@ using UnityEngine;
 public class DialogueOnInteract : MonoBehaviour
 {
     [SerializeField] Interactable interactable;
-    public string sceneId;
+    public SharedString sceneId;
+    [SerializeField] RotateToPlayerOnDialogue rotateToPlayer;
 
     private void Awake()
     {
         interactable.eventOnInteract += OnInteract;
+
+        if (rotateToPlayer != null )
+        {
+            rotateToPlayer.sceneId = sceneId;
+        }
     }
 
     private void OnDestroy()
@@ -24,7 +30,7 @@ public class DialogueOnInteract : MonoBehaviour
 
         if (actionType == InteractActionType.Interact)
         {
-            dm.StartDialogue(sceneId);
+            dm.StartDialogue(sceneId.value);
         }
     }
 }

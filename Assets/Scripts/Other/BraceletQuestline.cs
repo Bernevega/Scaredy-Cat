@@ -33,27 +33,27 @@ public class BraceletQuestline : MonoBehaviour
         switch (sceneID)
         {
             case "OyenStart":
-                mouse.sceneId = "MouseCheese";
+                mouse.sceneId.value = "MouseCheese";
                 break;
             case "MouseCheese":
-                mouse.sceneId = "MouseCheeseWait";
-                jD.sceneId = "JDCheese";
+                mouse.sceneId.value = "MouseCheeseWait";
+                jD.sceneId.value = "JDCheese";
                 break;
             case "JDCheese":
-                assyla.sceneId = "AssylaDance";
+                assyla.sceneId.value = "AssylaDance";
                 break;
             case "AssylaGive":
-                jD.sceneId = "JDGive";
+                jD.sceneId.value = "JDGive";
                 break;
             case "JDGive":
-                jD.sceneId = "JDThank";
-                mouse.sceneId = "MouseBraceletGive";
+                jD.sceneId.value = "JDThank";
+                mouse.sceneId.value = "MouseBraceletGive";
                 break;
             case "MouseBraceletGive":
                 if (nextNode == null)
                 {
                     braceletObject.SetActive(true);
-                    mouse.sceneId = "MouseThank";
+                    mouse.sceneId.value = "MouseThank";
                     mouse.gameObject.SetActive(false);
                 }
                 break;

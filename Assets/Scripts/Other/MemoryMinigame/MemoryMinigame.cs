@@ -98,12 +98,12 @@ public class MemoryMinigame : MonoBehaviour
         {
             StartCoroutine(StartDialogueCoroutine(0.1f, "NerdWin"));
             bowtieObject.SetActive(false);
-            nerd.sceneId = "NerdThank";
+            nerd.sceneId.value = "NerdThank";
         }
         else
         {
             StartCoroutine(StartDialogueCoroutine(0.1f, "NerdOver"));
-            nerd.sceneId = "NerdRestart";
+            nerd.sceneId.value = "NerdRestart";
         }
     }
 
