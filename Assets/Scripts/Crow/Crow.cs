@@ -47,6 +47,7 @@ public class Crow : MonoBehaviour
     private bool hasThanked = false;
     private bool hasLeftMonocle = false;
     private bool hasRightMonocle = false;
+    private bool inRangeForTalk = false;
     public static bool hasBothMonocles { get; private set; } = false;
 
     private enum DialogueState
@@ -118,7 +119,7 @@ public class Crow : MonoBehaviour
         float dist = Vector3.Distance(transform.position, _playerTransform.position);
         bool inRange = dist <= triggerRadius;
 
-        if (!inRange)
+        if (!inRangeForTalk)
         {
             _canShowPrompt = true;
             _hasInteracted = false;
@@ -126,20 +127,10 @@ public class Crow : MonoBehaviour
             return;
         }
 
-        if (requireKeyPress && inRange && _canShowPrompt)
+        if (requireKeyPress && inRangeForTalk && _canShowPrompt)
             ShowPrompt();
         else
             HidePrompt();
-
-        if (inRange && requireKeyPress && Input.GetKeyDown(interactionKey))
-        {
-            _canShowPrompt = false;
-            _hasInteracted = true;
-            HidePrompt();
-
-            var interactorComp = _playerTransform.GetComponent<Interactor>();
-            OnInteract(interactorComp, interactable, InteractActionType.Interact);
-        }
     }
 
     private void ShowPrompt()
@@ -196,20 +187,30 @@ public class Crow : MonoBehaviour
         if (dm != null && dm.dialogPanel != null && dm.dialogPanel.activeSelf)
             return;
 
-        if (type != InteractActionType.Interact) return;
-
-        if (dialogueState == DialogueState.FirstTalk)
+        if (type == InteractActionType.Interact)
         {
-            dialogueState = DialogueState.FirstMonocleWait;
-            SimpleDialogManager.Instance.StartDialogue("CrowFirstTalk");
-            // Disable the bust (bush) once the first dialogue starts
-            if (bushObject != null)
-                bushObject.SetActive(false);
+            if (dialogueState == DialogueState.FirstTalk)
+            {
+                dialogueState = DialogueState.FirstMonocleWait;
+                SimpleDialogManager.Instance.StartDialogue("CrowFirstTalk");
+                // Disable the bust (bush) once the first dialogue starts
+                if (bushObject != null)
+                    bushObject.SetActive(false);
+            }
+            else
+            {
+                CheckMonocle(interactor);
+            }
         }
-        else
+        else if (type == InteractActionType.Select)
         {
-            CheckMonocle(interactor);
+            inRangeForTalk = true;
         }
+        else if (type == InteractActionType.Deselect)
+        {
+            inRangeForTalk = false;
+        }
+        
     }
 
     private void CheckMonocle(Interactor interactor)
