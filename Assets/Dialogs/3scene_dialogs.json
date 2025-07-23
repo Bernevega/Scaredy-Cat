@@ -44,6 +44,41 @@
       }
     }
   },
+  "KittyCrowResque": {
+    "start": "crow1",
+    "nodes": {
+      "crow1": {
+        "speaker": "The Crow",
+        "text": "Wake up Kitty, are you okay?",
+        "next": "crow2"
+      },
+      "crow2": {
+        "speaker": "The Crow",
+        "text": "Caw.",
+        "next": "crow3"
+      },
+      "crow3": {
+        "speaker": "The Crow",
+        "text": "Caw caw!",
+        "next": "crow4"
+      },
+      "crow4": {
+        "speaker": "The Crow",
+        "text": "You have my second monocle, now I can see clearly how brave you were.",
+        "next": "crow5"
+      },
+      "crow5": {
+        "speaker": "The Crow",
+        "text": "Thank you for helping me.",
+        "next": "crow6"
+      },
+      "crow6": {
+        "speaker": "The Crow",
+        "text": "Caw.",
+        "next": null
+      }
+    }
+  },
   "CrowFirstTalk": {
     "start": "caw1",
     "nodes": {
