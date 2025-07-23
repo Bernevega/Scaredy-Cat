@@ -132,6 +132,7 @@ public class Labyrinth : MonoBehaviour
         if (timerCoroutine != null)
         {
             StopCoroutine(timerCoroutine);
+            StartCoroutine(FadeOut());
             timerCoroutine = null;
             vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
         }
