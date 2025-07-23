@@ -1125,6 +1125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 239422275}
   - component: {fileID: 239422277}
+  - component: {fileID: 239422279}
   - component: {fileID: 239422278}
   m_Layer: 0
   m_Name: Tire
@@ -1179,12 +1180,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 239422274}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26d6acc8613341c4c9238cce1a93c0b6, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d86309cf40e1e64b98b63f8bcf3762e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 143758672}
-  rotationSpeed: 5
-  onlyRotateOnYAxis: 1
+  sceneId:
+    value: Friends
+  rotator: {fileID: 239422279}
+--- !u!114 &239422279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239422274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8de0b6c5ea7141b48b789b0e6c467de0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetDirection: {x: 0, y: 0, z: 1}
+  rotationSpeed: 360
 --- !u!1 &254127287 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -9069306999821450830, guid: fa53211be921c6d499a0a4cbde6423ad, type: 3}
@@ -3098,11 +3113,11 @@ MonoBehaviour:
   sceneID: Mom
   triggerRadius: 0.6
   autoStartOnLoad: 1
+  autoStartDelay: 0
   requireKeyPress: 0
   interactionKey: 102
   interactionPrompt: {fileID: 0}
   repeatable: 0
-  turnSpeed: 0
 --- !u!65 &543759630
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4197,6 +4212,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 735614595}
+  - component: {fileID: 735614597}
+  - component: {fileID: 735614596}
   m_Layer: 0
   m_Name: Oliver
   m_TagString: Untagged
@@ -4212,7 +4229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735614594}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.50184524, z: -0, w: 0.8649575}
   m_LocalPosition: {x: 5.76, y: -0.435, z: -2.283}
   m_LocalScale: {x: 0.3, y: 0.55362004, z: 0.3}
   m_ConstrainProportionsScale: 1
@@ -4220,7 +4237,36 @@ Transform:
   - {fileID: 760916242}
   - {fileID: 2002092550}
   m_Father: {fileID: 355919537}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 60.244, z: 0}
+--- !u!114 &735614596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735614594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8de0b6c5ea7141b48b789b0e6c467de0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetDirection: {x: 0, y: 0, z: 1}
+  rotationSpeed: 360
+--- !u!114 &735614597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735614594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d86309cf40e1e64b98b63f8bcf3762e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId:
+    value: Friends
+  rotator: {fileID: 735614596}
 --- !u!1 &760916241
 GameObject:
   m_ObjectHideFlags: 0
@@ -6584,6 +6630,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1109238567}
   - component: {fileID: 1109238569}
+  - component: {fileID: 1109238571}
   - component: {fileID: 1109238570}
   m_Layer: 0
   m_Name: Ydna
@@ -6638,12 +6685,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1109238566}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26d6acc8613341c4c9238cce1a93c0b6, type: 3}
+  m_Script: {fileID: 11500000, guid: 8de0b6c5ea7141b48b789b0e6c467de0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 143758672}
-  rotationSpeed: 5
-  onlyRotateOnYAxis: 1
+  targetDirection: {x: 0, y: 0, z: 1}
+  rotationSpeed: 360
+--- !u!114 &1109238571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109238566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d86309cf40e1e64b98b63f8bcf3762e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId:
+    value: Friends
+  rotator: {fileID: 1109238570}
 --- !u!1 &1110856671
 GameObject:
   m_ObjectHideFlags: 0
@@ -10631,19 +10692,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9040542
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.42741784
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -10651,7 +10712,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 50.608
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -10805,9 +10866,6 @@ PrefabInstance:
       addedObject: {fileID: 2002092554}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2002092553}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2002092552}
   m_SourcePrefab: {fileID: 100100000, guid: 7d91e34c047aefe408b5d4d1fffeb8f5, type: 3}
 --- !u!4 &2002092550 stripped
@@ -10852,26 +10910,11 @@ MonoBehaviour:
   sceneID: Friends
   triggerRadius: 1.1
   autoStartOnLoad: 0
+  autoStartDelay: 0
   requireKeyPress: 1
   interactionKey: 102
   interactionPrompt: {fileID: 760916241}
   repeatable: 1
-  turnSpeed: 1080
---- !u!114 &2002092553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1190733575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26d6acc8613341c4c9238cce1a93c0b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 143758672}
-  rotationSpeed: 5
-  onlyRotateOnYAxis: 1
 --- !u!65 &2002092554
 BoxCollider:
   m_ObjectHideFlags: 0
