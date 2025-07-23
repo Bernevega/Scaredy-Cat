@@ -30,6 +30,7 @@ public class Crow : MonoBehaviour
     [SerializeField] private GameObject monocleRightObject;
     [SerializeField] private GameObject flowerObject;
     [SerializeField] private GameObject bushObject;
+    [SerializeField] private Animator animator;
 
     // Internal state
     private Transform _playerTransform;
@@ -39,6 +40,7 @@ public class Crow : MonoBehaviour
     // Graphics under the prompt, for fading
     private Graphic[] _promptGraphics;
     private Coroutine _fadeRoutine;
+   
 
     private Item[] itemReturnArray = new Item[1];
     private DialogueState dialogueState = DialogueState.FirstTalk;
@@ -88,6 +90,13 @@ public class Crow : MonoBehaviour
         {
             Debug.LogError("[Crow] interactionPrompt not assigned.");
         }
+
+        SimpleDialogManager.Instance.eventDialogueChanged += OnDialogueAdvance;
+    }
+
+    private void OnDestroy()
+    {
+        SimpleDialogManager.Instance.eventDialogueChanged -= OnDialogueAdvance;
     }
 
     private void Update()
@@ -220,6 +229,7 @@ public class Crow : MonoBehaviour
                 hasLeftMonocle = true;
                 dialogueState = DialogueState.SecondMonocleWait;
                 SimpleDialogManager.Instance.StartDialogue("CrowSecondMonocle");
+                animator.SetBool("Happy1", true);
             }
             else
             {
@@ -244,6 +254,7 @@ public class Crow : MonoBehaviour
                 hasBothMonocles = true;
                 dialogueState = DialogueState.Final;
                 SimpleDialogManager.Instance.StartDialogue("CrowFinal");
+                animator.SetBool("Happy2", true);
             }
             else
             {
@@ -259,6 +270,20 @@ public class Crow : MonoBehaviour
         {
             hasThanked = true;
             SimpleDialogManager.Instance.StartDialogue("CrowThank");
+        }
+    }
+
+    private void OnDialogueAdvance(string sceneId, string key)
+    {
+        if (sceneId == "CrowSecondMonocle" &&
+            key == null)
+        {
+            animator.SetBool("Happy1", false);
+        }
+        else if (sceneId == "CrowFinal" &&
+            key == null)
+        {
+            animator.SetBool("Happy2", false);
         }
     }
 

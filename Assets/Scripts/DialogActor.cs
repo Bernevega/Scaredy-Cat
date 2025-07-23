@@ -103,7 +103,8 @@ public class DialogActor : MonoBehaviour
 
     private void HidePrompt()
     {
-        interactionPrompt?.SetActive(false);
+        if (interactionPrompt != null)
+            interactionPrompt?.SetActive(false);
     }
 
     void OnDrawGizmosSelected()
