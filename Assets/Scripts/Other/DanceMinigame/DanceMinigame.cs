@@ -163,6 +163,7 @@ public class DanceMinigame : MonoBehaviour
                     keyPool[i].GetScale() < keyScale)
                 {
                     latestKey = keyPool[i];
+                    keyScale = keyPool[i].GetScale();
                 }
 
                 if (keyPool[i].gameObject.activeInHierarchy == false ||
