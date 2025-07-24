@@ -151,11 +151,20 @@ public class DanceMinigame : MonoBehaviour
                 break;
             }
         }
+
+        DanceKey latestKey = null;
         if (pressedKey != KeyCode.None)
         {
+            float keyScale = 9999999f;
             bool success = false;
             for (int i = 0; i < keyPool.Length; i++)
             {
+                if (keyPool[i].gameObject.activeInHierarchy == true &&
+                    keyPool[i].GetScale() < keyScale)
+                {
+                    latestKey = keyPool[i];
+                }
+
                 if (keyPool[i].gameObject.activeInHierarchy == false ||
                     keyPool[i].reqKey != pressedKey)
                 {
@@ -168,6 +177,7 @@ public class DanceMinigame : MonoBehaviour
                     success = true;
                     break;
                 }
+                
             }
 
             if (success)
@@ -176,6 +186,10 @@ public class DanceMinigame : MonoBehaviour
             }
             else
             {
+                if (latestKey)
+                {
+                    latestKey.gameObject.SetActive(false);
+                }
                 FailKey();
             }
         }

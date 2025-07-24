@@ -91,4 +91,9 @@ public class DanceKey : MonoBehaviour
 
         return inZone;
     }
+
+    public float GetScale()
+    {
+        return currentArea.transform.localScale.x;
+    }
 }
