@@ -281,13 +281,17 @@
     }
   },
   "FlowerPickup": {
-    "start": "caw1",
+    "start": "kitty1",
     "nodes": {
       "caw1": {
         "speaker": "Kitty",
-        "text": "I got the flower! I should head back now...",
+        "text": "Finally! I got the super duper rare flower!",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "Oh No! When did it get so dark? I need to get home.",
         "next": null
-      }
     }
   },
   "LogTurnBack": {
