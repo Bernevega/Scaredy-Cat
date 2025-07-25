@@ -983,10 +983,11 @@ MonoBehaviour:
   sceneID: KittyScared
   triggerRadius: 1
   autoStartOnLoad: 0
+  autoStartDelay: 0
   requireKeyPress: 0
   interactionKey: 102
   interactionPrompt: {fileID: 0}
-  promptFadeDuration: 0.25
+  repeatable: 0
 --- !u!4 &497253410
 Transform:
   m_ObjectHideFlags: 0
@@ -1987,6 +1988,7 @@ MonoBehaviour:
   startingQuests:
   - {fileID: 435841967}
   questPanels: {fileID: 756784596}
+  questUI: {fileID: 0}
 --- !u!4 &1091426739
 Transform:
   m_ObjectHideFlags: 0
@@ -4076,6 +4078,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 2.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &2046263991
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2046263993}
+  - component: {fileID: 2046263992}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2046263992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046263991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ee0f8fd807e2f4389658f7fde539b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initPools:
+  - objectToPool: {fileID: 2223675114723871067, guid: afde63e0790772946b7058d947247034, type: 3}
+    initSize: 15
+  - objectToPool: {fileID: 4229327393208528227, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
+    initSize: 15
+--- !u!4 &2046263993
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046263991}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.8314643, y: -3.4352164, z: 5.380576}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2064438920 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4071481230577620691, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
@@ -4332,3 +4383,4 @@ SceneRoots:
   - {fileID: 789699501}
   - {fileID: 1091426739}
   - {fileID: 435841966}
+  - {fileID: 2046263993}

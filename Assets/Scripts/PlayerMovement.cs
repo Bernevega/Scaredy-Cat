@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject model;
     [SerializeField] private Animator animator;
     [SerializeField] private AnimEventInvoker animEvents;
+    [SerializeField] private AudioClip[] walkSoundEffects;
 
     [HideInInspector] public bool blockRightMovement = false;
     [HideInInspector] public bool blockJump = false;  
@@ -184,6 +185,7 @@ public class PlayerMovement : MonoBehaviour
             case "LandStart":   LandStart();   break;
             case "LandEnd":     LandEnd();     break;
             case "WakeUpEnd":   WakeUpEnd();   break;
+            case "FootStep":    MakeFootstep();break;
         }
     }
 
@@ -195,6 +197,23 @@ public class PlayerMovement : MonoBehaviour
     void LandStart() => moveState = MoveState.Landing;
     void LandEnd()   => moveState = MoveState.Idle;
     void WakeUpEnd() { moveState = MoveState.Idle; Debug.Log("Wake up end"); }
+    void MakeFootstep()
+    {
+        int footstepToPlay = Random.Range(0, walkSoundEffects.Length);
+        AudioClip footStepClip = walkSoundEffects[footstepToPlay];
+        GameObject soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        if (soundPlayer)
+        {
+            SoundPlayer spScript = soundPlayer.GetComponent<SoundPlayer>();
+            spScript.transform.position = transform.position;
+
+            PlaySoundInfo soundInfo = new PlaySoundInfo(footStepClip);
+            soundInfo.pitch = Random.Range(0.7f, 1.3f);
+            soundInfo.volume = 0.5f;
+
+            spScript.PlaySound(soundInfo);
+        }
+    }
 
     private IEnumerator RotateModelOverTime(float duration)
     {
