@@ -50,7 +50,7 @@ public class WaterRespawn : MonoBehaviour
     private IEnumerator HandleRespawn(Transform player, Rigidbody rb, PlayerMovement movement)
     {
         // Wait briefly
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
 
         // Freeze player and disable movement
         rb.linearVelocity = Vector3.zero;
