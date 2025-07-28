@@ -1,35 +1,35 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 public class CrakingBranch : MonoBehaviour
 {
-    [Tooltip("Time in seconds to fully fade out.")]
-    public float fadeDuration = 3f;
+    [Tooltip("Seconds to wait before hiding the branch after player collision.")]
+    public float hideDelay = 3f;
 
-    [Tooltip("Time in seconds before reappearing.")]
-    public float reappearDelay = 5f;
-
-    [Tooltip("The object to visually fade and hide (usually the mesh).")]
+    [Tooltip("The visual object to hide (e.g. mesh or model GameObject)")]
     public GameObject visualTarget;
 
     private bool hasCollided = false;
-    private Renderer rend;
-    private Material mat;
-    private Color originalColor;
+
+    // Static list to track all CrakingBranch instances
+    public static List<CrakingBranch> AllBranches = new List<CrakingBranch>();
+
+    private void Awake()
+    {
+        AllBranches.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        AllBranches.Remove(this);
+    }
 
     private void Start()
     {
         if (visualTarget == null)
             visualTarget = gameObject;
-
-        rend = visualTarget.GetComponent<Renderer>();
-        mat = rend.material;
-        originalColor = mat.color;
-
-        Color startColor = originalColor;
-        startColor.a = 1f;
-        mat.color = startColor;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -39,31 +39,19 @@ public class CrakingBranch : MonoBehaviour
         if (collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             hasCollided = true;
-            StartCoroutine(FadeOutAndRestore());
+            StartCoroutine(HideAfterDelay());
         }
     }
 
-    private IEnumerator FadeOutAndRestore()
+    private IEnumerator HideAfterDelay()
     {
-        float elapsed = 0f;
-        Color startColor = mat.color;
-        Color endColor = startColor;
-        endColor.a = 0f;
+        yield return new WaitForSeconds(hideDelay);
+        visualTarget.SetActive(false);
+    }
 
-        // Fade out
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeDuration);
-            mat.color = Color.Lerp(startColor, endColor, t);
-            yield return null;
-        }
-
-        rend.enabled = false; // Hide the visuals (no deactivation)
-        yield return new WaitForSeconds(reappearDelay);
-
-        rend.enabled = true;
-        mat.color = originalColor; // Restore fully visible color
-        hasCollided = false; // Ready for next collision
+    public void ReappearNow()
+    {
+        visualTarget.SetActive(true);
+        hasCollided = false;
     }
 }

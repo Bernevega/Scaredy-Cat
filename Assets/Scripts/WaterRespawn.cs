@@ -49,10 +49,9 @@ public class WaterRespawn : MonoBehaviour
 
     private IEnumerator HandleRespawn(Transform player, Rigidbody rb, PlayerMovement movement)
     {
-        // Wait briefly
         yield return new WaitForSeconds(0.1f);
 
-        // Freeze player and disable movement
+        // Freeze physics and disable gravity/movement
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
@@ -64,10 +63,15 @@ public class WaterRespawn : MonoBehaviour
         player.position = spawnPoint.position;
         player.rotation = spawnPoint.rotation;
 
-        // Wait for physics frame to apply new transform
         yield return new WaitForFixedUpdate();
 
-        // Reset animator
+        // ✅ Reappear all branches during the black screen
+        foreach (var branch in CrakingBranch.AllBranches)
+        {
+            branch.ReappearNow();
+        }
+
+        // Reset animation state
         var animator = movement.GetComponentInChildren<Animator>();
         if (animator != null)
         {
@@ -77,10 +81,10 @@ public class WaterRespawn : MonoBehaviour
             animator.Play("Idle");
         }
 
-        // Wait until fade-in finishes before unfreezing
+        // Fade back in
         yield return StartCoroutine(screenFader.FadeIn());
 
-        // Re-enable physics
+        // Restore physics
         rb.isKinematic = false;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -96,7 +100,6 @@ public class WaterRespawn : MonoBehaviour
 
         // Enable movement script
         movement.enabled = true;
-
         _isRespawning = false;
     }
 }
