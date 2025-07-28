@@ -164,9 +164,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cf24db9105cf3479e69652e7a65ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 3
-  reappearDelay: 5
+  hideDelay: 3
   visualTarget: {fileID: 1614383843}
+  shakeMagnitude: 0.05
+  shakeSpeed: 30
 --- !u!65 &32172937
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -320,9 +321,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cf24db9105cf3479e69652e7a65ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 3
-  reappearDelay: 5
+  hideDelay: 3
   visualTarget: {fileID: 190005916}
+  shakeMagnitude: 0.05
+  shakeSpeed: 30
 --- !u!65 &129499619
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -566,7 +568,6 @@ MonoBehaviour:
   nextSceneName: 3Parkour4
   screenFader: {fileID: 1207711567}
   onlyPlayer: 1
-  nextSceneStartPositionIndex: 0
 --- !u!65 &282464768
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -720,9 +721,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cf24db9105cf3479e69652e7a65ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 3
-  reappearDelay: 5
+  hideDelay: 3
   visualTarget: {fileID: 125720871}
+  shakeMagnitude: 0.05
+  shakeSpeed: 30
 --- !u!65 &432579422
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1198,9 +1200,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cf24db9105cf3479e69652e7a65ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 2
-  reappearDelay: 4
+  hideDelay: 3
   visualTarget: {fileID: 719535777}
+  shakeMagnitude: 0.05
+  shakeSpeed: 30
 --- !u!1 &813474365
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,7 +1664,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7706367285934294889, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9149929194633719478, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: m_Pivot.x
@@ -2553,9 +2556,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cf24db9105cf3479e69652e7a65ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 3
-  reappearDelay: 5
+  hideDelay: 3
   visualTarget: {fileID: 1853337488}
+  shakeMagnitude: 0.05
+  shakeSpeed: 30
 --- !u!65 &1581750138
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2843,9 +2847,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cf24db9105cf3479e69652e7a65ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeDuration: 3
-  reappearDelay: 5
+  hideDelay: 3
   visualTarget: {fileID: 904567579}
+  shakeMagnitude: 0.05
+  shakeSpeed: 30
 --- !u!65 &1814873070
 BoxCollider:
   m_ObjectHideFlags: 0

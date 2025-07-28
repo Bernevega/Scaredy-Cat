@@ -1586,7 +1586,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4071481230577620691, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: fadeDuration
-      value: 0.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4246740591314527640, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: m_Maskable
@@ -1767,37 +1767,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5587585, y: 3.5551426, z: 11.040652}
   m_Center: {x: 0.000002590855, y: -0.0025837123, z: 4.7074428}
---- !u!1 &329490044
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 329490045}
-  m_Layer: 0
-  m_Name: SpawnpointLabyrinth
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &329490045
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329490044}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.663, y: 0, z: -1.78}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 938584768}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &341505296
 GameObject:
   m_ObjectHideFlags: 0
@@ -2384,6 +2353,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 462088193}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &484328919 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8513681105655169540, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+  m_PrefabInstance: {fileID: 1011490230}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &489607138
 GameObject:
   m_ObjectHideFlags: 0
@@ -3054,37 +3028,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1717096497040790537, guid: e98ff9940c632d84a9f08f0253025b85, type: 3}
   m_PrefabInstance: {fileID: 1125495378}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &731567667
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 731567668}
-  m_Layer: 0
-  m_Name: SpawnpointLabyrinth (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &731567668
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731567667}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.225, y: 0, z: -8.021}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 938584768}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &734398299
 GameObject:
   m_ObjectHideFlags: 0
@@ -4334,8 +4277,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1385752615}
-  - {fileID: 329490045}
-  - {fileID: 731567668}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &985813864
@@ -4641,13 +4582,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8513681105655169540, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1011490232}
   m_SourcePrefab: {fileID: 100100000, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
 --- !u!4 &1011490231 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
   m_PrefabInstance: {fileID: 1011490230}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1011490232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484328919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 205a0d48df825e94e927b91ab2cc83f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1042024679 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1853721832808501071, guid: e98ff9940c632d84a9f08f0253025b85, type: 3}
@@ -7113,7 +7069,6 @@ MonoBehaviour:
   nextSceneName: 4Ghosts
   screenFader: {fileID: 583483955}
   onlyPlayer: 1
-  nextSceneStartPositionIndex: 0
 --- !u!65 &1453995705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7349,13 +7304,14 @@ MonoBehaviour:
   - {fileID: 744873866}
   interactable: {fileID: 744873863}
   itemScript: {fileID: 1508214392}
-  sceneIDToTriggerDialog: 
+  sceneIDToTriggerDialog: FlowerPickup
   playerAnimator: {fileID: 0}
-  faintTriggerName: Faint
+  faintTriggerName: 
   fadeScript: {fileID: 0}
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
+  playerSpawnPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1508214392
 MonoBehaviour:
   m_ObjectHideFlags: 0

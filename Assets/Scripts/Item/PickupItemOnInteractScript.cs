@@ -20,6 +20,10 @@ public class PickupItemOnInteractScript : MonoBehaviour
     [Tooltip("Scene to load after faint and fade (must be added to Build Settings)")]
     public string sceneToLoad;
 
+    [Header("Player Spawn After Load")]
+    [Tooltip("Position to place the player at after the new scene loads")]
+    public Vector3 playerSpawnPosition;
+
     private void Awake()
     {
         interactable.eventOnInteract += OnInteract;
@@ -79,7 +83,19 @@ public class PickupItemOnInteractScript : MonoBehaviour
 
         if (!string.IsNullOrEmpty(sceneToLoad))
         {
+            SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.LoadScene(sceneToLoad);
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            player.transform.position = playerSpawnPosition;
         }
     }
 

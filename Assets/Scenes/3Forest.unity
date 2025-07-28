@@ -1877,7 +1877,6 @@ MonoBehaviour:
   nextSceneName: 3Parkour1
   screenFader: {fileID: 583483955}
   onlyPlayer: 1
-  nextSceneStartPositionIndex: 0
 --- !u!1 &269069740 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6633042164620095511, guid: e98ff9940c632d84a9f08f0253025b85, type: 3}
@@ -2118,6 +2117,7 @@ MonoBehaviour:
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
+  playerSpawnPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &300289080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2141,7 +2141,7 @@ Transform:
   m_GameObject: {fileID: 300289078}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 0.39, z: 8.677}
+  m_LocalPosition: {x: 2.37, y: 0.39, z: 14.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2401,7 +2401,6 @@ MonoBehaviour:
   nextSceneName: 2Outskirts
   screenFader: {fileID: 0}
   onlyPlayer: 1
-  nextSceneStartPositionIndex: 1
 --- !u!65 &331458400
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5794,7 +5793,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5625331880092350555, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -9086,7 +9086,6 @@ MonoBehaviour:
   nextSceneName: 4Ghosts
   screenFader: {fileID: 0}
   onlyPlayer: 1
-  nextSceneStartPositionIndex: 0
 --- !u!65 &1453995705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9571,6 +9570,7 @@ MonoBehaviour:
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
+  playerSpawnPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1508214392
 MonoBehaviour:
   m_ObjectHideFlags: 0

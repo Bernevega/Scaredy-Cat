@@ -14,28 +14,22 @@ public class SceneTransitionZone : MonoBehaviour
     [Tooltip("If true, only the player can trigger this; otherwise any collider works")]
     public bool onlyPlayer = true;
 
-    public uint nextSceneStartPositionIndex = 0;
-
     private Collider _col;
     private bool _isTransitioning = false;
 
-    void Awake()
+    private void Awake()
     {
         _col = GetComponent<Collider>();
         _col.isTrigger = true;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        // Prevent repeats
         if (_isTransitioning) return;
 
-        // If we're restricting to the Player tag...
         if (onlyPlayer && !other.CompareTag("Player"))
             return;
 
-        LevelDirector.targetStartPosition = (int)nextSceneStartPositionIndex;
-        // Kick off the fade and load
         StartCoroutine(FadeAndLoad());
     }
 
@@ -43,13 +37,13 @@ public class SceneTransitionZone : MonoBehaviour
     {
         _isTransitioning = true;
 
-        // 1) Fade out
+        // 1) Fade to black
         if (screenFader != null)
             yield return StartCoroutine(screenFader.FadeOut());
         else
             Debug.LogWarning("[SceneTransitionZone] No ScreenFader assigned; skipping fade.");
 
-        // 2) Load the next scene
+        // 2) Load the scene
         if (!string.IsNullOrEmpty(nextSceneName))
             SceneManager.LoadScene(nextSceneName);
         else
