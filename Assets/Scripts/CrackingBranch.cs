@@ -11,9 +11,16 @@ public class CrakingBranch : MonoBehaviour
     [Tooltip("The visual object to hide (e.g. mesh or model GameObject)")]
     public GameObject visualTarget;
 
-    private bool hasCollided = false;
+    [Tooltip("Shaking strength in local units (e.g. 0.1 = subtle)")]
+    public float shakeMagnitude = 0.05f;
 
-    // Static list to track all CrakingBranch instances
+    [Tooltip("Shaking speed (higher = faster wiggle)")]
+    public float shakeSpeed = 30f;
+
+    private bool hasCollided = false;
+    private Coroutine shakeRoutine;
+    private Vector3 originalLocalPos;
+
     public static List<CrakingBranch> AllBranches = new List<CrakingBranch>();
 
     private void Awake()
@@ -30,6 +37,8 @@ public class CrakingBranch : MonoBehaviour
     {
         if (visualTarget == null)
             visualTarget = gameObject;
+
+        originalLocalPos = visualTarget.transform.localPosition;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -39,6 +48,7 @@ public class CrakingBranch : MonoBehaviour
         if (collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             hasCollided = true;
+            shakeRoutine = StartCoroutine(Shake());
             StartCoroutine(HideAfterDelay());
         }
     }
@@ -46,12 +56,34 @@ public class CrakingBranch : MonoBehaviour
     private IEnumerator HideAfterDelay()
     {
         yield return new WaitForSeconds(hideDelay);
+
+        // Stop shaking before hiding
+        if (shakeRoutine != null)
+        {
+            StopCoroutine(shakeRoutine);
+            visualTarget.transform.localPosition = originalLocalPos;
+        }
+
         visualTarget.SetActive(false);
+    }
+
+    private IEnumerator Shake()
+    {
+        while (true)
+        {
+            float shakeOffsetX = Mathf.Sin(Time.time * shakeSpeed) * shakeMagnitude;
+            float shakeOffsetY = Mathf.Cos(Time.time * shakeSpeed) * shakeMagnitude;
+
+            visualTarget.transform.localPosition = originalLocalPos + new Vector3(shakeOffsetX, shakeOffsetY, 0f);
+
+            yield return null;
+        }
     }
 
     public void ReappearNow()
     {
         visualTarget.SetActive(true);
+        visualTarget.transform.localPosition = originalLocalPos;
         hasCollided = false;
     }
 }
