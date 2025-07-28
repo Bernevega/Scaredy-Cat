@@ -14,7 +14,6 @@ public class WaterRespawn : MonoBehaviour
 
     private void Reset()
     {
-        // ensure the water collider is set as a trigger
         var col = GetComponent<Collider>();
         col.isTrigger = true;
     }
@@ -34,69 +33,70 @@ public class WaterRespawn : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_isRespawning) 
-            return;
+        if (_isRespawning) return;
 
-        // Find the player's movement component (could be on a parent)
         var movement = other.GetComponentInParent<PlayerMovement>();
-        if (movement == null) 
-            return;
+        if (movement == null) return;
 
         var rb = movement.GetComponent<Rigidbody>();
-        if (rb == null) 
-            return;
+        if (rb == null) return;
 
         _isRespawning = true;
-
-        // 1) Disable player input immediately
         movement.enabled = false;
 
-        // 2) Start the respawn sequence (physics disabling is delayed)
         StartCoroutine(HandleRespawn(movement.transform, rb, movement));
     }
 
     private IEnumerator HandleRespawn(Transform player, Rigidbody rb, PlayerMovement movement)
     {
-        // 1) Wait 0.2 seconds before disabling physics
+        // Wait briefly
         yield return new WaitForSeconds(0.2f);
 
-        // 2) Freeze physics & zero out any current velocity
-        rb.isKinematic     = true;
-        rb.linearVelocity        = Vector3.zero;
+        // Freeze player and disable movement
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
 
-        // 3) Fade to black
+        // Fade to black
         yield return StartCoroutine(screenFader.FadeOut());
 
-        // 4) Teleport & orient
+        // Move player to spawn point
         player.position = spawnPoint.position;
         player.rotation = spawnPoint.rotation;
 
-        // 5) Wait one physics step so teleport “sticks”
+        // Wait for physics frame to apply new transform
         yield return new WaitForFixedUpdate();
 
-        // 6) Reset any leftover velocity & unfreeze physics
-        rb.linearVelocity        = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.isKinematic     = false;
-
-        // 7) One-frame buffer
-        yield return null;
-
-        // 8) Reset animation state to Idle BEFORE fade-in
+        // Reset animator
         var animator = movement.GetComponentInChildren<Animator>();
         if (animator != null)
         {
             animator.SetBool("moveInput", false);
             animator.SetBool("isRunning", false);
+            animator.SetBool("grounded", true);
             animator.Play("Idle");
         }
 
-        // 9) Fade back in
+        // Wait until fade-in finishes before unfreezing
         yield return StartCoroutine(screenFader.FadeIn());
 
-        // 10) Re-enable movement
-        movement.enabled   = true;
-        _isRespawning      = false;
+        // Re-enable physics
+        rb.isKinematic = false;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        // Reset movement state
+        movement.moveState = PlayerMovement.MoveState.Idle;
+        movement.blockJump = false;
+        movement.blockSprint = false;
+        movement.blockRightMovement = false;
+        movement.hasJumped = false;
+        movement.SetCanMove(true);
+        Physics.SyncTransforms();
+
+        // Enable movement script
+        movement.enabled = true;
+
+        _isRespawning = false;
     }
 }

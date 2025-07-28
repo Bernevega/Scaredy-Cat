@@ -36,8 +36,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded = true;
     private bool canMove = true;
     private bool _wasDialogActive = false;
-    private bool hasJumped = false;
-    private MoveState moveState = MoveState.Idle; 
+    public bool hasJumped = false;
+    public MoveState moveState = MoveState.Idle; 
 
     public enum MoveState : byte
     {
