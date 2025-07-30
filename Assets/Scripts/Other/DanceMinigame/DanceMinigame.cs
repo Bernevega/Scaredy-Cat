@@ -190,9 +190,10 @@ public class DanceMinigame : MonoBehaviour
                 if (latestKey)
                 {
                     latestKey.gameObject.SetActive(false);
+                    activeKeys--;
                 }
                 FailKey();
-                activeKeys--;
+                
             }
         }
     }
