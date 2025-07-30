@@ -70,6 +70,7 @@ public class SimpleDialogManager : MonoBehaviour
     private string currentTreeName;
     private Graphic[] graphicsUnderPanel;
     private bool isFading = false;
+    public bool dialogueStart = false;
 
     /// <summary>
     /// Event invoked whenever dialogue starts, ends, or advances.
@@ -165,6 +166,7 @@ public class SimpleDialogManager : MonoBehaviour
 
         // Fade in panel then show text
         StartCoroutine(FadePanel(0f, 1f));
+        dialogueStart = true;
         eventDialogueChanged?.Invoke(currentTreeName, currentKey);
         ShowCurrentNode();
     }
@@ -224,7 +226,9 @@ public class SimpleDialogManager : MonoBehaviour
         currentKey  = nextKey;
         currentNode = currentTree.nodes[nextKey];
 
+        dialogueStart = false;
         eventDialogueChanged?.Invoke(currentTreeName, currentKey);
+        
         ShowCurrentNode();
     }
 

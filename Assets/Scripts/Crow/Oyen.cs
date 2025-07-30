@@ -5,16 +5,19 @@ public class Oyen : MonoBehaviour
     [SerializeField] Interactable interactable;
     [SerializeField] ItemScriptable braceletItemScriptable;
     [SerializeField] GameObject nextSceneTransition;
+    [SerializeField] Animator animator;
 
 
     Item[] itemReturnArray = new Item[1];
 
     public bool waitingForBracelet = false;
     bool hasBracelet = false;
+    bool firstNode = false;
 
     private void Awake()
     {
         interactable.eventOnInteract += OnInteract;
+        animator.SetBool("Sad", true);
     }
 
     private void Start()
@@ -37,10 +40,37 @@ public class Oyen : MonoBehaviour
 
     private void OnDialogueAdvance(string sceneId, string currKey)
     {
-        if (sceneId == "OyenThank" && currKey == null)
+        var dm = SimpleDialogManager.Instance;
+
+        if (!(
+            sceneId == "OyenStart" ||
+            sceneId == "OyenWait" ||
+            sceneId == "OyenThank"))
         {
-            nextSceneTransition.SetActive(true);
+            return;
         }
+
+        if (dm.dialogueStart)
+        {
+            animator.SetBool("Sad", false);
+        }
+        else if (currKey == null && !hasBracelet)
+        {
+            animator.SetBool("Sad", true);
+        }
+        if (sceneId == "OyenThank")
+        {
+            if (currKey == null)
+            {
+                nextSceneTransition.SetActive(true);
+            }
+            else if (currKey == "boo2")
+            {
+                animator.SetBool("Sad", false);
+                animator.SetBool("Happy", true);
+            }
+        }
+        
     }
 
     private void CheckBracelet(Interactor interactor)

@@ -192,6 +192,7 @@ public class DanceMinigame : MonoBehaviour
                     latestKey.gameObject.SetActive(false);
                 }
                 FailKey();
+                activeKeys--;
             }
         }
     }
