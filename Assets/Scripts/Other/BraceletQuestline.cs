@@ -11,7 +11,7 @@ public class BraceletQuestline : MonoBehaviour
     [SerializeField] DialogueOnInteract assyla;
     [SerializeField] GameObject braceletObject;
     [SerializeField] GameObject nextSceneTransition;
-
+    [SerializeField] Quest quest;
     private void Start()
     {
         for (int i = 0; i < npcs.Length; i++) 
@@ -34,12 +34,26 @@ public class BraceletQuestline : MonoBehaviour
         {
             case "OyenStart":
                 mouse.sceneId.value = "MouseCheese";
+                if (nextNode == null)
+                {
+                    QuestManager.instance.AddQuest(quest);
+                }
                 break;
             case "MouseCheese":
                 mouse.sceneId.value = "MouseCheeseWait";
                 jD.sceneId.value = "JDCheese";
+                if (nextNode == null)
+                {
+                    quest.description = "Find a way to get cheese for the mouse.";
+                    QuestManager.instance.UpdateQuest(quest);
+                }
                 break;
             case "JDCheese":
+                if (nextNode == null)
+                {
+                    quest.description = "Find a hat for John Daniel.";
+                    QuestManager.instance.UpdateQuest(quest);
+                }
                 assyla.sceneId.value = "AssylaDance";
                 break;
             case "AssylaGive":
@@ -48,6 +62,11 @@ public class BraceletQuestline : MonoBehaviour
             case "JDGive":
                 jD.sceneId.value = "JDThank";
                 mouse.sceneId.value = "MouseBraceletGive";
+                if (nextNode == null)
+                {
+                    quest.description = "Get the bracelet from the mouse.";
+                    QuestManager.instance.UpdateQuest(quest);
+                }
                 break;
             case "MouseBraceletGive":
                 if (nextNode == null)
@@ -55,6 +74,9 @@ public class BraceletQuestline : MonoBehaviour
                     braceletObject.SetActive(true);
                     mouse.sceneId.value = "MouseThank";
                     mouse.gameObject.SetActive(false);
+
+                    quest.description = "Give the bracelet to the orange cat.";
+                    QuestManager.instance.UpdateQuest(quest);
                 }
                 break;
         }

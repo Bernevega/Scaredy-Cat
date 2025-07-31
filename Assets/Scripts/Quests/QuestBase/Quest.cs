@@ -11,11 +11,19 @@ public class Quest : MonoBehaviour
 
     public void OnStart()
     {
-        questBehaviour.OnStart();
+        if (questBehaviour != null)
+        {
+            questBehaviour.OnStart();
+        }
+        
     }
     public void OnComplete()
     {
-        questBehaviour.OnComplete();
+        if (questBehaviour != null)
+        {
+            questBehaviour.OnComplete();
+        }
+       
         completed = true;
     }
 }
