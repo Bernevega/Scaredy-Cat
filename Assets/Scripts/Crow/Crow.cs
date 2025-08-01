@@ -30,6 +30,7 @@ public class Crow : MonoBehaviour
     [SerializeField] private GameObject monocleRightObject;
     [SerializeField] private GameObject flowerObject;
     [SerializeField] private GameObject bushObject;
+    [SerializeField] private GameObject extraDisappearObject;
     [SerializeField] private Animator animator;
 
     // Internal state
@@ -231,6 +232,9 @@ public class Crow : MonoBehaviour
                 dialogueState = DialogueState.SecondMonocleWait;
                 SimpleDialogManager.Instance.StartDialogue("CrowSecondMonocle");
                 animator.SetBool("Happy1", true);
+
+                if (extraDisappearObject != null) 
+                    extraDisappearObject.SetActive(false);
             }
             else
             {
