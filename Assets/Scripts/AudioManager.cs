@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -27,10 +28,30 @@ public class AudioManager : MonoBehaviour
 
     // -------- Volume Setters --------
 
+    public void SetMasterVolume(Slider slider)
+    {
+        audioMixer.SetFloat("MasterVolume", Mathf.Log10(slider.value) * 20);
+        PlayerPrefs.SetFloat("MasterVolume", slider.value);
+        Debug.Log("Set the master volume to : " + slider.value);
+    }
+
+    public void SetMusicVolume(Slider slider)
+    {
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(slider.value) * 20);
+        PlayerPrefs.SetFloat("MusicVolume", slider.value);
+    }
+
+    public void SetSFXVolume(Slider slider)
+    {
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(slider.value) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", slider.value);
+    }
+
     public void SetMasterVolume(float volume)
     {
         audioMixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20);
         PlayerPrefs.SetFloat("MasterVolume", volume);
+        Debug.Log("Set the master volume to : " + volume);
     }
 
     public void SetMusicVolume(float volume)

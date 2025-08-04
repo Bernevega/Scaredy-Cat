@@ -128,28 +128,28 @@ public class PauseMenu : MonoBehaviour
     /// <summary>
     /// Assign this to generalVolumeSlider.OnValueChanged(float).
     /// </summary>
-    public void SetGeneralVolume(float volume)
+    public void SetGeneralVolume(Slider slider)
     {
         if (AudioManager.Instance != null)
-            AudioManager.Instance.SetMasterVolume(volume);
+            AudioManager.Instance.SetMasterVolume(slider);
     }
 
     /// <summary>
     /// Assign this to musicVolumeSlider.OnValueChanged(float).
     /// </summary>
-    public void SetMusicVolume(float volume)
+    public void SetMusicVolume(Slider slider)
     {
         if (AudioManager.Instance != null)
-            AudioManager.Instance.SetMusicVolume(volume);
+            AudioManager.Instance.SetMusicVolume(slider);
     }
 
     /// <summary>
     /// Assign this to sfxVolumeSlider.OnValueChanged(float).
     /// </summary>
-    public void SetSFXVolume(float volume)
+    public void SetSFXVolume(Slider slider)
     {
         if (AudioManager.Instance != null)
-            AudioManager.Instance.SetSFXVolume(volume);
+            AudioManager.Instance.SetSFXVolume(slider);
     }
 
     private void LoadVolumeSliders()

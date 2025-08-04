@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlaySoundOnButtonAction : MonoBehaviour
 {
     [SerializeField] UIButton button;
+    [SerializeField] AudioMixerGroup mix;
 
     [Space(10)]
     [SerializeField] AudioClip mouseDownSound;
@@ -75,6 +77,7 @@ public class PlaySoundOnButtonAction : MonoBehaviour
         soundInfo.clip = clipToPlay;
         soundInfo.pitch = pitch;
         soundInfo.volume = vol;
+        soundInfo.mixer = mix;
 
         soundPlayer2D.PlaySound(soundInfo);
     }
