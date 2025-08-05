@@ -26,6 +26,7 @@ public class Crow : MonoBehaviour
     [SerializeField] private Interactable interactable;
     [SerializeField] private ItemScriptable monocleLeftScriptable;
     [SerializeField] private ItemScriptable monocleRightScriptable;
+    [SerializeField] private Sprite crow2Sprite;
     [SerializeField] private GameObject monocleLeftObject;
     [SerializeField] private GameObject monocleRightObject;
     [SerializeField] private GameObject flowerObject;
@@ -230,7 +231,9 @@ public class Crow : MonoBehaviour
                 bushObject.SetActive(false);
                 hasLeftMonocle = true;
                 dialogueState = DialogueState.SecondMonocleWait;
+                SimpleDialogManager.Instance.crowSprite = crow2Sprite;
                 SimpleDialogManager.Instance.StartDialogue("CrowSecondMonocle");
+                
                 animator.SetBool("Happy1", true);
 
                 if (extraDisappearObject != null) 

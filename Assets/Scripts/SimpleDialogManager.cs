@@ -49,6 +49,7 @@ public class SimpleDialogManager : MonoBehaviour
     public Sprite oliverSprite;
     public Sprite groupFriendsSprite;
     public Sprite crowSprite;
+    public Sprite crow2Sprite;
 
     // New character sprites
     public Sprite assylaSprite;
@@ -178,7 +179,7 @@ public class SimpleDialogManager : MonoBehaviour
         // Set correct portrait
         switch (currentNode.speaker)
         {
-            case "Mom Cat":             speakerIcon.sprite = momCatSprite;       break;
+            case "Mom Cat":             speakerIcon.sprite = momCatSprite;      break;
             case "Kitty":               speakerIcon.sprite = kittySprite;       break;
             case "Tire":                speakerIcon.sprite = tireSprite;        break;
             case "Ydna":                speakerIcon.sprite = ydnaSprite;        break;
@@ -192,6 +193,7 @@ public class SimpleDialogManager : MonoBehaviour
             case "N":                   speakerIcon.sprite = nSprite;           break;
             case "Chica":               speakerIcon.sprite = chicaSprite;       break;
             case "Oyen":                speakerIcon.sprite = oyenSprite;        break;
+            case "CrowMono":            speakerIcon.sprite = crow2Sprite;       break;
 
             default:                     speakerIcon.sprite = null;              break;
         }
