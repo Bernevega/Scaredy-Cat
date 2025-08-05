@@ -1156,6 +1156,8 @@ GameObject:
   - component: {fileID: 3210186878911154177}
   - component: {fileID: 7430719846101486185}
   - component: {fileID: 6839310191046215997}
+  - component: {fileID: 51843890854566665}
+  - component: {fileID: 3210779764856338167}
   m_Layer: 5
   m_Name: AudioButton
   m_TagString: Untagged
@@ -1277,6 +1279,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &51843890854566665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272443040718966877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3210779764856338167}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
+--- !u!114 &3210779764856338167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272443040718966877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1334105920100722652
 GameObject:
   m_ObjectHideFlags: 0
@@ -2189,6 +2229,8 @@ GameObject:
   - component: {fileID: 8880664702765747119}
   - component: {fileID: 2281187182497631408}
   - component: {fileID: 8570072555355787348}
+  - component: {fileID: 1260241420059970929}
+  - component: {fileID: 3211904400763160779}
   m_Layer: 5
   m_Name: ControlsButton
   m_TagString: Untagged
@@ -2310,6 +2352,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1260241420059970929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2176044317743158816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3211904400763160779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2176044317743158816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1260241420059970929}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
 --- !u!1 &2319616552048373222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2451,6 +2531,8 @@ GameObject:
   - component: {fileID: 3532298005738135604}
   - component: {fileID: 4196891728470570847}
   - component: {fileID: 7254209570930162570}
+  - component: {fileID: 817953920199529503}
+  - component: {fileID: 313529809669246151}
   m_Layer: 5
   m_Name: BackToMenuButton
   m_TagString: Untagged
@@ -2542,6 +2624,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &817953920199529503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2619908632874129747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 313529809669246151}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
+--- !u!114 &313529809669246151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2619908632874129747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2724239190855877145
 GameObject:
   m_ObjectHideFlags: 0
@@ -2553,6 +2673,8 @@ GameObject:
   - component: {fileID: 3648931954593790616}
   - component: {fileID: 8481044945413719188}
   - component: {fileID: 5867678523495839880}
+  - component: {fileID: 1743682486346727839}
+  - component: {fileID: 648413964327928199}
   m_Layer: 5
   m_Name: SaveButton
   m_TagString: Untagged
@@ -2644,6 +2766,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1743682486346727839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2724239190855877145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 648413964327928199}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
+--- !u!114 &648413964327928199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2724239190855877145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2761839134035380884
 GameObject:
   m_ObjectHideFlags: 0
@@ -3318,6 +3478,8 @@ GameObject:
   - component: {fileID: 4075589200239886109}
   - component: {fileID: 6192426825682937090}
   - component: {fileID: 6455041046322752025}
+  - component: {fileID: 7995564519016250837}
+  - component: {fileID: 7905871205660957703}
   m_Layer: 5
   m_Name: CloseSettingsButton
   m_TagString: Untagged
@@ -3439,6 +3601,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7995564519016250837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4370486444333079576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7905871205660957703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4370486444333079576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7995564519016250837}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
 --- !u!1 &4514911092779246752
 GameObject:
   m_ObjectHideFlags: 0
@@ -4460,6 +4660,8 @@ GameObject:
   - component: {fileID: 1895213142965866307}
   - component: {fileID: 3929835336044089749}
   - component: {fileID: 5594499129314521713}
+  - component: {fileID: 3851443594562459158}
+  - component: {fileID: 2535800637885590101}
   m_Layer: 5
   m_Name: ContinueButton
   m_TagString: Untagged
@@ -4551,6 +4753,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3851443594562459158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922967460797392147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2535800637885590101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922967460797392147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3851443594562459158}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
 --- !u!1 &5924891433422171883
 GameObject:
   m_ObjectHideFlags: 0
@@ -5867,6 +6107,8 @@ GameObject:
   - component: {fileID: 397604363501420560}
   - component: {fileID: 1705087993642526666}
   - component: {fileID: 3054937349284798793}
+  - component: {fileID: 3943089850287507720}
+  - component: {fileID: 8638202939668108658}
   m_Layer: 5
   m_Name: VideoButton
   m_TagString: Untagged
@@ -5988,6 +6230,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3943089850287507720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7481430001284251799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8638202939668108658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7481430001284251799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3943089850287507720}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
 --- !u!1 &7778365899072528187
 GameObject:
   m_ObjectHideFlags: 0
@@ -6654,6 +6934,8 @@ GameObject:
   - component: {fileID: 3914602704631449367}
   - component: {fileID: 3203270607063189155}
   - component: {fileID: 1170460125777218983}
+  - component: {fileID: 3669782786495623892}
+  - component: {fileID: 4629148359721033689}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -6745,6 +7027,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3669782786495623892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8273130282481375312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4629148359721033689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8273130282481375312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3669782786495623892}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
 --- !u!1 &8329524951499445520
 GameObject:
   m_ObjectHideFlags: 0
@@ -7389,6 +7709,8 @@ GameObject:
   - component: {fileID: 4169301110076475564}
   - component: {fileID: 5383798062980720090}
   - component: {fileID: 1534574283320526915}
+  - component: {fileID: 7418495945390167809}
+  - component: {fileID: 2880379230453773293}
   m_Layer: 5
   m_Name: ExitGameButton
   m_TagString: Untagged
@@ -7480,6 +7802,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7418495945390167809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8896658943534087794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2880379230453773293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8896658943534087794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1ad41bd74bbfd43aecc8bc773d126a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7418495945390167809}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
+  mouseDownSound: {fileID: 8300000, guid: 9551908fc9f4e174b80615c084b47b11, type: 3}
+  mouseDownVolume: 1
+  mouseDownPitch: 1
+  mouseUpSound: {fileID: 0}
+  mouseUpVolume: 1
+  mouseUpPitch: 1
+  hoverEnterSound: {fileID: 8300000, guid: 06b7680c8c76bc8468ce932f1c4dc418, type: 3}
+  hoverEnterVolume: 1
+  hoverEnterPitch: 1
+  hoverExitSound: {fileID: 0}
+  hoverExitVolume: 1
+  hoverExitPitch: 1
 --- !u!1 &8923614596706555422
 GameObject:
   m_ObjectHideFlags: 0
