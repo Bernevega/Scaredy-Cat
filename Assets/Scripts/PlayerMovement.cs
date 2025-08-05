@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private AnimEventInvoker animEvents;
     [SerializeField] private AudioClip[] walkSoundEffects;
+    [SerializeField] private AudioClip jumpSoundEffect;
+    [SerializeField] private AudioClip landSoundEffect;
 
     [HideInInspector] public bool blockRightMovement = false;
     [HideInInspector] public bool blockJump = false;  
@@ -192,10 +194,44 @@ public class PlayerMovement : MonoBehaviour
     void JumpLiftOff()
     {
         // No longer used for jumping physics, but can be used for FX
+
+        GameObject soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        if (soundPlayer)
+        {
+            SoundPlayer spScript = soundPlayer.GetComponent<SoundPlayer>();
+            spScript.transform.position = transform.position;
+
+            PlaySoundInfo soundInfo = new PlaySoundInfo(jumpSoundEffect);
+            soundInfo.pitch = Random.Range(0.7f, 1.3f);
+            soundInfo.volume = 0.5f;
+
+            spScript.PlaySound(soundInfo);
+        }
     }
 
-    void LandStart() => moveState = MoveState.Landing;
-    void LandEnd()   => moveState = MoveState.Idle;
+    void LandStart()
+    {
+        moveState = MoveState.Landing;
+
+        GameObject soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        if (soundPlayer)
+        {
+            SoundPlayer spScript = soundPlayer.GetComponent<SoundPlayer>();
+            spScript.transform.position = transform.position;
+
+            PlaySoundInfo soundInfo = new PlaySoundInfo(landSoundEffect);
+            soundInfo.pitch = Random.Range(0.7f, 1.3f);
+            soundInfo.volume = 0.5f;
+
+            spScript.PlaySound(soundInfo);
+        }
+    }
+    void LandEnd() 
+    {
+        moveState = MoveState.Idle;
+
+        
+    }
     void WakeUpEnd() { moveState = MoveState.Idle; Debug.Log("Wake up end"); }
     void MakeFootstep()
     {
