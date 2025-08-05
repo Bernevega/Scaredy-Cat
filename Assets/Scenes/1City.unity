@@ -3382,7 +3382,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5625331880092350555, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -31689,6 +31690,10 @@ PrefabInstance:
       propertyPath: screenFader
       value: 
       objectReference: {fileID: 492535764}
+    - target: {fileID: 1829109664281607325, guid: 6ebcd23bfffaec14491335c61ba2627f, type: 3}
+      propertyPath: nextSceneName
+      value: 2OutSkirts
+      objectReference: {fileID: 0}
     - target: {fileID: 3649254074119787202, guid: 6ebcd23bfffaec14491335c61ba2627f, type: 3}
       propertyPath: m_Name
       value: SceneTransitioner
@@ -31735,11 +31740,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9046780017732301232, guid: 6ebcd23bfffaec14491335c61ba2627f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.45
+      value: 11.63
       objectReference: {fileID: 0}
     - target: {fileID: 9046780017732301232, guid: 6ebcd23bfffaec14491335c61ba2627f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.78
+      value: 3.18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36169,7 +36174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4071481230577620691, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: fadeDuration
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6811903474984233143, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: m_IsActive
@@ -36181,7 +36186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7706367285934294889, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9149929194633719478, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
       propertyPath: m_Pivot.x
