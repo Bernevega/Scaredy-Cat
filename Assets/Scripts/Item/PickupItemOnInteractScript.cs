@@ -20,13 +20,13 @@ public class PickupItemOnInteractScript : MonoBehaviour
     [Tooltip("Scene to load after faint and fade (must be added to Build Settings)")]
     public string sceneToLoad;
 
-    [Header("Player Spawn After Load")]
-    [Tooltip("Position to place the player at after the new scene loads")]
-    public Vector3 playerSpawnPosition;
-
-    [Header("Other GameObjects")]
-    [Tooltip("GameObject that becomes active when the item is picked up")]
+    [Header("Optional")]
+    [Tooltip("GameObject to activate when the item is picked up")]
     public GameObject objectToShowOnPickup;
+
+    private GameObject playerObject;
+    private MonoBehaviour playerMovementScript;
+    private Rigidbody playerRigidbody;
 
     private void Awake()
     {
@@ -54,7 +54,6 @@ public class PickupItemOnInteractScript : MonoBehaviour
             DisableRenderers();
             interactable.enabled = false;
 
-            // Show object on pickup (if assigned)
             if (objectToShowOnPickup != null)
                 objectToShowOnPickup.SetActive(true);
 
@@ -79,6 +78,21 @@ public class PickupItemOnInteractScript : MonoBehaviour
     {
         yield return new WaitForSeconds(faintDelay);
 
+        playerObject = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObject != null)
+        {
+            // Disable player movement script
+            playerMovementScript = playerObject.GetComponent<MonoBehaviour>(); // Replace with your actual movement script type
+            if (playerMovementScript != null)
+                playerMovementScript.enabled = false;
+
+            // Freeze player position
+            playerRigidbody = playerObject.GetComponent<Rigidbody>();
+            if (playerRigidbody != null)
+                playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        }
+
         if (playerAnimator != null)
             playerAnimator.SetTrigger(faintTriggerName);
 
@@ -91,19 +105,7 @@ public class PickupItemOnInteractScript : MonoBehaviour
 
         if (!string.IsNullOrEmpty(sceneToLoad))
         {
-            SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.LoadScene(sceneToLoad);
-        }
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            player.transform.position = playerSpawnPosition;
         }
     }
 
