@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private AudioClip landSoundEffect;
 
     [HideInInspector] public bool blockRightMovement = false;
-    [HideInInspector] public bool blockJump = false;  
+    [HideInInspector] public bool blockJump = false;
     [HideInInspector] public bool blockSprint = false;
 
     [Header("Rotation Reset Settings")]
@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;
     private bool _wasDialogActive = false;
     public bool hasJumped = false;
-    public MoveState moveState = MoveState.Idle; 
+    public MoveState moveState = MoveState.Idle;
 
     public enum MoveState : byte
     {
@@ -108,6 +108,10 @@ public class PlayerMovement : MonoBehaviour
 
             // Clear lingering velocity
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+
+            // Reset move state if grounded
+            if (isGrounded)
+                moveState = MoveState.Idle;
 
             // Smooth rotation reset
             StopAllCoroutines();
@@ -187,14 +191,12 @@ public class PlayerMovement : MonoBehaviour
             case "LandStart":   LandStart();   break;
             case "LandEnd":     LandEnd();     break;
             case "WakeUpEnd":   WakeUpEnd();   break;
-            case "FootStep":    MakeFootstep();break;
+            case "FootStep":    MakeFootstep(); break;
         }
     }
 
     void JumpLiftOff()
     {
-        // No longer used for jumping physics, but can be used for FX
-
         GameObject soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
         if (soundPlayer)
         {
@@ -226,13 +228,18 @@ public class PlayerMovement : MonoBehaviour
             spScript.PlaySound(soundInfo);
         }
     }
-    void LandEnd() 
+
+    void LandEnd()
     {
         moveState = MoveState.Idle;
-
-        
     }
-    void WakeUpEnd() { moveState = MoveState.Idle; Debug.Log("Wake up end"); }
+
+    void WakeUpEnd()
+    {
+        moveState = MoveState.Idle;
+        Debug.Log("Wake up end");
+    }
+
     void MakeFootstep()
     {
         int footstepToPlay = Random.Range(0, walkSoundEffects.Length);
@@ -255,7 +262,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Transform t = model != null ? model.transform : transform;
         Quaternion start = t.rotation;
-        Quaternion end   = Quaternion.LookRotation(direction, Vector3.up);
+        Quaternion end = Quaternion.LookRotation(direction, Vector3.up);
         float elapsed = 0f;
         while (elapsed < duration)
         {
