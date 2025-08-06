@@ -30496,6 +30496,8 @@ MonoBehaviour:
   fadeDelay: 1
   sceneToLoad: 
   objectToShowOnPickup: {fileID: 1950212926}
+  disablePlayerMovementOnFaint: 0
+  movementScriptTypeName: PlayerMovement
 --- !u!114 &1508214392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30538,7 +30540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43caef564ec4bd54cab130818850ede8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: {fileID: 0}
+  interactable: {fileID: 1157678427}
   ghostPaperObject: {fileID: 1310823349}
   logBlocker: {fileID: 1123717905}
 --- !u!1 &1521811689
@@ -31635,7 +31637,7 @@ MonoBehaviour:
   npcText: {fileID: 2076815764}
   playerText: {fileID: 1377760072}
   momCatSprite: {fileID: 21300000, guid: 4d781ef6dc470ba47aa39c01fbef9dc6, type: 3}
-  kittySprite: {fileID: 21300000, guid: 823628af9ccfa7a489b6ba1d317d7599, type: 3}
+  kittySprite: {fileID: 21300000, guid: 8c370ea9b945a4b4ca96753fc8a8ff69, type: 3}
   tireSprite: {fileID: 21300000, guid: 06f8ec5699dbc6b48a16446bb48b2ef6, type: 3}
   ydnaSprite: {fileID: 21300000, guid: 48d014421b3256d49923e828a6c5f729, type: 3}
   oliverSprite: {fileID: 21300000, guid: 5bda5d667d29ebf4eacab869c2831912, type: 3}
