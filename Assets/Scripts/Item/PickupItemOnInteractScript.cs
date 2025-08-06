@@ -24,6 +24,10 @@ public class PickupItemOnInteractScript : MonoBehaviour
     [Tooltip("Position to place the player at after the new scene loads")]
     public Vector3 playerSpawnPosition;
 
+    [Header("Other GameObjects")]
+    [Tooltip("GameObject that becomes active when the item is picked up")]
+    public GameObject objectToShowOnPickup;
+
     private void Awake()
     {
         interactable.eventOnInteract += OnInteract;
@@ -49,6 +53,10 @@ public class PickupItemOnInteractScript : MonoBehaviour
 
             DisableRenderers();
             interactable.enabled = false;
+
+            // Show object on pickup (if assigned)
+            if (objectToShowOnPickup != null)
+                objectToShowOnPickup.SetActive(true);
 
             if (!string.IsNullOrEmpty(sceneIDToTriggerDialog))
             {
