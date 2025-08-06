@@ -4138,7 +4138,7 @@ Transform:
   m_GameObject: {fileID: 301999865}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.588, y: 14.065, z: 1.822}
+  m_LocalPosition: {x: 1.588, y: 14.065, z: 1.343}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -7605,7 +7605,7 @@ MonoBehaviour:
   fadeImage: {fileID: 1839482659}
   volume: {fileID: 1658692585}
   fadeDuration: 1
-  triggerTime: 7
+  triggerTime: 10
   maxVignetteIntensity: 0.6
   vignetteFadeOutSpeed: 1
   jumpDisableRadius: 1.2
@@ -7691,8 +7691,8 @@ Transform:
   m_GameObject: {fileID: 731759457}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.7153, y: 0.9996, z: -6.6979}
-  m_LocalScale: {x: 6.302709, y: 2.1312, z: 6.772694}
+  m_LocalPosition: {x: 4.1711, y: 0.9996, z: -7.7954}
+  m_LocalScale: {x: 8.773859, y: 2.1312, z: 8.967725}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -12112,7 +12112,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: eafb8f18f01fd8b4eb20258e4e9db04f, type: 2}
     - target: {fileID: 2545887033134918369, guid: e98ff9940c632d84a9f08f0253025b85, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -35.23
+      value: -32.46
       objectReference: {fileID: 0}
     - target: {fileID: 2636842395113391993, guid: e98ff9940c632d84a9f08f0253025b85, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -18729,7 +18729,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1579050821}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d353f47f283f7b546ac9ab70625dfeb3, type: 3}
   m_Name: 
@@ -22676,7 +22676,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 0.9716981, g: 0.51154304, b: 0.43543077, a: 1}
-  m_Intensity: 0.59
+  m_Intensity: 5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -24420,6 +24420,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1525894187473177350, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
+      propertyPath: m_RendererIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1525894187473177350, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4203837595240964730, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.3489997
