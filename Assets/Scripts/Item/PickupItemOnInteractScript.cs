@@ -20,9 +20,16 @@ public class PickupItemOnInteractScript : MonoBehaviour
     [Tooltip("Scene to load after faint and fade (must be added to Build Settings)")]
     public string sceneToLoad;
 
-    [Header("Optional")]
+    [Header("Optional On Pickup")]
     [Tooltip("GameObject to activate when the item is picked up")]
     public GameObject objectToShowOnPickup;
+
+    [Header("Optional Freeze/Disable Movement")]
+    [Tooltip("Should player movement be disabled and frozen during faint?")]
+    public bool disablePlayerMovementOnFaint = false;
+
+    [Tooltip("The name of the movement script to disable (e.g. PlayerMovement). Leave blank to skip.")]
+    public string movementScriptTypeName = "PlayerMovement";
 
     private GameObject playerObject;
     private MonoBehaviour playerMovementScript;
@@ -47,7 +54,6 @@ public class PickupItemOnInteractScript : MonoBehaviour
         if (interactType == InteractActionType.Interact)
         {
             InventoryScript inventoryScript = interactor.GetOwner().GetComponent<InventoryScript>();
-
             if (inventoryScript != null)
                 inventoryScript.AddItem(itemScript);
 
@@ -78,19 +84,32 @@ public class PickupItemOnInteractScript : MonoBehaviour
     {
         yield return new WaitForSeconds(faintDelay);
 
-        playerObject = GameObject.FindGameObjectWithTag("Player");
-
-        if (playerObject != null)
+        if (disablePlayerMovementOnFaint)
         {
-            // Disable player movement script
-            playerMovementScript = playerObject.GetComponent<MonoBehaviour>(); // Replace with your actual movement script type
-            if (playerMovementScript != null)
-                playerMovementScript.enabled = false;
+            playerObject = GameObject.FindGameObjectWithTag("Player");
 
-            // Freeze player position
-            playerRigidbody = playerObject.GetComponent<Rigidbody>();
-            if (playerRigidbody != null)
-                playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            if (playerObject != null)
+            {
+                // Disable movement script
+                if (!string.IsNullOrEmpty(movementScriptTypeName))
+                {
+                    System.Type type = System.Type.GetType(movementScriptTypeName);
+                    if (type != null)
+                    {
+                        var movement = playerObject.GetComponent(type) as MonoBehaviour;
+                        if (movement != null)
+                        {
+                            playerMovementScript = movement;
+                            playerMovementScript.enabled = false;
+                        }
+                    }
+                }
+
+                // Freeze Rigidbody (if exists)
+                playerRigidbody = playerObject.GetComponent<Rigidbody>();
+                if (playerRigidbody != null)
+                    playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            }
         }
 
         if (playerAnimator != null)
