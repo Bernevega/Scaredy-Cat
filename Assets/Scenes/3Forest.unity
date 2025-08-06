@@ -17454,7 +17454,9 @@ MonoBehaviour:
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
-  playerSpawnPosition: {x: 0, y: 0, z: 0}
+  objectToShowOnPickup: {fileID: 0}
+  disablePlayerMovementOnFaint: 0
+  movementScriptTypeName: PlayerMovement
 --- !u!114 &1508214392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24506,10 +24508,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 170.70515
+  m_Radius: 101
   m_Height: 434.95468
   m_Direction: 1
-  m_Center: {x: 1255.6761, y: 266.1256, z: -2618.5012}
+  m_Center: {x: 1255.6761, y: 266.1256, z: -2701.3}
 --- !u!136 &2029866233
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -28113,7 +28115,9 @@ MonoBehaviour:
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
-  playerSpawnPosition: {x: 0, y: 0, z: 0}
+  objectToShowOnPickup: {fileID: 0}
+  disablePlayerMovementOnFaint: 0
+  movementScriptTypeName: PlayerMovement
 --- !u!114 &919132148987671573
 MonoBehaviour:
   m_ObjectHideFlags: 0

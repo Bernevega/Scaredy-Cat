@@ -43,21 +43,27 @@ public class SimpleDialogManager : MonoBehaviour
 
     [Header("Speaker Portrait Sprites")]
     public Sprite momCatSprite;
+    public NPCVoiceScriptable kittyMomVoice;
     public Sprite kittySprite;
+    public NPCVoiceScriptable kittyVoice;
     public Sprite tireSprite;
     public Sprite ydnaSprite;
     public Sprite oliverSprite;
     public Sprite groupFriendsSprite;
+    public NPCVoiceScriptable friendsVoice;
     public Sprite crowSprite;
-    public Sprite crow2Sprite;
+    public NPCVoiceScriptable crowVoice;
 
     // New character sprites
     public Sprite assylaSprite;
     public Sprite johnDanielSprite;
+    public NPCVoiceScriptable johnDanielVoice;
     public Sprite mangleSprite;
     public Sprite nSprite;
     public Sprite chicaSprite;
-    public Sprite oyenSprite;
+    public Sprite oyenSprite; 
+    
+    public NPCVoiceScriptable mousieVoice;
 
     [Header("Transition")]
     [Tooltip("Seconds to fade in/out dialog panel")]
@@ -176,27 +182,29 @@ public class SimpleDialogManager : MonoBehaviour
     {
         speakerNameText.text = currentNode.speaker;
 
+        // vtp = voice to play.
+        NPCVoiceScriptable vtp = null;
         // Set correct portrait
         switch (currentNode.speaker)
         {
-            case "Mom Cat":             speakerIcon.sprite = momCatSprite;      break;
-            case "Kitty":               speakerIcon.sprite = kittySprite;       break;
-            case "Tire":                speakerIcon.sprite = tireSprite;        break;
-            case "Ydna":                speakerIcon.sprite = ydnaSprite;        break;
-            case "Oliver":              speakerIcon.sprite = oliverSprite;      break;
-            case "Ydna, Tire, Oliver":  speakerIcon.sprite = groupFriendsSprite;break;
-            case "The Crow":            speakerIcon.sprite = crowSprite;        break;
+            case "Mom Cat":             speakerIcon.sprite = momCatSprite;      vtp = kittyMomVoice; break;
+            case "Kitty":               speakerIcon.sprite = kittySprite;       vtp = kittyVoice;    break;
+            case "Tire":                speakerIcon.sprite = tireSprite;        vtp = friendsVoice;  break;
+            case "Ydna":                speakerIcon.sprite = ydnaSprite;        vtp = friendsVoice;  break;
+            case "Oliver":              speakerIcon.sprite = oliverSprite;      vtp = friendsVoice;  break;
+            case "Ydna, Tire, Oliver":  speakerIcon.sprite = groupFriendsSprite;vtp = friendsVoice;  break;
+            case "The Crow":            speakerIcon.sprite = crowSprite;        vtp = crowVoice;     break;
 
-            case "Assyla":              speakerIcon.sprite = assylaSprite;      break;
-            case "John Daniel":         speakerIcon.sprite = johnDanielSprite;  break;
-            case "Mangle":              speakerIcon.sprite = mangleSprite;      break;
-            case "N":                   speakerIcon.sprite = nSprite;           break;
-            case "Chica":               speakerIcon.sprite = chicaSprite;       break;
-            case "Oyen":                speakerIcon.sprite = oyenSprite;        break;
-            case "CrowMono":            speakerIcon.sprite = crow2Sprite;       break;
+            case "Assyla":              speakerIcon.sprite = assylaSprite;      vtp = friendsVoice; break;
+            case "John Daniel":         speakerIcon.sprite = johnDanielSprite;  vtp = johnDanielVoice; break;
+            case "Mangle":              speakerIcon.sprite = mangleSprite;      vtp = friendsVoice; break;
+            case "N":                   speakerIcon.sprite = nSprite;           vtp = friendsVoice;break;
+            case "Chica":               speakerIcon.sprite = chicaSprite;       vtp = friendsVoice; break;
+            case "Oyen":                speakerIcon.sprite = oyenSprite;        vtp = friendsVoice; break;
 
             default:                     speakerIcon.sprite = null;              break;
         }
+        PlayVoice(vtp);
 
         npcText.text    = "";
         playerText.text = "";
@@ -205,6 +213,18 @@ public class SimpleDialogManager : MonoBehaviour
             playerText.text = currentNode.text;
         else
             npcText.text = currentNode.text;
+    }
+
+    private void PlayVoice(NPCVoiceScriptable voice)
+    {
+        if (voice == null) return;
+        ObjectPool objPool = ObjectPool.instance;
+        if (objPool == null) return;
+        GameObject soundPlayerObj = objPool.objPool_GetObject("2DSoundPlayer");
+        if (soundPlayerObj == null) return;
+        SoundPlayer soundPlayer = soundPlayerObj.GetComponent<SoundPlayer>();
+
+        soundPlayer.PlaySound(voice.GetRandomVoiceClip());
     }
 
     private void OnContinuePressed()
