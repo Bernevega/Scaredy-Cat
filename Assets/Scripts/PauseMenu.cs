@@ -36,6 +36,10 @@ public class PauseMenu : MonoBehaviour
         SetupResolutionOptions();
         SetupScreenModeOptions();
         LoadVolumeSliders();
+
+        // Hide cursor at start
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -56,6 +60,11 @@ public class PauseMenu : MonoBehaviour
         PauseMenuCanvas.SetActive(true);
         isPaused = true;
         Time.timeScale = 0f;
+
+        // Show cursor when paused
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         Debug.Log("Game paused");
     }
 
@@ -64,6 +73,11 @@ public class PauseMenu : MonoBehaviour
         PauseMenuCanvas.SetActive(false);
         isPaused = false;
         Time.timeScale = 1f;
+
+        // Hide cursor when resuming gameplay
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         Debug.Log("Game unpaused");
     }
 
@@ -114,6 +128,8 @@ public class PauseMenu : MonoBehaviour
     public void BackToMenu()
     {
         Time.timeScale = 1f;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -125,27 +141,18 @@ public class PauseMenu : MonoBehaviour
 
     // ---------------- Audio UI Callbacks ----------------
 
-    /// <summary>
-    /// Assign this to generalVolumeSlider.OnValueChanged(float).
-    /// </summary>
     public void SetGeneralVolume(Slider slider)
     {
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetMasterVolume(slider);
     }
 
-    /// <summary>
-    /// Assign this to musicVolumeSlider.OnValueChanged(float).
-    /// </summary>
     public void SetMusicVolume(Slider slider)
     {
         if (AudioManager.Instance != null)
             AudioManager.Instance.SetMusicVolume(slider);
     }
 
-    /// <summary>
-    /// Assign this to sfxVolumeSlider.OnValueChanged(float).
-    /// </summary>
     public void SetSFXVolume(Slider slider)
     {
         if (AudioManager.Instance != null)
@@ -213,9 +220,6 @@ public class PauseMenu : MonoBehaviour
         screenModeDropdown.RefreshShownValue();
     }
 
-    /// <summary>
-    /// Assign this to resolutionDropdown.OnValueChanged(int).
-    /// </summary>
     public void SetResolution(int index)
     {
         string[] dims = resolutionDropdown.options[index].text.Split('x');
@@ -226,14 +230,10 @@ public class PauseMenu : MonoBehaviour
         Screen.SetResolution(width, height, mode);
     }
 
-    /// <summary>
-    /// Assign this to screenModeDropdown.OnValueChanged(int).
-    /// </summary>
     public void SetScreenMode(int index)
     {
         FullScreenMode mode = GetScreenModeFromDropdown();
         Screen.fullScreenMode = mode;
-        // Reapply current resolution so mode change takes effect
         Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, mode);
     }
 
