@@ -2547,6 +2547,7 @@ GameObject:
   - component: {fileID: 7254209570930162570}
   - component: {fileID: 817953920199529503}
   - component: {fileID: 313529809669246151}
+  - component: {fileID: 7797652697287034906}
   m_Layer: 5
   m_Name: BackToMenuButton
   m_TagString: Untagged
@@ -2676,6 +2677,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7797652697287034906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2619908632874129747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 313529809669246151}
+  targetTransform: {fileID: 3532298005738135604}
+  mouseDownScale: {x: 0.9, y: 0.9, z: 0.9}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!1 &2724239190855877145
 GameObject:
   m_ObjectHideFlags: 0
@@ -2689,6 +2711,7 @@ GameObject:
   - component: {fileID: 5867678523495839880}
   - component: {fileID: 1743682486346727839}
   - component: {fileID: 648413964327928199}
+  - component: {fileID: 6200411834164481183}
   m_Layer: 5
   m_Name: SaveButton
   m_TagString: Untagged
@@ -2818,6 +2841,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6200411834164481183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2724239190855877145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 648413964327928199}
+  targetTransform: {fileID: 3648931954593790616}
+  mouseDownScale: {x: 0.9, y: 0.9, z: 0.9}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!1 &2761839134035380884
 GameObject:
   m_ObjectHideFlags: 0
@@ -4690,6 +4734,7 @@ GameObject:
   - component: {fileID: 5594499129314521713}
   - component: {fileID: 3851443594562459158}
   - component: {fileID: 2535800637885590101}
+  - component: {fileID: 5869487377775787613}
   m_Layer: 5
   m_Name: ContinueButton
   m_TagString: Untagged
@@ -4819,6 +4864,27 @@ MonoBehaviour:
   hoverExitSound: {fileID: 0}
   hoverExitVolume: 1
   hoverExitPitch: 1
+--- !u!114 &5869487377775787613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5922967460797392147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3851443594562459158}
+  targetTransform: {fileID: 1895213142965866307}
+  mouseDownScale: {x: 0.9, y: 0.9, z: 0.9}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!1 &5924891433422171883
 GameObject:
   m_ObjectHideFlags: 0
@@ -6903,6 +6969,7 @@ GameObject:
   - component: {fileID: 1170460125777218983}
   - component: {fileID: 3669782786495623892}
   - component: {fileID: 4629148359721033689}
+  - component: {fileID: 3144809356220135824}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -7033,6 +7100,27 @@ MonoBehaviour:
   hoverExitSound: {fileID: 0}
   hoverExitVolume: 1
   hoverExitPitch: 1
+--- !u!114 &3144809356220135824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8273130282481375312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3669782786495623892}
+  targetTransform: {fileID: 3914602704631449367}
+  mouseDownScale: {x: 0.9, y: 0.9, z: 0.9}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!1 &8329524951499445520
 GameObject:
   m_ObjectHideFlags: 0
@@ -7543,6 +7631,7 @@ GameObject:
   - component: {fileID: 1534574283320526915}
   - component: {fileID: 7418495945390167809}
   - component: {fileID: 2880379230453773293}
+  - component: {fileID: 7228227062663060535}
   m_Layer: 5
   m_Name: ExitGameButton
   m_TagString: Untagged
@@ -7672,6 +7761,27 @@ MonoBehaviour:
   hoverExitSound: {fileID: 0}
   hoverExitVolume: 1
   hoverExitPitch: 1
+--- !u!114 &7228227062663060535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8896658943534087794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7418495945390167809}
+  targetTransform: {fileID: 4169301110076475564}
+  mouseDownScale: {x: 0.9, y: 0.9, z: 0.9}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!1 &8923614596706555422
 GameObject:
   m_ObjectHideFlags: 0
