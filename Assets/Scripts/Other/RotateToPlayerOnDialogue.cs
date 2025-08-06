@@ -9,7 +9,7 @@ public class RotateToPlayerOnDialogue : MonoBehaviour
     [SerializeField] AutoRotate rotator;
     Vector3 originalDirection;
 
-    bool inDialogue = false;
+    [SerializeField] bool inDialogue = false;
 
     private void Start()
     {
@@ -25,7 +25,10 @@ public class RotateToPlayerOnDialogue : MonoBehaviour
     private void OnDialogueAdvance(string sceneId, string currentKey)
     {
         GameObject player = PlayerManager.PM_GetPlayer();
-
+        if (player == null)
+        {
+            Debug.Log("THE PLAYER IS NULL");
+        }
         if (player != null &&
             sceneId == this.sceneId.value)
         {
@@ -46,6 +49,7 @@ public class RotateToPlayerOnDialogue : MonoBehaviour
                 rotator.targetDirection = dirToPlayer;
 
                 originalDirection = transform.forward;
+                Debug.Log("Rotating");
             }
         }
     }
