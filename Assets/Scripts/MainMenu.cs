@@ -83,6 +83,42 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        // Detect gamepad usage and reselect button if lost focus
+        if (Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                ReselectButtonForCurrentPanel();
+            }
+        }
+    }
+
+    private void ReselectButtonForCurrentPanel()
+    {
+        if (MenuPanel.activeInHierarchy && DefaultMainMenuButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
+        }
+        else if (VideoSettingsPanel.activeInHierarchy && DefaultVideoSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultVideoSettingsButton.gameObject);
+        }
+        else if (AudioSettingsPanel.activeInHierarchy && DefaultAudioSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultAudioSettingsButton.gameObject);
+        }
+        else if (ControlsSettingsPanel.activeInHierarchy && DefaultControlsSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
+        }
+        else if (CreditsPanel.activeInHierarchy && DefaultCreditsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultCreditsButton.gameObject);
+        }
+    }
+
     // ---------------- Main Menu Buttons ----------------
 
     public void MainGameStart()
