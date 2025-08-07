@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
 {
@@ -17,6 +19,18 @@ public class MainMenu : MonoBehaviour
 
     [Header("Buttons")]
     public Button ContinueButton;
+    public Button OpenVideoSettingsButton;
+    public Button OpenAudioSettingsButton;
+    public Button OpenControlsSettingsButton;
+    public Button BackFromSettingsButton;
+    public Button BackFromCreditsButton;
+
+    [Header("Default Selected Buttons")]
+    public Button DefaultMainMenuButton;
+    public Button DefaultVideoSettingsButton;
+    public Button DefaultAudioSettingsButton;
+    public Button DefaultControlsSettingsButton;
+    public Button DefaultCreditsButton;
 
     [Header("Audio Settings UI")]
     [Tooltip("Slider range: 0..1")]
@@ -28,8 +42,8 @@ public class MainMenu : MonoBehaviour
     public TMP_Dropdown resolutionDropdown;
     public TMP_Dropdown screenModeDropdown;
 
-    private Resolution[] resolutions;
     private string saveFilePath;
+    private Controls inputControls;
 
     private void Awake()
     {
@@ -39,19 +53,34 @@ public class MainMenu : MonoBehaviour
         {
             ContinueButton.gameObject.SetActive(false);
         }
+
+        inputControls = new Controls();
+        inputControls.UI.Enable();
+        inputControls.Player.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        if (inputControls != null)
+        {
+            inputControls.UI.Disable();
+        }
     }
 
     private void Start()
     {
-        // Show main menu, hide other panels
         MenuPanel.SetActive(true);
         SettingsPanel.SetActive(false);
         CreditsPanel.SetActive(false);
 
-        // Populate video dropdowns & load saved volumes
         SetupResolutionOptions();
         SetupScreenModeOptions();
         LoadVolumeSliders();
+
+        if (DefaultMainMenuButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
+        }
     }
 
     // ---------------- Main Menu Buttons ----------------
@@ -82,6 +111,11 @@ public class MainMenu : MonoBehaviour
         VideoSettingsPanel.SetActive(true);
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(false);
+
+        if (DefaultVideoSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultVideoSettingsButton.gameObject);
+        }
     }
 
     public void OpenAudioSettings()
@@ -89,6 +123,11 @@ public class MainMenu : MonoBehaviour
         VideoSettingsPanel.SetActive(false);
         AudioSettingsPanel.SetActive(true);
         ControlsSettingsPanel.SetActive(false);
+
+        if (DefaultAudioSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultAudioSettingsButton.gameObject);
+        }
     }
 
     public void OpenControlsSettings()
@@ -96,12 +135,22 @@ public class MainMenu : MonoBehaviour
         VideoSettingsPanel.SetActive(false);
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(true);
+
+        if (DefaultControlsSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
+        }
     }
 
     public void OpenCredits()
     {
         MenuPanel.SetActive(false);
         CreditsPanel.SetActive(true);
+
+        if (DefaultCreditsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultCreditsButton.gameObject);
+        }
     }
 
     public void ClosePanel()
@@ -109,6 +158,11 @@ public class MainMenu : MonoBehaviour
         SettingsPanel.SetActive(false);
         CreditsPanel.SetActive(false);
         MenuPanel.SetActive(true);
+
+        if (DefaultMainMenuButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
+        }
     }
 
     public void QuitGame()
@@ -119,9 +173,6 @@ public class MainMenu : MonoBehaviour
 
     // ---------------- Audio UI Callbacks ----------------
 
-    /// <summary>
-    /// Assign this to generalVolumeSlider.OnValueChanged(float).
-    /// </summary>
     public void SetGeneralVolume(float volume)
     {
         if (AudioManager.Instance != null)
@@ -130,9 +181,6 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Assign this to musicVolumeSlider.OnValueChanged(float).
-    /// </summary>
     public void SetMusicVolume(float volume)
     {
         if (AudioManager.Instance != null)
@@ -141,9 +189,6 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Assign this to sfxVolumeSlider.OnValueChanged(float).
-    /// </summary>
     public void SetSFXVolume(float volume)
     {
         if (AudioManager.Instance != null)
@@ -152,10 +197,6 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Reads saved PlayerPrefs and sets slider values accordingly.
-    /// Also re-applies them via AudioManager so mixer is in sync.
-    /// </summary>
     private void LoadVolumeSliders()
     {
         float master = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
@@ -183,24 +224,24 @@ public class MainMenu : MonoBehaviour
 
     private void SetupResolutionOptions()
     {
-        resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 
-        List<string> options = new List<string>();
+        List<string> options = new List<string>
+        {
+            "1280 x 720",
+            "1600 x 900",
+            "1920 x 1080"
+        };
+
         int currentResolutionIndex = 0;
 
-        for (int i = 0; i < resolutions.Length; i++)
+        string currentRes = Screen.currentResolution.width + " x " + Screen.currentResolution.height;
+        for (int i = 0; i < options.Count; i++)
         {
-            string option = resolutions[i].width + " x " + resolutions[i].height;
-            if (!options.Contains(option))
-            {
-                options.Add(option);
-            }
-
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
+            if (options[i] == currentRes)
             {
                 currentResolutionIndex = i;
+                break;
             }
         }
 
@@ -217,9 +258,6 @@ public class MainMenu : MonoBehaviour
         screenModeDropdown.RefreshShownValue();
     }
 
-    /// <summary>
-    /// Assign this to resolutionDropdown.OnValueChanged(int).
-    /// </summary>
     public void SetResolution(int index)
     {
         string[] dims = resolutionDropdown.options[index].text.Split('x');
@@ -230,14 +268,10 @@ public class MainMenu : MonoBehaviour
         Screen.SetResolution(width, height, mode);
     }
 
-    /// <summary>
-    /// Assign this to screenModeDropdown.OnValueChanged(int).
-    /// </summary>
     public void SetScreenMode(int index)
     {
         FullScreenMode mode = GetScreenModeFromDropdown();
         Screen.fullScreenMode = mode;
-        // Reapply current resolution so Unity respects mode change.
         Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, mode);
     }
 
