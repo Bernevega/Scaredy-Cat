@@ -11,8 +11,10 @@ public class DanceMinigame : MonoBehaviour
     [SerializeField] DanceKey[] keyPool;
     [SerializeField] GameObject[] lives;
     [SerializeField] GameObject hatObject;
+    [SerializeField] AudioSource musicAudio;
     [SerializeField] AudioClip clickClip;
-    [SerializeField] AudioClip music;
+    [SerializeField] AudioClip danceMusic;
+    [SerializeField] AudioClip normalMusic;
     [SerializeField] AudioMixerGroup mix;
 
     public float keyTimer = 2f;
@@ -42,10 +44,16 @@ public class DanceMinigame : MonoBehaviour
 
     private void OnDialogueAdvance(string sceneID, string currentKey)
     {
+        musicAudio.Stop();
         if ((sceneID == "AssylaDance" && currentKey == null) ||
             (sceneID == "AssylaRestart" && currentKey == null))
         {
             StartMinigame();
+        }
+        else if (currentKey == null)
+        {
+            musicAudio.clip = normalMusic;
+            musicAudio.Play();
         }
     }
 
@@ -78,6 +86,8 @@ public class DanceMinigame : MonoBehaviour
                 lives[i].SetActive(false);
             }
         }
+        musicAudio.clip = danceMusic;
+        musicAudio.Play();
     }
 
     private void EndMinigame(bool win)

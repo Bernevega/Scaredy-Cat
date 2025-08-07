@@ -676,6 +676,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65237ae4d4e6ef24883ced4608e400cb, type: 3}
+--- !u!82 &44082950 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
+  m_PrefabInstance: {fileID: 109723573}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &50305849 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4821301772448141941, guid: 9d60b7898e927e94dafdceaafecb8a77, type: 3}
@@ -4068,8 +4073,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 549342610}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.749, y: 0.6529999, z: 5.01}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 1.749, y: 0.729, z: 5.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4077,7 +4082,7 @@ Transform:
   - {fileID: 896207220}
   - {fileID: 543450651593227132}
   m_Father: {fileID: 2118295273}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &549971517 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1120246377563029703, guid: 9d60b7898e927e94dafdceaafecb8a77, type: 3}
@@ -7663,9 +7668,11 @@ MonoBehaviour:
   - {fileID: 152609444}
   - {fileID: 1464355037}
   hatObject: {fileID: 2071891663}
-  clickClip: {fileID: 0}
-  music: {fileID: 0}
-  mix: {fileID: 0}
+  musicAudio: {fileID: 44082950}
+  clickClip: {fileID: 8300000, guid: 9ef5e83688731ea49a7c45c69bed5c2f, type: 3}
+  danceMusic: {fileID: 8300000, guid: 1905334a9ba4da64d81993f8548bb7ce, type: 3}
+  normalMusic: {fileID: 8300000, guid: 0645402d3261c1d4085e19d65f44fb73, type: 3}
+  mix: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
   keyTimer: 2
   losses: 0
   keysLeft: 20
