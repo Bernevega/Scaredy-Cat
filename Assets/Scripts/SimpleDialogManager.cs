@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 using Newtonsoft.Json;
 
 [Serializable]
@@ -61,13 +62,16 @@ public class SimpleDialogManager : MonoBehaviour
     public Sprite mangleSprite;
     public Sprite nSprite;
     public Sprite chicaSprite;
-    public Sprite oyenSprite; 
-    
+    public Sprite oyenSprite;
     public NPCVoiceScriptable mousieVoice;
 
     [Header("Transition")]
     [Tooltip("Seconds to fade in/out dialog panel")]
     public float fadeDuration = 0.25f;
+
+    // Input System
+    private Controls controls;
+    private bool interactInput;
 
     // Internals
     private Dictionary<string, DialogTree> allTrees;
@@ -87,6 +91,10 @@ public class SimpleDialogManager : MonoBehaviour
 
     void Awake()
     {
+        // Input System setup
+        controls = new Controls();
+        controls.Player.Interact.performed += ctx => interactInput = true;
+
         if (Instance == null)
         {
             Instance = this;
@@ -126,6 +134,9 @@ public class SimpleDialogManager : MonoBehaviour
         }
     }
 
+    void OnEnable()  => controls.Enable();
+    void OnDisable() => controls.Disable();
+
     public void Initialize()
     {
         // Load all dialog trees
@@ -149,8 +160,13 @@ public class SimpleDialogManager : MonoBehaviour
     void Update()
     {
         // Only advance when dialogue is visible and not mid-fade
-        if (dialogPanel.activeSelf && !isFading && Input.GetKeyDown(KeyCode.Space))
+        if (!dialogPanel.activeSelf || isFading)
+            return;
+
+        // advance on Space *or* controller "Interact"
+        if (Input.GetKeyDown(KeyCode.Space) || interactInput)
         {
+            interactInput = false;
             OnContinuePressed();
         }
     }
@@ -250,7 +266,7 @@ public class SimpleDialogManager : MonoBehaviour
 
         dialogueStart = false;
         eventDialogueChanged?.Invoke(currentTreeName, currentKey);
-        
+
         ShowCurrentNode();
     }
 

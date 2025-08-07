@@ -1,6 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class PlayerMovement : MonoBehaviour
@@ -56,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         mainCam = Camera.main;
 
-        // Zero‐friction so the player slides along walls
+        // Zero-friction so the player slides along walls
         Collider col = GetComponent<Collider>();
         var slideMat = new PhysicsMaterial("SlideMat")
         {
@@ -71,49 +73,35 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (mainCam == null)
-            mainCam = Camera.main;
+        // Ensure camera reference
+        if (mainCam == null) mainCam = Camera.main;
 
-        // Ground check
+        // --- GROUND CHECK ---
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         animator.SetBool("grounded", isGrounded);
-        if (isGrounded)
-            hasJumped = false;
+        if (isGrounded) hasJumped = false;
 
-        // Dialog check
+        // --- DIALOG PAUSE CHECK ---
         var dialogMgr = SimpleDialogManager.Instance;
         bool dialogActive = dialogMgr != null
                             && dialogMgr.dialogPanel != null
                             && dialogMgr.dialogPanel.activeSelf;
-
         if (dialogActive)
         {
             _wasDialogActive = true;
             canMove = false;
-
-            // Stop residual movement
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
-
-            // Play idle animation
             animator.SetBool("moveInput", false);
             animator.SetBool("isRunning", false);
             animator.Play("Idle");
             return;
         }
-
         if (_wasDialogActive)
         {
             _wasDialogActive = false;
             canMove = true;
-
-            // Clear lingering velocity
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
-
-            // Reset move state if grounded
-            if (isGrounded)
-                moveState = MoveState.Idle;
-
-            // Smooth rotation reset
+            if (isGrounded) moveState = MoveState.Idle;
             StopAllCoroutines();
             if (rotationReturnDuration > 0f)
                 StartCoroutine(RotateModelOverTime(rotationReturnDuration));
@@ -124,65 +112,94 @@ public class PlayerMovement : MonoBehaviour
 
         if (!canMove) return;
 
-        if (speed > 0f)
+        // --- READ RAW INPUTS ---
+
+        // Keyboard
+        float kbX         = Input.GetAxisRaw("Horizontal");
+        float kbZ         = Input.GetAxisRaw("Vertical");
+        bool  jumpKb      = Input.GetButtonDown("Jump");
+        bool  sprintKb    = Input.GetKey(KeyCode.LeftShift);
+        bool  interactKb  = Input.GetKeyDown(KeyCode.E);
+
+        // Gamepad
+        float gpX = 0f, gpZ = 0f;
+        bool  jumpGp     = false;
+        bool  sprintGp   = false;
+        bool  interactGp = false;
+#if ENABLE_INPUT_SYSTEM
+        if (Gamepad.current != null)
         {
-            // Read inputs
-            float moveX = Input.GetAxisRaw("Horizontal");
-            float moveZ = Input.GetAxisRaw("Vertical");
+            Vector2 stick    = Gamepad.current.leftStick.ReadValue();
+            gpX              = stick.x;
+            gpZ              = stick.y;
+            jumpGp           = Gamepad.current.buttonSouth.wasPressedThisFrame;
+            sprintGp         = Gamepad.current.leftStickButton.isPressed;    // <— L3 run
+            interactGp       = Gamepad.current.buttonEast.wasPressedThisFrame;
+        }
+#endif
 
-            if (blockRightMovement && moveX > 0f)
-                moveX = 0f;
+        // --- COMBINE INPUTS ---
+        Vector2 rawMove = new Vector2(kbX + gpX, kbZ + gpZ);
+        if (rawMove.sqrMagnitude > 1f) rawMove.Normalize();
+        float moveX       = rawMove.x;
+        float moveZ       = rawMove.y;
+        bool  hasInput    = rawMove.sqrMagnitude > 0f;
+        bool  jumpPressed = jumpKb || jumpGp;
+        bool  sprintInput = (sprintKb || sprintGp) && !blockSprint;
+        bool  interact    = interactKb || interactGp;
 
-            bool hasInput = moveX != 0f || moveZ != 0f;
-            animator.SetBool("moveInput", hasInput);
+        animator.SetBool("moveInput", hasInput);
 
-            // Direction relative to camera
-            Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
-            Vector3 camR = Vector3.Cross(Vector3.up, camF);
-            Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
-            if (moveDir != Vector3.zero)
-                direction = moveDir;
+        // CAMERA-RELATIVE MOVE DIRECTION
+        Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
+        Vector3 camR = Vector3.Cross(Vector3.up, camF);
+        Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
+        if (moveDir != Vector3.zero) direction = moveDir;
 
-            // Sprint
-            float currentSpeed = speed;
-            bool isRunning = false;
-            if (hasInput && Input.GetKey(KeyCode.LeftShift) && !blockSprint)
-            {
-                currentSpeed *= runMultiplier;
-                isRunning = true;
-            }
-            animator.SetBool("isRunning", isRunning);
-
-            // Apply movement
-            rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
-
-            // Jump
-            if (moveState == MoveState.Idle && !blockJump && Input.GetButtonDown("Jump") && isGrounded && !hasJumped)
-            {
-                animator.SetTrigger("jump");
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // reset Y velocity
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);      // instant jump
-                hasJumped = true;
-                moveState = MoveState.Jumping;
-            }
+        // SPRINT
+        float currentSpeed = speed;
+        if (hasInput && sprintInput)
+        {
+            currentSpeed *= runMultiplier;
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
         }
 
-        // Rotate model or object
-        Transform targetTransform = model != null ? model.transform : transform;
-        Quaternion desiredRot = Quaternion.LookRotation(direction, Vector3.up);
-        if (targetTransform.rotation != desiredRot)
-            targetTransform.rotation = Quaternion.RotateTowards(
-                targetTransform.rotation,
-                desiredRot,
-                1080f * Time.deltaTime
-            );
+        // APPLY MOVEMENT
+        rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
+
+        // JUMP
+        if (moveState == MoveState.Idle && !blockJump && jumpPressed && isGrounded && !hasJumped)
+        {
+            animator.SetTrigger("jump");
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            hasJumped = true;
+            moveState = MoveState.Jumping;
+        }
+
+        // INTERACT
+        if (interact)
+        {
+            animator.SetTrigger("interact");
+        }
+
+        // ROTATE MODEL SMOOTHLY
+        Transform t       = model != null ? model.transform : transform;
+        Quaternion desired = Quaternion.LookRotation(direction, Vector3.up);
+        if (t.rotation != desired)
+            t.rotation = Quaternion.RotateTowards(t.rotation, desired, 1080f * Time.deltaTime);
     }
 
+    // External control methods
     public void SetDirection(Vector3 dir) => direction = dir.normalized;
     public void SetCanMove(bool b) => canMove = b;
-
     public void WakeUp() { moveState = MoveState.WakingUp; animator.SetTrigger("WakeUp"); }
 
+    // Animation event handling
     public void AnimStringEvent(string str)
     {
         switch (str)
@@ -195,66 +212,65 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void JumpLiftOff()
+    private void JumpLiftOff()
     {
-        GameObject soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        var soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
         if (soundPlayer)
         {
-            SoundPlayer spScript = soundPlayer.GetComponent<SoundPlayer>();
-            spScript.transform.position = transform.position;
-
-            PlaySoundInfo soundInfo = new PlaySoundInfo(jumpSoundEffect);
-            soundInfo.pitch = Random.Range(0.7f, 1.3f);
-            soundInfo.volume = 0.5f;
-
-            spScript.PlaySound(soundInfo);
+            var sp = soundPlayer.GetComponent<SoundPlayer>();
+            sp.transform.position = transform.position;
+            var info = new PlaySoundInfo(jumpSoundEffect)
+            {
+                pitch = Random.Range(0.7f, 1.3f),
+                volume = 0.5f
+            };
+            sp.PlaySound(info);
         }
     }
 
-    void LandStart()
+    private void LandStart()
     {
         moveState = MoveState.Landing;
-
-        GameObject soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        var soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
         if (soundPlayer)
         {
-            SoundPlayer spScript = soundPlayer.GetComponent<SoundPlayer>();
-            spScript.transform.position = transform.position;
-
-            PlaySoundInfo soundInfo = new PlaySoundInfo(landSoundEffect);
-            soundInfo.pitch = Random.Range(0.7f, 1.3f);
-            soundInfo.volume = 0.5f;
-
-            spScript.PlaySound(soundInfo);
+            var sp = soundPlayer.GetComponent<SoundPlayer>();
+            sp.transform.position = transform.position;
+            var info = new PlaySoundInfo(landSoundEffect)
+            {
+                pitch = Random.Range(0.7f, 1.3f),
+                volume = 0.5f
+            };
+            sp.PlaySound(info);
         }
     }
 
-    void LandEnd()
+    private void LandEnd()
     {
         moveState = MoveState.Idle;
     }
 
-    void WakeUpEnd()
+    private void WakeUpEnd()
     {
         moveState = MoveState.Idle;
         Debug.Log("Wake up end");
     }
 
-    void MakeFootstep()
+    private void MakeFootstep()
     {
-        int footstepToPlay = Random.Range(0, walkSoundEffects.Length);
-        AudioClip footStepClip = walkSoundEffects[footstepToPlay];
-        GameObject soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        int idx = Random.Range(0, walkSoundEffects.Length);
+        var clip = walkSoundEffects[idx];
+        var soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
         if (soundPlayer)
         {
-            SoundPlayer spScript = soundPlayer.GetComponent<SoundPlayer>();
-            spScript.transform.position = transform.position;
-
-            PlaySoundInfo soundInfo = new PlaySoundInfo(footStepClip);
-            soundInfo.pitch = Random.Range(0.7f, 1.3f);
-            soundInfo.volume = 0.5f;
-
-            spScript.PlaySound(soundInfo);
+            var sp = soundPlayer.GetComponent<SoundPlayer>();
+            sp.transform.position = transform.position;
+            var info = new PlaySoundInfo(clip)
+            {
+                pitch = Random.Range(0.7f, 1.3f),
+                volume = 0.5f
+            };
+            sp.PlaySound(info);
         }
     }
 
@@ -262,8 +278,8 @@ public class PlayerMovement : MonoBehaviour
     {
         Transform t = model != null ? model.transform : transform;
         Quaternion start = t.rotation;
-        Quaternion end = Quaternion.LookRotation(direction, Vector3.up);
-        float elapsed = 0f;
+        Quaternion end   = Quaternion.LookRotation(direction, Vector3.up);
+        float elapsed     = 0f;
         while (elapsed < duration)
         {
             float tNorm = elapsed / duration;
