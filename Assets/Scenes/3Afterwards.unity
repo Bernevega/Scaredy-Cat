@@ -14754,6 +14754,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8265500905901214764, guid: c19654d371c868946a4137142c273f70, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0f9f346b87f800c41afc2c6b253c8876, type: 2}
+    - target: {fileID: 394660902827310476, guid: c19654d371c868946a4137142c273f70, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0f9f346b87f800c41afc2c6b253c8876, type: 2}
     - target: {fileID: 919132149155446097, guid: c19654d371c868946a4137142c273f70, type: 3}
       propertyPath: m_Name
       value: Crow Monocles
@@ -31637,19 +31645,24 @@ MonoBehaviour:
   npcText: {fileID: 2076815764}
   playerText: {fileID: 1377760072}
   momCatSprite: {fileID: 21300000, guid: 4d781ef6dc470ba47aa39c01fbef9dc6, type: 3}
+  kittyMomVoice: {fileID: 0}
   kittySprite: {fileID: 21300000, guid: 8c370ea9b945a4b4ca96753fc8a8ff69, type: 3}
+  kittyVoice: {fileID: 0}
   tireSprite: {fileID: 21300000, guid: 06f8ec5699dbc6b48a16446bb48b2ef6, type: 3}
   ydnaSprite: {fileID: 21300000, guid: 48d014421b3256d49923e828a6c5f729, type: 3}
   oliverSprite: {fileID: 21300000, guid: 5bda5d667d29ebf4eacab869c2831912, type: 3}
   groupFriendsSprite: {fileID: 21300000, guid: b24f1090f9523d141bb50855882b996b, type: 3}
+  friendsVoice: {fileID: 0}
   crowSprite: {fileID: 21300000, guid: e008ca5381ac1054fa007267cb2ea85a, type: 3}
-  crow2Sprite: {fileID: 21300000, guid: e008ca5381ac1054fa007267cb2ea85a, type: 3}
+  crowVoice: {fileID: 0}
   assylaSprite: {fileID: 21300000, guid: e40462e62ed47a0419b105c9c187b4df, type: 3}
   johnDanielSprite: {fileID: 21300000, guid: 4823e49b1db544449affb57b640bf344, type: 3}
+  johnDanielVoice: {fileID: 0}
   mangleSprite: {fileID: 21300000, guid: a9d87d3fc0f66f8428ef721e9f9cf1f1, type: 3}
   nSprite: {fileID: 21300000, guid: 6913e7b4c12b0104b92a2d5a53415a95, type: 3}
   chicaSprite: {fileID: 21300000, guid: 264d2a1e215df2242b96640f3ecd71d3, type: 3}
   oyenSprite: {fileID: 21300000, guid: 5ae986846052c054b9cdb0ae77d63459, type: 3}
+  mousieVoice: {fileID: 0}
   fadeDuration: 0.25
   dialogueStart: 0
 --- !u!4 &1557344767
@@ -43340,7 +43353,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2826930877349321075, guid: d1dd89c00d674e74d9b282f9e8032c0d, type: 3}
+  - {fileID: 2100000, guid: ec345cd9c44e20546a1431a9c6aa2f8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -43662,7 +43675,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2826930877349321075, guid: d1dd89c00d674e74d9b282f9e8032c0d, type: 3}
+  - {fileID: 2100000, guid: ec345cd9c44e20546a1431a9c6aa2f8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -43904,7 +43917,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2826930877349321075, guid: d1dd89c00d674e74d9b282f9e8032c0d, type: 3}
+  - {fileID: 2100000, guid: ec345cd9c44e20546a1431a9c6aa2f8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
