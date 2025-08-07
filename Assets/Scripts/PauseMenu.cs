@@ -40,6 +40,7 @@ public class PauseMenu : MonoBehaviour
         // Hide cursor at start
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        isPaused = false;
     }
 
     private void Update()
@@ -130,6 +131,25 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        PlayerManager pm = PlayerManager.instance;
+        SimpleDialogManager dm = SimpleDialogManager.Instance;
+        QuestManager qm = QuestManager.instance;
+
+        if (pm)
+        {
+            Destroy(pm.player);
+            Destroy(pm.gameObject);
+        }
+        if (dm)
+        {
+            Destroy(dm.gameObject);
+        }
+        if (qm)
+        {
+            Destroy(qm.gameObject);
+        }
+
         SceneManager.LoadScene("MainMenu");
     }
 

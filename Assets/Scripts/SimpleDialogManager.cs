@@ -159,6 +159,11 @@ public class SimpleDialogManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("SPACE DOWN");
+        }
+
         // Only advance when dialogue is visible and not mid-fade
         if (!dialogPanel.activeSelf || isFading)
             return;
@@ -166,6 +171,7 @@ public class SimpleDialogManager : MonoBehaviour
         // advance on Space *or* controller "Interact"
         if (Input.GetKeyDown(KeyCode.Space) || interactInput)
         {
+            Debug.Log("NEXT DIALOGUE");
             interactInput = false;
             OnContinuePressed();
         }
