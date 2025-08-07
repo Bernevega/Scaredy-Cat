@@ -13,6 +13,10 @@ public class ForestSceneStart : MonoBehaviour
         if (playerObj)
             playerMoveScript = playerObj.GetComponent<PlayerMovement>();
         if (playerMoveScript)
+        {
             playerMoveScript.WakeUp();
+            playerMoveScript.blockSprint = false;
+        }
+            
     }
 }

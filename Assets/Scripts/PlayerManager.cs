@@ -19,6 +19,7 @@ public class PlayerManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            Destroy(player);
         }
     }
 

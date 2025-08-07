@@ -203,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetDirection(Vector3 dir) => direction = dir.normalized;
     public void SetCanMove(bool b) => canMove = b;
-    public void WakeUp() { moveState = MoveState.WakingUp; animator.SetTrigger("WakeUp"); }
+    public void WakeUp() { moveState = MoveState.WakingUp; animator.SetTrigger("WakeUp"); canMove = false; }
 
     public void AnimStringEvent(string str)
     {
@@ -258,6 +258,7 @@ public class PlayerMovement : MonoBehaviour
     private void WakeUpEnd()
     {
         moveState = MoveState.Idle;
+        canMove = true;
         Debug.Log("Wake up end");
     }
 

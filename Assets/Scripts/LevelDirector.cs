@@ -12,15 +12,26 @@ public class LevelDirector : MonoBehaviour
     private void Start()
     {
         if (!ignore)
+        {
+            Debug.Log("TRYING TO TELEPORT PLAYER");
             StartCoroutine(TeleportPlayerCoroutine());
+            
+        }
+            
     }
 
     IEnumerator TeleportPlayerCoroutine()
     {
+        Debug.Log("TELEPORTED PLAYER TO A START POSITION");
         yield return new WaitForFixedUpdate();
         if (targetStartPosition >= 0 && targetStartPosition < startPositions.Length)
         {
-            PlayerManager.instance.player.transform.position = startPositions[targetStartPosition].position;
+            GameObject player = PlayerManager.instance.player;
+            Rigidbody playerRb = player.GetComponent<Rigidbody>();
+
+            playerRb.linearVelocity = Vector3.zero;
+            playerRb.MovePosition(startPositions[targetStartPosition].position);
+            
         }
         else if (targetStartPosition >= 0)
         {
