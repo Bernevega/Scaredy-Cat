@@ -7,6 +7,7 @@ public class OyenGraveyard : MonoBehaviour
 
     [SerializeField] GameObject momCat;
     [SerializeField] AutoRotate momCatRotator;
+    [SerializeField] Animator oyenAnimator;
 
     [SerializeField] Gravestone oyenGravestone;
 
@@ -73,6 +74,7 @@ public class OyenGraveyard : MonoBehaviour
         if (transform.position != waypoints[step].position)
         {
             transform.position = Vector3.MoveTowards(transform.position, waypoints[step].position, moveSpeed * Time.deltaTime);
+            oyenAnimator.SetBool("Walking", true);
         }
         else
         {
@@ -80,6 +82,7 @@ public class OyenGraveyard : MonoBehaviour
             {
                 state = State.GraveyardWalkWait;
                 rotator.targetDirection = new Vector3(0, 0, -1);
+                oyenAnimator.SetBool("Walking", false);
                 step++;
             }
             else
@@ -88,6 +91,7 @@ public class OyenGraveyard : MonoBehaviour
                 {
                     Vector3 targetDirection = (waypoints[step + 1].position - waypoints[step].position).normalized;
                     rotator.targetDirection = targetDirection;
+                    
                 }
                 step++;
             }
@@ -102,6 +106,11 @@ public class OyenGraveyard : MonoBehaviour
         }
         else
         {
+            if (step + 1 < waypoints.Length)
+            {
+                Vector3 dirToNext = (waypoints[step + 1].position - momCat.transform.position).normalized;
+                momCatRotator.targetDirection = dirToNext;
+            }
             if (step == 3)
             {
                 SimpleDialogManager.Instance.StartDialogue("MomCall");
@@ -109,7 +118,7 @@ public class OyenGraveyard : MonoBehaviour
             else if (step == 4)
             {
                 state = State.MomCatWalkWait;
-                
+                momCatRotator.targetDirection = waypoints[^1].transform.forward;
             }
             step++;
         }
@@ -137,7 +146,11 @@ public class OyenGraveyard : MonoBehaviour
             pmv.speed = 0;
 
             oyenGravestone.SetSceneID("OyenOJGrave2");
-            
+            if (step + 1 < waypoints.Length)
+            {
+                Vector3 dirToNext = (waypoints[step + 1].position - momCat.transform.position).normalized;
+                momCatRotator.targetDirection = dirToNext;
+            }
         }
     }
 

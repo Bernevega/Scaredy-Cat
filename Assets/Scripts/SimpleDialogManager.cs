@@ -55,6 +55,7 @@ public class SimpleDialogManager : MonoBehaviour
     public Sprite nSprite;
     public Sprite chicaSprite;
     public Sprite oyenSprite;
+    public Sprite mousieSprite;
     public NPCVoiceScriptable mousieVoice;
 
     [Header("Transition")]
@@ -189,6 +190,7 @@ public class SimpleDialogManager : MonoBehaviour
             case "N":                   speakerIcon.sprite = nSprite;           vtp = friendsVoice; break;
             case "Chica":               speakerIcon.sprite = chicaSprite;       vtp = friendsVoice; break;
             case "Oyen":                speakerIcon.sprite = oyenSprite;        vtp = friendsVoice; break;
+            case "Mousie":              speakerIcon.sprite = mousieSprite;      vtp = mousieVoice; break;
 
             default:                    speakerIcon.sprite = null;              break;
         }
