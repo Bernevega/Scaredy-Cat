@@ -3,16 +3,24 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class PauseMenu : MonoBehaviour
 {
     [Header("UI")]
-    public GameObject PauseMenuCanvas;      // Root canvas for pause UI
-    public GameObject SettingsPanel;        // Parent of all settings subpanels
-    public GameObject PausePanel;           // The “Paused: Continue/Settings/…” panel
-    public GameObject VideoSettingsPanel;   // Sub‐panel for resolution & mode
-    public GameObject AudioSettingsPanel;   // Sub‐panel for volume sliders
-    public GameObject ControlsSettingsPanel;// Sub‐panel for control bindings
+    public GameObject PauseMenuCanvas;
+    public GameObject SettingsPanel;
+    public GameObject PausePanel;
+    public GameObject VideoSettingsPanel;
+    public GameObject AudioSettingsPanel;
+    public GameObject ControlsSettingsPanel;
+
+    [Header("Default Selected Buttons")]
+    public Button DefaultPauseMenuButton;
+    public Button DefaultVideoSettingsButton;
+    public Button DefaultAudioSettingsButton;
+    public Button DefaultControlsSettingsButton;
 
     [Header("Audio UI")]
     [Tooltip("Slider range: 0..1")]
@@ -25,11 +33,9 @@ public class PauseMenu : MonoBehaviour
     public TMP_Dropdown screenModeDropdown;
 
     public static bool isPaused { get; private set; } = false;
-    private Resolution[] resolutions;
 
     private void Start()
     {
-        // Initially hide everything except gameplay
         PauseMenuCanvas.SetActive(false);
         SettingsPanel.SetActive(false);
 
@@ -37,7 +43,6 @@ public class PauseMenu : MonoBehaviour
         SetupScreenModeOptions();
         LoadVolumeSliders();
 
-        // Hide cursor at start
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -51,6 +56,35 @@ public class PauseMenu : MonoBehaviour
             else
                 ContinueGame();
         }
+
+        // Re-focus if controller used and no UI selected
+        if (Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                ReselectButtonForCurrentPanel();
+            }
+        }
+    }
+
+    private void ReselectButtonForCurrentPanel()
+    {
+        if (PausePanel.activeInHierarchy && DefaultPauseMenuButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultPauseMenuButton.gameObject);
+        }
+        else if (VideoSettingsPanel.activeInHierarchy && DefaultVideoSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultVideoSettingsButton.gameObject);
+        }
+        else if (AudioSettingsPanel.activeInHierarchy && DefaultAudioSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultAudioSettingsButton.gameObject);
+        }
+        else if (ControlsSettingsPanel.activeInHierarchy && DefaultControlsSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
+        }
     }
 
     // ---------------- Pause / Continue ----------------
@@ -61,9 +95,13 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
 
-        // Show cursor when paused
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        if (DefaultPauseMenuButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultPauseMenuButton.gameObject);
+        }
 
         Debug.Log("Game paused");
     }
@@ -74,7 +112,6 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1f;
 
-        // Hide cursor when resuming gameplay
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -91,6 +128,11 @@ public class PauseMenu : MonoBehaviour
         VideoSettingsPanel.SetActive(true);
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(false);
+
+        if (DefaultVideoSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultVideoSettingsButton.gameObject);
+        }
     }
 
     public void OpenAudioSettings()
@@ -98,6 +140,11 @@ public class PauseMenu : MonoBehaviour
         VideoSettingsPanel.SetActive(false);
         AudioSettingsPanel.SetActive(true);
         ControlsSettingsPanel.SetActive(false);
+
+        if (DefaultAudioSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultAudioSettingsButton.gameObject);
+        }
     }
 
     public void OpenControlsSettings()
@@ -105,12 +152,22 @@ public class PauseMenu : MonoBehaviour
         VideoSettingsPanel.SetActive(false);
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(true);
+
+        if (DefaultControlsSettingsButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
+        }
     }
 
     public void CloseSettings()
     {
         SettingsPanel.SetActive(false);
         PausePanel.SetActive(true);
+
+        if (DefaultPauseMenuButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(DefaultPauseMenuButton.gameObject);
+        }
     }
 
     public void SaveGame()
@@ -186,24 +243,24 @@ public class PauseMenu : MonoBehaviour
 
     private void SetupResolutionOptions()
     {
-        resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 
-        List<string> options = new List<string>();
-        int currentResolutionIndex = 0;
-
-        for (int i = 0; i < resolutions.Length; i++)
+        List<string> options = new List<string>
         {
-            string option = resolutions[i].width + " x " + resolutions[i].height;
-            if (!options.Contains(option))
-            {
-                options.Add(option);
-            }
+            "1280 x 720",
+            "1600 x 900",
+            "1920 x 1080"
+        };
 
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
+        int currentResolutionIndex = 0;
+        string currentRes = Screen.currentResolution.width + " x " + Screen.currentResolution.height;
+
+        for (int i = 0; i < options.Count; i++)
+        {
+            if (options[i] == currentRes)
             {
                 currentResolutionIndex = i;
+                break;
             }
         }
 
