@@ -13,6 +13,7 @@ public class GraveyardCutscene : MonoBehaviour
     [SerializeField] Transform[] cameraWaypoints;
     [SerializeField] Transform[] oyenWaypoints;
     [SerializeField] Transform[] kittyWaypoints;
+    [SerializeField] SceneTransitionZone cutsceneTransition;
 
     int cameraStep = 0;
     int oyenStep = 0;
@@ -70,6 +71,7 @@ public class GraveyardCutscene : MonoBehaviour
         player.speed = 0f;
 
         cutsceneActivated = true;
+        cutsceneTransition.gameObject.SetActive(true);
     }
 
     private void Update()
