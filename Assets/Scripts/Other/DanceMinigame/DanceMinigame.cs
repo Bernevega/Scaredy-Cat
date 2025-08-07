@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class DanceMinigame : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class DanceMinigame : MonoBehaviour
     [SerializeField] DanceKey[] keyPool;
     [SerializeField] GameObject[] lives;
     [SerializeField] GameObject hatObject;
+    [SerializeField] AudioClip clickClip;
+    [SerializeField] AudioClip music;
+    [SerializeField] AudioMixerGroup mix;
 
     public float keyTimer = 2f;
     public int losses = 0;
@@ -201,6 +205,20 @@ public class DanceMinigame : MonoBehaviour
     private void FailKey()
     {
         losses++;
+
+        GameObject spObject = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        if (spObject != null)
+        {
+            SoundPlayer splr = spObject.GetComponent<SoundPlayer>();
+
+            PlaySoundInfo soundInfo = new PlaySoundInfo();
+            soundInfo.clip = clickClip;
+            soundInfo.volume = 1f;
+            soundInfo.pitch = 0.5f;
+            soundInfo.mixer = mix;
+
+            splr.PlaySound(soundInfo);
+        }
         
         for (int i = 0; i < lives.Length; i++)
         {
@@ -227,6 +245,20 @@ public class DanceMinigame : MonoBehaviour
     public void WinKey()
     {
         activeKeys--;
+
+        GameObject spObject = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
+        if (spObject != null)
+        {
+            SoundPlayer splr = spObject.GetComponent<SoundPlayer>();
+
+            PlaySoundInfo soundInfo = new PlaySoundInfo();
+            soundInfo.clip = clickClip;
+            soundInfo.volume = 1f;
+            soundInfo.pitch = 1f;
+            soundInfo.mixer = mix;
+
+            splr.PlaySound(soundInfo);
+        }
 
         if (activeKeys == 0 && keysLeft == 0)
         {

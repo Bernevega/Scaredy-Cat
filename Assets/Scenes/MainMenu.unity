@@ -3890,6 +3890,7 @@ GameObject:
   - component: {fileID: 3156232450327170296}
   - component: {fileID: 9072088042835690313}
   - component: {fileID: 9072088042835690312}
+  - component: {fileID: 9072088042835690314}
   m_Layer: 5
   m_Name: CloseSettingsButton
   m_TagString: Untagged
@@ -6718,6 +6719,7 @@ GameObject:
   - component: {fileID: 3547817181485739443}
   - component: {fileID: 8952021016117092184}
   - component: {fileID: 8952021016117092183}
+  - component: {fileID: 8952021016117092185}
   m_Layer: 5
   m_Name: VideoButton
   m_TagString: Untagged
@@ -6970,6 +6972,7 @@ GameObject:
   - component: {fileID: 4388828710870637344}
   - component: {fileID: 8877650421735982201}
   - component: {fileID: 8877650421735982200}
+  - component: {fileID: 8877650421735982202}
   m_Layer: 5
   m_Name: ControlsButton
   m_TagString: Untagged
@@ -6991,6 +6994,7 @@ GameObject:
   - component: {fileID: 7230775279342667982}
   - component: {fileID: 8585623691241093297}
   - component: {fileID: 8585623691241093296}
+  - component: {fileID: 8585623691241093298}
   m_Layer: 5
   m_Name: AudioButton
   m_TagString: Untagged
@@ -7569,6 +7573,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8585623691241093298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7571813960424639219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 8585623691241093297}
+  targetTransform: {fileID: 3138668434574921279}
+  mouseDownScale: {x: 0.98, y: 0.98, z: 0.98}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!224 &8721309839252588930
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7745,6 +7770,27 @@ MonoBehaviour:
   hoverExitSound: {fileID: 0}
   hoverExitVolume: 1
   hoverExitPitch: 1
+--- !u!114 &8877650421735982202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7539017314462993769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 8877650421735982200}
+  targetTransform: {fileID: 5606993823259173012}
+  mouseDownScale: {x: 0.98, y: 0.98, z: 0.98}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!224 &8891319400717655444
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7831,6 +7877,27 @@ MonoBehaviour:
   hoverExitSound: {fileID: 0}
   hoverExitVolume: 1
   hoverExitPitch: 1
+--- !u!114 &8952021016117092185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7025199034478764391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 8952021016117092183}
+  targetTransform: {fileID: 7362823873165329815}
+  mouseDownScale: {x: 0.98, y: 0.98, z: 0.98}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!1 &8968729696961246889
 GameObject:
   m_ObjectHideFlags: 0
@@ -7976,6 +8043,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b821c1fc294544fb7238db50ff54d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9072088042835690314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071482894848410853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88969eb9f2df64c4da4a3bef37d4bde3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 9072088042835690313}
+  targetTransform: {fileID: 9072088042835690311}
+  mouseDownScale: {x: 0.98, y: 0.98, z: 0.98}
+  mouseUpScale: {x: 1, y: 1, z: 1}
+  hoveEnterScale: {x: 1.1, y: 1.1, z: 1.1}
+  hoveExitScale: {x: 1, y: 1, z: 1}
+  targetScale: {x: 1, y: 1, z: 1}
+  transitionSpeed: 5
+  isDirty: 0
 --- !u!222 &9083807315043862946
 CanvasRenderer:
   m_ObjectHideFlags: 0
