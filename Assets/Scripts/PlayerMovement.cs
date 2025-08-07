@@ -29,9 +29,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public bool blockSprint = false;
 
     [Header("Rotation Reset Settings")]
-    [Tooltip("Seconds to ease model back to last direction when dialog ends. If ≤0, uses rotationReturnSpeed.")]
     public float rotationReturnDuration = 0.5f;
-    [Tooltip("Degrees per second to rotate model if rotationReturnDuration ≤ 0.")]
     public float rotationReturnSpeed = 1080f;
 
     private Rigidbody rb;
@@ -58,7 +56,6 @@ public class PlayerMovement : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         mainCam = Camera.main;
 
-        // Zero-friction so the player slides along walls
         Collider col = GetComponent<Collider>();
         var slideMat = new PhysicsMaterial("SlideMat")
         {
@@ -73,19 +70,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Ensure camera reference
         if (mainCam == null) mainCam = Camera.main;
 
-        // --- GROUND CHECK ---
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         animator.SetBool("grounded", isGrounded);
         if (isGrounded) hasJumped = false;
 
-        // --- DIALOG PAUSE CHECK ---
         var dialogMgr = SimpleDialogManager.Instance;
         bool dialogActive = dialogMgr != null
                             && dialogMgr.dialogPanel != null
                             && dialogMgr.dialogPanel.activeSelf;
+
         if (dialogActive)
         {
             _wasDialogActive = true;
@@ -96,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
             animator.Play("Idle");
             return;
         }
+
         if (_wasDialogActive)
         {
             _wasDialogActive = false;
@@ -112,51 +108,66 @@ public class PlayerMovement : MonoBehaviour
 
         if (!canMove) return;
 
-        // --- READ RAW INPUTS ---
+        // --- Input values ---
+        float kbX = Input.GetAxisRaw("Horizontal");
+        float kbZ = Input.GetAxisRaw("Vertical");
+        bool jumpKb = Input.GetButtonDown("Jump");
+        bool sprintKb = Input.GetKey(KeyCode.LeftShift);
+        bool interactKb = Input.GetKeyDown(KeyCode.E);
+        bool toggleQuestKb = Input.GetKeyDown(KeyCode.Q);
 
-        // Keyboard
-        float kbX         = Input.GetAxisRaw("Horizontal");
-        float kbZ         = Input.GetAxisRaw("Vertical");
-        bool  jumpKb      = Input.GetButtonDown("Jump");
-        bool  sprintKb    = Input.GetKey(KeyCode.LeftShift);
-        bool  interactKb  = Input.GetKeyDown(KeyCode.E);
-
-        // Gamepad
         float gpX = 0f, gpZ = 0f;
-        bool  jumpGp     = false;
-        bool  sprintGp   = false;
-        bool  interactGp = false;
+        bool jumpGp = false;
+        bool sprintGp = false;
+        bool interactGp = false;
+        bool toggleQuestGp = false;
+
 #if ENABLE_INPUT_SYSTEM
         if (Gamepad.current != null)
         {
-            Vector2 stick    = Gamepad.current.leftStick.ReadValue();
-            gpX              = stick.x;
-            gpZ              = stick.y;
-            jumpGp           = Gamepad.current.buttonSouth.wasPressedThisFrame;
-            sprintGp         = Gamepad.current.leftStickButton.isPressed;    // <— L3 run
-            interactGp       = Gamepad.current.buttonEast.wasPressedThisFrame;
+            Vector2 stick = Gamepad.current.leftStick.ReadValue();
+            gpX = stick.x;
+            gpZ = stick.y;
+            jumpGp = Gamepad.current.buttonSouth.wasPressedThisFrame;
+            sprintGp = Gamepad.current.leftStickButton.isPressed;
+            interactGp = Gamepad.current.buttonEast.wasPressedThisFrame;
+            toggleQuestGp = Gamepad.current.buttonNorth.wasPressedThisFrame;
+
+            // Toggle Quest with Gamepad
+            if (toggleQuestGp)
+            {
+                QuestManager.instance?.ToggleQuestPanel();
+            }
+        }
+
+        if (Keyboard.current != null && toggleQuestKb)
+        {
+            QuestManager.instance?.ToggleQuestPanel();
+        }
+#else
+        if (toggleQuestKb)
+        {
+            QuestManager.instance?.ToggleQuestPanel();
         }
 #endif
 
-        // --- COMBINE INPUTS ---
+        // --- Combine Inputs ---
         Vector2 rawMove = new Vector2(kbX + gpX, kbZ + gpZ);
         if (rawMove.sqrMagnitude > 1f) rawMove.Normalize();
-        float moveX       = rawMove.x;
-        float moveZ       = rawMove.y;
-        bool  hasInput    = rawMove.sqrMagnitude > 0f;
-        bool  jumpPressed = jumpKb || jumpGp;
-        bool  sprintInput = (sprintKb || sprintGp) && !blockSprint;
-        bool  interact    = interactKb || interactGp;
+        float moveX = rawMove.x;
+        float moveZ = rawMove.y;
+        bool hasInput = rawMove.sqrMagnitude > 0f;
+        bool jumpPressed = jumpKb || jumpGp;
+        bool sprintInput = (sprintKb || sprintGp) && !blockSprint;
+        bool interact = interactKb || interactGp;
 
         animator.SetBool("moveInput", hasInput);
 
-        // CAMERA-RELATIVE MOVE DIRECTION
         Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
         Vector3 camR = Vector3.Cross(Vector3.up, camF);
         Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
         if (moveDir != Vector3.zero) direction = moveDir;
 
-        // SPRINT
         float currentSpeed = speed;
         if (hasInput && sprintInput)
         {
@@ -168,10 +179,8 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRunning", false);
         }
 
-        // APPLY MOVEMENT
         rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
 
-        // JUMP
         if (moveState == MoveState.Idle && !blockJump && jumpPressed && isGrounded && !hasJumped)
         {
             animator.SetTrigger("jump");
@@ -181,34 +190,30 @@ public class PlayerMovement : MonoBehaviour
             moveState = MoveState.Jumping;
         }
 
-        // INTERACT
         if (interact)
         {
             animator.SetTrigger("interact");
         }
 
-        // ROTATE MODEL SMOOTHLY
-        Transform t       = model != null ? model.transform : transform;
+        Transform t = model != null ? model.transform : transform;
         Quaternion desired = Quaternion.LookRotation(direction, Vector3.up);
         if (t.rotation != desired)
             t.rotation = Quaternion.RotateTowards(t.rotation, desired, 1080f * Time.deltaTime);
     }
 
-    // External control methods
     public void SetDirection(Vector3 dir) => direction = dir.normalized;
     public void SetCanMove(bool b) => canMove = b;
     public void WakeUp() { moveState = MoveState.WakingUp; animator.SetTrigger("WakeUp"); }
 
-    // Animation event handling
     public void AnimStringEvent(string str)
     {
         switch (str)
         {
             case "JumpLiftOff": JumpLiftOff(); break;
-            case "LandStart":   LandStart();   break;
-            case "LandEnd":     LandEnd();     break;
-            case "WakeUpEnd":   WakeUpEnd();   break;
-            case "FootStep":    MakeFootstep(); break;
+            case "LandStart": LandStart(); break;
+            case "LandEnd": LandEnd(); break;
+            case "WakeUpEnd": WakeUpEnd(); break;
+            case "FootStep": MakeFootstep(); break;
         }
     }
 
@@ -278,8 +283,8 @@ public class PlayerMovement : MonoBehaviour
     {
         Transform t = model != null ? model.transform : transform;
         Quaternion start = t.rotation;
-        Quaternion end   = Quaternion.LookRotation(direction, Vector3.up);
-        float elapsed     = 0f;
+        Quaternion end = Quaternion.LookRotation(direction, Vector3.up);
+        float elapsed = 0f;
         while (elapsed < duration)
         {
             float tNorm = elapsed / duration;

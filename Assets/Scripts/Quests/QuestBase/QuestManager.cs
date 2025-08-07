@@ -6,12 +6,15 @@ public class QuestManager : MonoBehaviour
 {
     public static QuestManager instance { get; private set; }
 
-    List<Quest> quests = new List<Quest>(3);
-    [SerializeField] List<QuestInfoBox> questInfos = new List<QuestInfoBox>();
+    private List<Quest> quests = new List<Quest>(3);
+
+    [SerializeField] private List<QuestInfoBox> questInfos = new List<QuestInfoBox>();
+    [SerializeField] private Quest[] startingQuests;
+    [SerializeField] private GameObject questPanels;
+    [SerializeField] private GameObject questUI;
+
     public Action<Quest, UpdateType> eventQuestUpdated;
-    [SerializeField] Quest[] startingQuests;
-    [SerializeField] GameObject questPanels;
-    [SerializeField] GameObject questUI;
+
     public enum UpdateType
     {
         Added,
@@ -19,13 +22,16 @@ public class QuestManager : MonoBehaviour
         Update
     }
 
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
-        {
             instance = this;
-        }
+        else
+            Destroy(gameObject);
+    }
 
+    private void Start()
+    {
         for (int i = 0; i < startingQuests.Length; i++)
         {
             AddQuest(startingQuests[i]);
@@ -33,13 +39,7 @@ public class QuestManager : MonoBehaviour
 
         UpdateUI();
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            questPanels.SetActive(!questPanels.activeSelf);
-        }
-    }
+
     private void OnDestroy()
     {
         if (instance == this)
@@ -47,20 +47,37 @@ public class QuestManager : MonoBehaviour
             instance = null;
         }
     }
+
+    // 🟡 Used by PlayerMovement.cs
+    public void ToggleQuestPanel()
+    {
+        if (questPanels != null)
+        {
+            bool isActive = questPanels.activeSelf;
+            questPanels.SetActive(!isActive);
+
+            // Optional: Pause/unpause game or cursor here
+            // Cursor.visible = !isActive;
+            // Cursor.lockState = isActive ? CursorLockMode.Locked : CursorLockMode.None;
+        }
+    }
+
     public void AddQuest(Quest quest)
     {
         bool shouldAddQuest = true;
+
         for (int i = 0; i < quests.Count; i++)
         {
             if (quests[i].questName == quest.questName)
             {
                 shouldAddQuest = false;
+                break;
             }
         }
 
         if (shouldAddQuest)
         {
-            Debug.Log("Added quest");
+            Debug.Log("Added quest: " + quest.questName);
             quests.Add(quest);
             quest.OnStart();
         }
@@ -88,11 +105,10 @@ public class QuestManager : MonoBehaviour
 
     public void CompleteQuest(string questName)
     {
-        for (int i = 0;i < quests.Count;i++)
+        for (int i = 0; i < quests.Count; i++)
         {
             if (quests[i].questName == questName)
             {
-
                 quests[i].OnComplete();
                 quests.RemoveAt(i);
                 break;
@@ -117,9 +133,11 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void SetUIEnabled(bool b)
+    public void SetUIEnabled(bool enabled)
     {
-        if (questUI)
-            questUI.SetActive(b);
+        if (questUI != null)
+        {
+            questUI.SetActive(enabled);
+        }
     }
 }

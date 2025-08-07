@@ -34,6 +34,25 @@ public class PauseMenu : MonoBehaviour
 
     public static bool isPaused { get; private set; } = false;
 
+    private Controls inputControls;
+
+    private void Awake()
+    {
+        inputControls = new Controls();
+    }
+
+    private void OnEnable()
+    {
+        inputControls.UI.Enable();
+        inputControls.UI.Pause.performed += OnPauseInput;
+    }
+
+    private void OnDisable()
+    {
+        inputControls.UI.Pause.performed -= OnPauseInput;
+        inputControls.UI.Disable();
+    }
+
     private void Start()
     {
         PauseMenuCanvas.SetActive(false);
@@ -45,17 +64,13 @@ public class PauseMenu : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        isPaused = false;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (!isPaused)
-                PauseGame();
-            else
-                ContinueGame();
+            TogglePause();
         }
 
         // Re-focus if controller used and no UI selected
@@ -66,6 +81,19 @@ public class PauseMenu : MonoBehaviour
                 ReselectButtonForCurrentPanel();
             }
         }
+    }
+
+    private void OnPauseInput(InputAction.CallbackContext context)
+    {
+        TogglePause();
+    }
+
+    private void TogglePause()
+    {
+        if (!isPaused)
+            PauseGame();
+        else
+            ContinueGame();
     }
 
     private void ReselectButtonForCurrentPanel()
@@ -188,25 +216,6 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
-        PlayerManager pm = PlayerManager.instance;
-        SimpleDialogManager dm = SimpleDialogManager.Instance;
-        QuestManager qm = QuestManager.instance;
-
-        if (pm)
-        {
-            Destroy(pm.player);
-            Destroy(pm.gameObject);
-        }
-        if (dm)
-        {
-            Destroy(dm.gameObject);
-        }
-        if (qm)
-        {
-            Destroy(qm.gameObject);
-        }
-
         SceneManager.LoadScene("MainMenu");
     }
 
