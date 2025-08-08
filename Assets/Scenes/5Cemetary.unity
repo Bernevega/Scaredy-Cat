@@ -8662,6 +8662,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 484404269}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &485077568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 485077569}
+  m_Layer: 0
+  m_Name: FlowerPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &485077569
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485077568}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.183, y: -0.354, z: 0.778}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 994280677}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &485733886
 GameObject:
   m_ObjectHideFlags: 0
@@ -10280,7 +10311,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.937987, y: 1.5211043, z: 0.14091635}
+  m_Size: {x: 9.19, y: 1.5211043, z: 0.14091635}
   m_Center: {x: -2.716582, y: 0.4294052, z: 3.1996467}
 --- !u!65 &594036109
 BoxCollider:
@@ -14913,6 +14944,7 @@ MonoBehaviour:
   - {fileID: 1542440011}
   - {fileID: 759525449}
   - {fileID: 1014655777}
+  flowerPos: {fileID: 485077569}
   cutsceneTransition: {fileID: 2070411981}
 --- !u!4 &994280677
 Transform:
@@ -14931,6 +14963,7 @@ Transform:
   - {fileID: 2035875513}
   - {fileID: 494484433}
   - {fileID: 2070411983}
+  - {fileID: 485077569}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &997185476
@@ -20772,7 +20805,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1538528086
 Transform:
   m_ObjectHideFlags: 0
@@ -23707,7 +23740,7 @@ Transform:
   m_GameObject: {fileID: 1793530778}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.097, y: 0.612, z: 5.855}
+  m_LocalPosition: {x: 3.097, y: 0.612, z: 5.564}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

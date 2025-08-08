@@ -50,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
         WakingUp,
     }
 
+    public Animator GetAnimator() { return animator; }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();

@@ -191,6 +191,7 @@ public class SimpleDialogManager : MonoBehaviour
             case "Chica":               speakerIcon.sprite = chicaSprite;       vtp = friendsVoice; break;
             case "Oyen":                speakerIcon.sprite = oyenSprite;        vtp = friendsVoice; break;
             case "Mousie":              speakerIcon.sprite = mousieSprite;      vtp = mousieVoice; break;
+            case "Gravestone":          speakerIcon.sprite = groupFriendsSprite; break;
 
             default:                    speakerIcon.sprite = null;              break;
         }

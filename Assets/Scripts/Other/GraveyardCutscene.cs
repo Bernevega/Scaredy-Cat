@@ -13,6 +13,7 @@ public class GraveyardCutscene : MonoBehaviour
     [SerializeField] Transform[] cameraWaypoints;
     [SerializeField] Transform[] oyenWaypoints;
     [SerializeField] Transform[] kittyWaypoints;
+    [SerializeField] Transform flowerPos;
     [SerializeField] SceneTransitionZone cutsceneTransition;
 
     int cameraStep = 0;
@@ -115,6 +116,15 @@ public class GraveyardCutscene : MonoBehaviour
             Rigidbody playerRb = player.GetComponent<Rigidbody>();
             playerRb.isKinematic = true;
 
+            if (kittyStep + 1 < kittyWaypoints.Length)
+            {
+                player.SetDirection((kittyWaypoints[kittyStep + 1].position - player.transform.position).normalized);
+            }
+            if (oyenStep + 1 < oyenWaypoints.Length)
+            {
+                oyen.targetDirection = (oyenWaypoints[oyenStep + 1].position - oyen.transform.position).normalized;
+            }
+
             cameraStep++;
         }
     }
@@ -205,7 +215,33 @@ public class GraveyardCutscene : MonoBehaviour
         if (kittyStep - 1 > 0)
         {
             player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep - 1].position).normalized);
+
+            GameObject flowerObject = FindFlowerRecursive(player.transform, "FlowerOnHead");
+            if (flowerObject != null)
+            {
+                flowerObject.transform.parent = null;
+                flowerObject.transform.position = flowerPos.transform.position;
+            }
         }
+    }
+
+    private GameObject FindFlowerRecursive(Transform obj, string childName)
+    {
+        foreach (Transform child in obj)
+        {
+            if (child.name == childName)
+            {
+                return child.gameObject;
+            }
+
+            GameObject result = FindFlowerRecursive(child, childName);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return null;
     }
 
     private void KittyPlaceFlower2State()
@@ -325,8 +361,8 @@ public class GraveyardCutscene : MonoBehaviour
         {
             if (currentKey == null)
             {
-                player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep - 1].position).normalized);
-                oyen.targetDirection = (oyenWaypoints[oyenStep].position - oyenWaypoints[oyenStep - 1].position).normalized;
+                player.SetDirection((kittyWaypoints[kittyStep].position - player.transform.position).normalized);
+                oyen.targetDirection = (oyenWaypoints[oyenStep].position - oyen.transform.position).normalized;
                 cutState = CutsceneState.KittyOyenWalkOff;
             }
         }

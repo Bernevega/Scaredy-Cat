@@ -83,6 +83,7 @@ public class OyenGraveyard : MonoBehaviour
                 state = State.GraveyardWalkWait;
                 rotator.targetDirection = new Vector3(0, 0, -1);
                 oyenAnimator.SetBool("Walking", false);
+                oyenGravestone.gameObject.SetActive(true);
                 step++;
             }
             else
@@ -126,6 +127,7 @@ public class OyenGraveyard : MonoBehaviour
 
     private void OyenStartDialogue(string key)
     {
+        
         if (key == null)
         {
             firstDialogActor.SetActive(false);
@@ -144,6 +146,7 @@ public class OyenGraveyard : MonoBehaviour
             PlayerMovement pmv = pm.player.GetComponent<PlayerMovement>();
             pmv.SetDirection(new Vector3(1, 0, 0));
             pmv.speed = 0;
+            oyenGravestone.gameObject.SetActive(false);
 
             oyenGravestone.SetSceneID("OyenOJGrave2");
             if (step + 1 < waypoints.Length)
