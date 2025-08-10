@@ -58,6 +58,9 @@ public class SimpleDialogManager : MonoBehaviour
     public Sprite mousieSprite;
     public NPCVoiceScriptable mousieVoice;
 
+    [Tooltip("Fallback portrait for NPCs without a specific sprite")]
+    public Sprite defaultNpcSprite;
+
     [Header("Transition")]
     public float fadeDuration = 0.25f;
 
@@ -110,6 +113,8 @@ public class SimpleDialogManager : MonoBehaviour
             Instance.nSprite = nSprite;
             Instance.chicaSprite = chicaSprite;
             Instance.oyenSprite = oyenSprite;
+
+            Instance.defaultNpcSprite = defaultNpcSprite;
 
             Instance.fadeDuration = fadeDuration;
 
@@ -193,7 +198,9 @@ public class SimpleDialogManager : MonoBehaviour
             case "Mousie":              speakerIcon.sprite = mousieSprite;      vtp = mousieVoice; break;
             case "Gravestone":          speakerIcon.sprite = groupFriendsSprite; break;
 
-            default:                    speakerIcon.sprite = null;              break;
+            default:                    
+                speakerIcon.sprite = defaultNpcSprite; 
+                break;
         }
 
         PlayVoice(vtp);

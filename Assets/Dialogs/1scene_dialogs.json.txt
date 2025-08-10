@@ -24,6 +24,17 @@
       }
     }
   },
+  
+  "Mom2": {
+    "start": "momWarn1",
+    "nodes": {
+      "momWarn1": {
+        "speaker": "Mom Cat",
+        "text": "Go on now, your friends are waiting for you!",
+        "next": null
+      }
+    }
+  },
 
   "NotYet": {
     "start": "notYetDialog",
@@ -31,6 +42,68 @@
       "notYetDialog": {
         "speaker": "Kitty",
         "text": "I need to talk to my friends!",
+        "next": null
+      }
+    }
+  },
+
+  "NPC1_": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "Kitty",
+        "text": "Hi! How are you doing?",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "Fine, what about you, Kitty?",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "Kitty",
+        "text": "I am okay, I just need to find the super-duper rare flower for my friends!",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "Kitty",
+        "text": "And then they will not call me Scaredy Cat anymore!!!",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "???",
+        "text": "...",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "Good luck with that, I guess...",
+        "next": null
+      }
+    }
+  },
+
+  "NPC1_2": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "???",
+        "text": "Have you found it yet?",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "Kitty",
+        "text": "No :(",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "???",
+        "text": "Have you tried going to the right, into the forest?",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "Kitty",
+        "text": "Ohhhh, I will try that, thanks!",
         "next": null
       }
     }
@@ -137,6 +210,27 @@
       "kittyReply3": {
         "speaker": "Kitty",
         "text": "FINE! But you better promise!",
+        "next": null
+      },
+    }
+  },
+
+  "Friends2": {
+    "start": "Tire1",
+    "nodes": {
+      "Tire1": {
+        "speaker": "Tire",
+        "text": "Too scared to find that rare flower, Scaredy Cat?",
+        "next": "kitty1"
+      },
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "In your dreams! Watch me go into that forest ALL ALONE and find it!",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "Easy!!!...... ...  .  .     .        .",
         "next": null
       },
     }
