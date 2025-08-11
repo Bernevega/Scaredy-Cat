@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Video;
+using System;
 
 public class MenuSetup : MonoBehaviour
 {
@@ -19,6 +21,10 @@ public class MenuSetup : MonoBehaviour
     public float slideSpeed = 200f;
     [Tooltip("How long buttons take to fade in (sec)")]
     public float buttonFadeDuration = 0.5f;
+
+    [Header("Background Videos")]
+    [SerializeField] RenderTextureVideoObject[] videos;
+    [SerializeField] int currentVideoIndex = 0;
 
     bool _started;
     CanvasGroup _pressCG;
@@ -49,7 +55,15 @@ public class MenuSetup : MonoBehaviour
         {
             cg.alpha = 0f;
             cg.gameObject.SetActive(false);
+            videos[0].videoPlayer.Play();
         }
+
+        for (int i = 0; i < videos.Length; i++)
+        {
+            videos[i].videoPlayer.gameObject.SetActive(false);
+        }
+        videos[0].videoPlayer.gameObject.SetActive(true);
+        videos[1].videoPlayer.loopPointReached += VideoTransitionFinished;
     }
 
     void Update()
@@ -57,8 +71,43 @@ public class MenuSetup : MonoBehaviour
         if (!_started && Input.anyKeyDown)
         {
             _started = true;
-            StartCoroutine(DoTransition());
+            StartCoroutine(TransitionVideo(videos[0], videos[1]));
         }
+    }
+
+    private void VideoTransitionFinished(VideoPlayer vp)
+    {
+        StartCoroutine(TransitionVideo(videos[1], videos[2]));
+        StartCoroutine(DoTransition()); // UI transition.
+    }
+
+    IEnumerator TransitionVideo(RenderTextureVideoObject currentVideo, RenderTextureVideoObject nextVideo)
+    {
+        nextVideo.rawImage.color = new Vector4(1, 1, 1, 0);
+        nextVideo.rawImage.gameObject.SetActive(true);
+        nextVideo.videoPlayer.Pause();
+
+        if (nextVideo.videoPlayer != currentVideo.videoPlayer)
+        {
+            while (nextVideo.rawImage.color.a < 1)
+            {
+                nextVideo.rawImage.color =
+                    Vector4.MoveTowards(
+                        nextVideo.rawImage.color,
+                        new Color(1, 1, 1, 1),
+                        Time.fixedDeltaTime * 1f
+                        );
+
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
+        nextVideo.videoPlayer.Play();
+        currentVideo.rawImage.color = new Vector4(1, 1, 1, 0);
+        currentVideo.videoPlayer.Stop();
+        currentVideo.rawImage.gameObject.SetActive(false);
+
+        yield return null;
     }
 
     IEnumerator DoTransition()
@@ -95,5 +144,12 @@ public class MenuSetup : MonoBehaviour
                 cg.alpha = t;
             yield return null;
         }
+    }
+
+    [Serializable]
+    public struct RenderTextureVideoObject
+    {
+        public VideoPlayer videoPlayer;
+        public RawImage rawImage;
     }
 }
