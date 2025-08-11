@@ -104,7 +104,6 @@ public class MenuSetup : MonoBehaviour
 
         nextVideo.videoPlayer.Play();
         currentVideo.rawImage.color = new Vector4(1, 1, 1, 0);
-        currentVideo.videoPlayer.Stop();
         currentVideo.rawImage.gameObject.SetActive(false);
 
         yield return null;
