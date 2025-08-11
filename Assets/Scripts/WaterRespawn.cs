@@ -22,9 +22,9 @@ public class WaterRespawn : MonoBehaviour
     {
         if (spawnPoint == null)
         {
-            var sp = GameObject.FindWithTag("SpawnPoint");
+            var sp = GameObject.FindWithTag("Respawn");
             if (sp != null) spawnPoint = sp.transform;
-            else Debug.LogError("[WaterRespawn] No spawnPoint set and no 'SpawnPoint' tag found.");
+            else Debug.LogError("[WaterRespawn] No spawnPoint set and no 'Respawn' tag found.");
         }
 
         if (screenFader == null)

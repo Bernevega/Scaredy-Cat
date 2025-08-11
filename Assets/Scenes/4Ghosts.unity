@@ -5883,11 +5883,6 @@ CapsuleCollider:
   m_Height: 328.63593
   m_Direction: 1
   m_Center: {x: 0, y: -65.783745, z: 4.707968}
---- !u!1 &860532142 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8513681105655169540, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
-  m_PrefabInstance: {fileID: 556307886}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &861150108 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8525683071448045431, guid: 9d60b7898e927e94dafdceaafecb8a77, type: 3}
@@ -11327,6 +11322,8 @@ MonoBehaviour:
   nextSceneName: 5Cemetary
   screenFader: {fileID: 0}
   onlyPlayer: 1
+  fadeOutDurationOverride: -1
+  fallbackWaitSeconds: 0
 --- !u!135 &1459619134
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -18031,51 +18028,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965244435}
   m_Mesh: {fileID: 4876120281301639905, guid: 9d60b7898e927e94dafdceaafecb8a77, type: 3}
---- !u!1 &1965641618
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1965641620}
-  - component: {fileID: 1965641619}
-  m_Layer: 0
-  m_Name: PlayerManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1965641619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1965641618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc82fcb00e8e9aa409eecc6f72ef330f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 860532142}
---- !u!4 &1965641620
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1965641618}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1968020354
 GameObject:
   m_ObjectHideFlags: 0
@@ -19038,125 +18990,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 63.965637, y: 63.965576, z: 65.654045}
   m_Center: {x: 0, y: -0.00012207031, z: 0}
---- !u!1 &2113167352
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2113167355}
-  - component: {fileID: 2113167354}
-  - component: {fileID: 2113167353}
-  m_Layer: 0
-  m_Name: WeatherManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2113167353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2113167352}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4d51a812d712c649bdb962dd6a598d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cloudCoverage: 0.5
-  cloudScale: 0.7
-  cloudChange: 0.2
-  cloudMovement: {x: -0.1, y: 0.01}
-  cloudStep: {x: 10, y: 10}
-  shades: 100
-  cloudStrength: 2.5
-  brightness: 80
-  miminumDarkness: 0.5
-  Materials:
-  - {fileID: 2100000, guid: d50a40cb47ec86444b898d9121bbe0f7, type: 2}
-  - {fileID: 2100000, guid: a194cb4ce6027c246af528b83b728a15, type: 2}
-  - {fileID: 2100000, guid: 77d84437c100f274aad603219110357d, type: 2}
-  - {fileID: 2100000, guid: 479e9a9d893b1ec48909c98262d08324, type: 2}
-  - {fileID: 2100000, guid: 460e6d5cb2d4c42419ff7a31f9e3f82c, type: 2}
-  - {fileID: 2100000, guid: 1bc542ca95527c44293bbc98b9a519f2, type: 2}
-  - {fileID: 2100000, guid: 6f362eb575a274c4aa0e43fb37098c4f, type: 2}
-  - {fileID: 2100000, guid: 91863d30f71675a4abf59cdffc9539ab, type: 2}
-  - {fileID: 2100000, guid: 045008cd6a351b44fa99242119cf15a3, type: 2}
-  - {fileID: 2100000, guid: 719df871080742445b86937d1b9977c9, type: 2}
-  - {fileID: 2100000, guid: 669b1bc48c1bc8c4cbba4d86cb8a68f6, type: 2}
-  - {fileID: 2100000, guid: df239e5d015599647a8e5d23201e56c2, type: 2}
-  - {fileID: 2100000, guid: 5a36b2bc5eacb6b4a9bb2802c2da017f, type: 2}
-  overrideMatValues: 1
-  cookieClouds: 0
-  additionalCookieSize: {x: 20, y: 20}
---- !u!114 &2113167354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2113167352}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d353f47f283f7b546ac9ab70625dfeb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lightColor: {r: 0.75, g: 0.8621609, b: 1, a: 0}
-  lightStrength: 0.1
-  lightRamps: 5
-  fadeStart: 0.5
-  fadeStrength: 0.2
-  directionalFading: 1
-  shadowStrength: 0.6
-  shadowRamps: 5
-  directionalDisappearance: 0.32
-  cloudAreaNearClipPlane: 1
-  cloudAreaFarClipPlane: 2.36
-  showCloudAreaInEditor: 1
-  shadowMarchStepSize: 0.18
-  shadowMarchSteps: 48
-  cloudDataResolution: 700
-  autoApplySettings: 1
-  _preComputedCloudTexture: {fileID: 0}
-  cloudDataTexture: {fileID: 0}
-  godrayMat: {fileID: 0}
-  cloudDataWriterMat: {fileID: 0}
-  mainCamera: {fileID: 0}
-  mainLightTrans: {fileID: 0}
-  anchorTrans: {fileID: 0}
-  planeOrigo: {x: 0, y: 0, z: 0}
-  cloudMovement: {x: 0, y: 0}
-  cloudStep: {x: 0, y: 0}
-  planeWidthWorldUnits: 0
-  planeHeightWorldUnits: 0
-  screenWidthWorldUnits: 0
-  screenHeightWorldUnits: 0
-  cloudCoverage: 0
-  cloudScale: 0
-  cloudChange: 0
-  dataWriterMultiplier: 2.7
-  dataWriterAdditive: 0
-  brightness: 0.25
---- !u!4 &2113167355
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2113167352}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.748898, y: -15.04199, z: 11.371826}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2113872381 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6441082708840844261, guid: 9d60b7898e927e94dafdceaafecb8a77, type: 3}
@@ -34076,13 +33909,11 @@ SceneRoots:
   m_Roots:
   - {fileID: 1419967706}
   - {fileID: 1548940244}
-  - {fileID: 1965641620}
   - {fileID: 913570815}
   - {fileID: 556307886}
   - {fileID: 6666112247228239627}
   - {fileID: 2118295273}
   - {fileID: 390599357}
-  - {fileID: 2113167355}
   - {fileID: 145721102}
   - {fileID: 678162896}
   - {fileID: 1868432174}
