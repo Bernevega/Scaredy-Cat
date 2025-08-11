@@ -32,6 +32,12 @@ public class PlayerMovement : MonoBehaviour
     public float rotationReturnDuration = 0.5f;
     public float rotationReturnSpeed = 1080f;
 
+    [Header("Scene Start")]
+    [Tooltip("If checked, triggers WakeUp() automatically when the scene starts.")]
+    [SerializeField] private bool playWakeUpOnSceneStart = true;
+    [Tooltip("Optional small delay before triggering WakeUp on scene start.")]
+    [SerializeField] private float wakeUpSceneStartDelay = 0f;
+
     private Rigidbody rb;
     private Camera mainCam;
     private Vector3 direction = Vector3.forward;
@@ -67,7 +73,22 @@ public class PlayerMovement : MonoBehaviour
         };
         col.material = slideMat;
 
-        animEvents.stringEvent += AnimStringEvent;
+        if (animEvents) animEvents.stringEvent += AnimStringEvent;
+
+        // Auto-play wake up at scene start (optional)
+        if (playWakeUpOnSceneStart)
+        {
+            if (wakeUpSceneStartDelay > 0f)
+                StartCoroutine(CoDelayedWakeUp(wakeUpSceneStartDelay));
+            else
+                WakeUp();
+        }
+    }
+
+    private IEnumerator CoDelayedWakeUp(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        WakeUp();
     }
 
     void Update()
@@ -205,7 +226,13 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetDirection(Vector3 dir) => direction = dir.normalized;
     public void SetCanMove(bool b) => canMove = b;
-    public void WakeUp() { moveState = MoveState.WakingUp; animator.SetTrigger("WakeUp"); canMove = false; }
+
+    public void WakeUp()
+    {
+        moveState = MoveState.WakingUp;
+        animator.SetTrigger("WakeUp");
+        canMove = false;
+    }
 
     public void AnimStringEvent(string str)
     {

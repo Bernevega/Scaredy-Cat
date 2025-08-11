@@ -2372,12 +2372,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 219.34521, y: 379.0138, z: 226.93652}
-  m_Center: {x: -21.59636, y: -4.9482803, z: -0.000091552734}
+  m_Size: {x: 219.34521, y: 379.0138, z: 257.88397}
+  m_Center: {x: -21.59636, y: -4.9482727, z: 15.473634}
 --- !u!1 &178866577
 GameObject:
   m_ObjectHideFlags: 0
@@ -3516,7 +3516,7 @@ MonoBehaviour:
   nextSceneName: 3Parkour1
   screenFader: {fileID: 583483955}
   onlyPlayer: 1
-  fadeOutDurationOverride: -1
+  fadeOutDurationOverride: 1
   fallbackWaitSeconds: 0
 --- !u!136 &257678158
 CapsuleCollider:
@@ -5105,37 +5105,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5587585, y: 3.5551426, z: 23.957193}
   m_Center: {x: 0.000004704364, y: -0.0025837123, z: 11.165702}
---- !u!1 &427504487
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 427504488}
-  m_Layer: 0
-  m_Name: FromOutskirts
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &427504488
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427504487}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.34, y: 0.391, z: -0.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 645574925}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &458184246
 GameObject:
   m_ObjectHideFlags: 0
@@ -6810,67 +6779,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642290940}
   m_Mesh: {fileID: 7282811492065817239, guid: ab263fdf8dfec28489801c6aa701c4b4, type: 3}
---- !u!1 &645574923
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 645574925}
-  - component: {fileID: 645574928}
-  - component: {fileID: 645574929}
-  m_Layer: 0
-  m_Name: LevelDirector
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &645574925
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 645574923}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 427504488}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &645574928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 645574923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56647c48ec28f424ca8140e4eb0ffe10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPositions:
-  - {fileID: 427504488}
-  ignore: 0
---- !u!114 &645574929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 645574923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 205a0d48df825e94e927b91ab2cc83f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &649028645
 GameObject:
   m_ObjectHideFlags: 0
@@ -9567,9 +9475,13 @@ PrefabInstance:
       propertyPath: playWakeUpOnStart
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8825587145721537332, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+      propertyPath: wakeUpSceneStartDelay
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.3259997
+      value: -1.2209997
       objectReference: {fileID: 0}
     - target: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10969,7 +10881,7 @@ Transform:
   m_GameObject: {fileID: 1123717905}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.375, y: 0.595, z: -0.54}
+  m_LocalPosition: {x: -2.27, y: 0.595, z: -0.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -21961,10 +21873,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 177.0315
+  m_Radius: 156.11661
   m_Height: 691.9275
   m_Direction: 1
-  m_Center: {x: -24.81243, y: -21.990477, z: 30.456293}
+  m_Center: {x: -9.085537, y: -21.990477, z: -5.2785273}
 --- !u!1 &1889828154
 GameObject:
   m_ObjectHideFlags: 0
@@ -24129,7 +24041,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4203837595240964730, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.3489997
+      value: -1.2439997
       objectReference: {fileID: 0}
     - target: {fileID: 4203837595240964730, guid: 6e07e7ada8a6ef747905ce47b670afb2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -43309,6 +43221,8 @@ GameObject:
   - component: {fileID: 1924919020308218239}
   - component: {fileID: 4504923865922983415}
   - component: {fileID: 7516478693841211951}
+  - component: {fileID: 7516478693841211953}
+  - component: {fileID: 7516478693841211952}
   m_Layer: 0
   m_Name: Mini_Mushroom_5
   m_TagString: Untagged
@@ -45593,6 +45507,41 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7516478693841211952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6587538177253837679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba0d233ff726b945808ab7c1b142d98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceForce: 3
+  useSurfaceNormal: 0
+--- !u!65 &7516478693841211953
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6587538177253837679}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 165.21996, y: 225.69514, z: 170.45409}
+  m_Center: {x: 15.274038, y: -1.2267607, z: 0.00028228757}
 --- !u!33 &7517789991871458211
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -48873,6 +48822,7 @@ GameObject:
   - component: {fileID: 3607163295732428533}
   - component: {fileID: 7753518131600063367}
   - component: {fileID: 176813462}
+  - component: {fileID: 8747629920790154227}
   m_Layer: 0
   m_Name: Mushroom_7
   m_TagString: Untagged
@@ -48880,6 +48830,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8747629920790154227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8747629920790154226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba0d233ff726b945808ab7c1b142d98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceForce: 3
+  useSurfaceNormal: 0
 --- !u!1 &8758437984631055660
 GameObject:
   m_ObjectHideFlags: 0
@@ -50059,7 +50023,6 @@ SceneRoots:
   - {fileID: 1100060251}
   - {fileID: 135976534}
   - {fileID: 1508214393}
-  - {fileID: 645574925}
   - {fileID: 2024990412}
   - {fileID: 1011490230}
   - {fileID: 1218556824}
