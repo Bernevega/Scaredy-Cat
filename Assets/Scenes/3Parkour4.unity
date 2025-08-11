@@ -2842,6 +2842,10 @@ PrefabInstance:
       propertyPath: runMultiplier
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8825587145721537332, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+      propertyPath: playWakeUpOnSceneStart
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.15
@@ -3174,6 +3178,8 @@ MonoBehaviour:
   nextSceneName: 3Parkour5
   screenFader: {fileID: 612545593}
   onlyPlayer: 1
+  fadeOutDurationOverride: -1
+  fallbackWaitSeconds: 0
 --- !u!65 &1866969275
 BoxCollider:
   m_ObjectHideFlags: 0

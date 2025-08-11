@@ -247,7 +247,7 @@ PrefabInstance:
     - target: {fileID: 6849620837593997850, guid: 1da763c96655b484e948d863bd92743b, type: 3}
       propertyPath: speakerNameText
       value: 
-      objectReference: {fileID: 1871945152}
+      objectReference: {fileID: 0}
     - target: {fileID: 6849620837593997850, guid: 1da763c96655b484e948d863bd92743b, type: 3}
       propertyPath: johnDanielSprite
       value: 
@@ -819,6 +819,7 @@ MonoBehaviour:
   interactionKey: 102
   interactionPrompt: {fileID: 0}
   repeatable: 0
+  promptFadeDuration: 0.25
 --- !u!4 &912864845
 Transform:
   m_ObjectHideFlags: 0
@@ -969,6 +970,10 @@ MonoBehaviour:
   objectToShowOnPickup: {fileID: 0}
   disablePlayerMovementOnFaint: 1
   movementScriptTypeName: PlayerMovement
+  interactionCanvas: {fileID: 0}
+  interactionRadius: 2
+  interactionFadeDuration: 0.25
+  hideInteractionUIOnPickup: 1
 --- !u!114 &1511644374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1160,6 +1165,10 @@ PrefabInstance:
       propertyPath: runMultiplier
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8825587145721537332, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+      propertyPath: playWakeUpOnSceneStart
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.15
@@ -1338,17 +1347,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1871945152 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7089660646223951457, guid: 3556b8795a40ce048b2a02099eabb40f, type: 3}
-  m_PrefabInstance: {fileID: 713712761}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1884512369
 GameObject:
   m_ObjectHideFlags: 0

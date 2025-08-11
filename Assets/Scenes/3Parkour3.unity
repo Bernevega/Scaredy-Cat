@@ -604,6 +604,8 @@ MonoBehaviour:
   nextSceneName: 3Parkour4
   screenFader: {fileID: 1207711567}
   onlyPlayer: 1
+  fadeOutDurationOverride: -1
+  fallbackWaitSeconds: 0
 --- !u!65 &282464768
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3083,6 +3085,10 @@ PrefabInstance:
     - target: {fileID: 8825587145721537332, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       propertyPath: runMultiplier
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8825587145721537332, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
+      propertyPath: playWakeUpOnSceneStart
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9038015778958891198, guid: 51eefb188f8106d4abfff75ad602a06c, type: 3}
       propertyPath: m_LocalScale.x
