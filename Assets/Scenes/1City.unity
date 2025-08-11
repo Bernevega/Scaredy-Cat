@@ -1694,7 +1694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62865a87545848843b8a18c60bf49a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneID: Friends
+  sceneID: NPC4_
   triggerRadius: 0.75
   autoStartOnLoad: 0
   autoStartDelay: 0
@@ -4775,8 +4775,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62865a87545848843b8a18c60bf49a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneID: Friends
-  triggerRadius: 0.75
+  sceneID: NPC6_
+  triggerRadius: 0.8
   autoStartOnLoad: 0
   autoStartDelay: 0
   requireKeyPress: 1
@@ -5783,7 +5783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62865a87545848843b8a18c60bf49a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneID: Friends
+  sceneID: NPC3_
   triggerRadius: 0.75
   autoStartOnLoad: 0
   autoStartDelay: 0
@@ -6322,7 +6322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62865a87545848843b8a18c60bf49a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneID: Friends
+  sceneID: NPC2_
   triggerRadius: 0.75
   autoStartOnLoad: 0
   autoStartDelay: 0
@@ -6926,7 +6926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62865a87545848843b8a18c60bf49a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneID: Friends
+  sceneID: NPC7_
   triggerRadius: 0.75
   autoStartOnLoad: 0
   autoStartDelay: 0
@@ -11225,11 +11225,6 @@ CapsuleCollider:
   m_Height: 10.568123
   m_Direction: 1
   m_Center: {x: 0.000061035156, y: 0.0000038146973, z: 0}
---- !u!1 &1091002185 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9039525656550511424, guid: cfe786d29ffc05b4f9f7e72eaedc867b, type: 3}
-  m_PrefabInstance: {fileID: 1415074976}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1091002186 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 492544750698906071, guid: cfe786d29ffc05b4f9f7e72eaedc867b, type: 3}
@@ -16630,7 +16625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62865a87545848843b8a18c60bf49a6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneID: Friends
+  sceneID: NPC5_
   triggerRadius: 0.75
   autoStartOnLoad: 0
   autoStartDelay: 0
@@ -28468,27 +28463,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5439097778421959959, guid: d0c386c9d4f7f9044998f6519059733c, type: 3}
   m_PrefabInstance: {fileID: 3523387683989887630}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2115337876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115337873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62865a87545848843b8a18c60bf49a6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneID: Friends
-  triggerRadius: 0.75
-  autoStartOnLoad: 0
-  autoStartDelay: 0
-  requireKeyPress: 1
-  interactionKey: 102
-  interactionPrompt: {fileID: 1091002185}
-  repeatable: 1
-  promptFadeDuration: 0.25
 --- !u!114 &2115337877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29163,7 +29137,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1914831828260222283, guid: 9733cc70115f6dd48b9c0f3f2f8388a2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.46
+      value: 6.433
       objectReference: {fileID: 0}
     - target: {fileID: 1914831828260222283, guid: 9733cc70115f6dd48b9c0f3f2f8388a2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -29171,7 +29145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1914831828260222283, guid: 9733cc70115f6dd48b9c0f3f2f8388a2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.81
+      value: 0.905
       objectReference: {fileID: 0}
     - target: {fileID: 1914831828260222283, guid: 9733cc70115f6dd48b9c0f3f2f8388a2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -33260,9 +33234,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1146836924685694194, guid: d0c386c9d4f7f9044998f6519059733c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2115337876}
-    - targetCorrespondingSourceObject: {fileID: 1146836924685694194, guid: d0c386c9d4f7f9044998f6519059733c, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2115337877}
   m_SourcePrefab: {fileID: 100100000, guid: d0c386c9d4f7f9044998f6519059733c, type: 3}
 --- !u!137 &3527622537019116851
@@ -34555,7 +34526,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1873366594141745466, guid: 2aecb1f718c18074db0dbec0fe82ebbb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.66
+      value: 5.378
       objectReference: {fileID: 0}
     - target: {fileID: 1873366594141745466, guid: 2aecb1f718c18074db0dbec0fe82ebbb, type: 3}
       propertyPath: m_LocalPosition.y
@@ -34563,7 +34534,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1873366594141745466, guid: 2aecb1f718c18074db0dbec0fe82ebbb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.94
+      value: 6.631
       objectReference: {fileID: 0}
     - target: {fileID: 1873366594141745466, guid: 2aecb1f718c18074db0dbec0fe82ebbb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -35739,7 +35710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2305556093060705374, guid: ae8193d9b29267e499f922975fba7978, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.197
+      value: 10.36
       objectReference: {fileID: 0}
     - target: {fileID: 2305556093060705374, guid: ae8193d9b29267e499f922975fba7978, type: 3}
       propertyPath: m_LocalPosition.y
@@ -35747,7 +35718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2305556093060705374, guid: ae8193d9b29267e499f922975fba7978, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.98
+      value: -0.688
       objectReference: {fileID: 0}
     - target: {fileID: 2305556093060705374, guid: ae8193d9b29267e499f922975fba7978, type: 3}
       propertyPath: m_LocalRotation.w

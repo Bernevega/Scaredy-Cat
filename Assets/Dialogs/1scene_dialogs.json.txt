@@ -4,22 +4,27 @@
     "nodes": {
       "momWarn1": {
         "speaker": "Mom Cat",
-        "text": "Do not stay out too late with your friends!",
+        "text": "Don't stay out too late with your friends!",
         "next": "kittyReply1"
       },
       "kittyReply1": {
         "speaker": "Kitty",
-        "text": "Alright, Alright geez.",
+        "text": "Alright, alright... Geez.",
         "next": "momWarn2"
       },
       "momWarn2": {
         "speaker": "Mom Cat",
-        "text": "I am serious! You will be taken by ghosts if you stay out too late. Be home before sunset! Bye, I love you!!",
+        "text": "I'm serious! You'll be taken by ghosts if you stay out too late. Be home before sunset!",
+        "next": "momWarn3"
+      },
+      "momWarn3": {
+        "speaker": "Mom Cat",
+        "text": "Bye, I love you!!!",
         "next": "kittyReply2"
       },
       "kittyReply2": {
         "speaker": "Kitty",
-        "text": "Bye mom, love you too!",
+        "text": "Bye, Mom! Love you too!!!",
         "next": null
       }
     }
@@ -62,12 +67,12 @@
       },
       "npc3": {
         "speaker": "Kitty",
-        "text": "I am okay, I just need to find the super-duper rare flower for my friends!",
+        "text": "I'm okay, I just need to find a super-duper rare flower for my friends!",
         "next": "npc4"
       },
       "npc4": {
         "speaker": "Kitty",
-        "text": "And then they will not call me Scaredy Cat anymore!!!",
+        "text": "And then they won't call me a scaredy-cat anymore!!!",
         "next": "npc5"
       },
       "npc5": {
@@ -103,9 +108,596 @@
       },
       "npc4": {
         "speaker": "Kitty",
-        "text": "Ohhhh, I will try that, thanks!",
+        "text": "Ohhhh, I'll try that, thanks!",
         "next": null
       }
+    }
+  },
+
+  "NPC2_": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "Kitty",
+        "text": "Heyyyy!",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "Hi!! Wanna play with me?",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "Kitty",
+        "text": "Sorry, I have plans today!",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "???",
+        "text": "Awwwhhh, okay! Next time then!",
+        "next": null
+      }
+    }
+  },
+
+  "NPC2_2": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "???",
+        "text": "Hi again! Do you have time to play with me now?",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "Kitty",
+        "text": "Sorry, I'm still busy...",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "???",
+        "text": "No one wants to play with me :( Go away...",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "Kitty",
+        "text": "Sorry!!! I'll play with you tomorrow, I promise!",
+        "next": null
+      }
+    }
+  },
+
+  "NPC3_": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "Kitty",
+        "text": "Hi! What are you guys chatting about?",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "You're WAY too small to know!",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "???",
+        "text": "Yeah, go away! The adults are talking!!!",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "Kitty",
+        "text": "You're only like 2 years older than me...",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "???",
+        "text": "And!?!?!?! Our conversations are beyond your understanding.",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "Yeah!",
+        "next": null
+      }
+    }
+  },
+
+  "NPC3_2": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "???",
+        "text": "So… I had my first cup of coffee this morning.",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "Really? Was it bitter? My mom says coffee is bitter.",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "???",
+        "text": "Nooo, not at all. It was... SUPER sweet!!! Almost like hot chocolate!",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "???",
+        "text": "Sweet? I thought adults drink it black with no sugar.",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "???",
+        "text": "Well, yeah, I mean… I COULD drink it black if I wanted.",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "But I added… just a little sugar.",
+        "next": "npc7"
+      },
+      "npc7": {
+        "speaker": "???",
+        "text": "And milk.",
+        "next": "npc8"
+      },
+      "npc8": {
+        "speaker": "???",
+        "text": "And maybe some syrup.",
+        "next": "npc9"
+      },
+      "npc9": {
+        "speaker": "???",
+        "text": "And some whipped cream.",
+        "next": "npc10"
+      },
+      "npc10": {
+        "speaker": "???",
+        "text": "OMG, you're soooo cool for that!!! I should start drinking coffee too then!",
+        "next": "npc11"
+      },
+      "npc11": {
+        "speaker": "???",
+        "text": "Exactly! We could meet in the mornings and drink coffee together before doing... important things.",
+        "next": "npc12"
+      },
+      "npc12": {
+        "speaker": "???",
+        "text": "Like what?",
+        "next": "npc13"
+      },
+      "npc13": {
+        "speaker": "???",
+        "text": "I dunno... talk about the weather, I guess. That's what my dad does.",
+        "next": null
+      }
+    }
+  },
+
+  "NPC4_": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "Kitty",
+        "text": "Good morning, Sir Fluffernoodle McMeowMeow Paws-a-lot!",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "Awh, Kitty, no need to be so formal! Just Sir Cat is okay...",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "Kitty",
+        "text": "Ohhh, okay, got it!",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "???",
+        "text": "Have a nice day, Kitty.",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "Kitty",
+        "text": "Thank you, Sir Fluff- I mean... Mr Sir Cat!!",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "...",
+        "next": null
+      }
+    }
+  },
+
+  "NPC4_2": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "Kitty",
+        "text": "Hello again!",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "Ah- Hello, Kitty! Is something wrong?",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "Kitty",
+        "text": "Nooo, just wanted to ask why your formal name is sooooo long!",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "???",
+        "text": "Ohhhh.... Well, you see, I come from a very-very-vey-very-VEEEERRRRY wealthy family and-",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "???",
+        "text": "-in our family, every kitten gets a grand name sooooo long it takes at least three breaths to say it-",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "-and we have a golden scratching post, velvet food bowls, and my own butler who brushes my tail every morning.",
+        "next": "npc7"
+      },
+      "npc7": {
+        "speaker": "???",
+        "text": "I once had an entire salmon as a snack. A SNACK, Kitty!",
+        "next": "npc8"
+      },
+      "npc8": {
+        "speaker": "???",
+        "text": "Oh, and my bed is made from the softest clouds. Real clouds. Flown in from the mountains by-...",
+        "next": "npc9"
+      },
+      "npc9": {
+        "speaker": "Kitty",
+        "text": "OH! SORRY! I think one of my friends is calling me!",
+        "next": "npc10"
+      },
+      "npc10": {
+      "speaker": "???",
+      "text": "Alrighty… Next time then! I'll tell you about the diamond-encrusted litter box...",
+      "next": null
+      },
+    }
+  },
+
+  "NPC5_": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "Kitty",
+        "text": "Morning!",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "Good morning, Kitty. Wanna hear a cool fact I read in an encyclopedia today?",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "Kitty",
+        "text": "Sure, go on!",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "???",
+        "text": "Did you know octopuses have three hearts, and two of them stop beating when they swim?",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "Kitty",
+        "text": "Waaaahhhh, how scary!!",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "What?? How's that scary?",
+        "next": "npc7"
+      },
+      "npc7": {
+        "speaker": "Kitty",
+        "text": "I mean, imagine if your heart just stop beating!!!! Not even talking about TWO at the SAME TIME!!",
+        "next": "npc8"
+      },
+      "npc8": {
+        "speaker": "???",
+        "text": "Hmmm, I guess it IS a little bit nerve-wracking... Sorry...",
+        "next": "npc9"
+      },
+      "npc9": {
+        "speaker": "Kitty",
+        "text": ":((( You always do that to me!!",
+        "next": null
+      },
+    }
+  },
+
+  "NPC5_2": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "???",
+        "text": "I'm sorry I scared you, wanna hear another fun story?",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "Kitty",
+        "text": "Okay, but it better not be a scary one!!",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "???",
+        "text": "Okay! Did you know that somewhere deep in the forest there is a border between the living and ghost worlds?",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "Kitty",
+        "text": "WUUUAHHH!!! You promised it would NOT be a scary story!!!",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "???",
+        "text": "It's not scary at all! You cannot possibly cross it by an accident.",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "An ancient wise Crow is guarding the border and it doesn't let anyone cross unless they are ready!",
+        "next": "npc7"
+      },
+      "npc7": {
+        "speaker": "???",
+        "text": "And by being ready I mean-",
+        "next": "npc8"
+      },
+      "npc8": {
+        "speaker": "Kitty",
+        "text": "ALRIGHTY I THINK I HAVE TO GO NOW BYE!!!!!!!!!!!!",
+        "next": "npc9"
+      },
+      "npc9": {
+        "speaker": "???",
+        "text": ". . . s o r r y",
+        "next": null
+      },
+    }
+  },
+
+  "NPC6_": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "Kitty",
+        "text": "Heyyyy, what are you up to?",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "???",
+        "text": "Oh! Kitty! Did you know that if you stack 42 playing cards, the stack will reach the Moon?",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "Kitty",
+        "text": "Uhhh... I don't think that's true...",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "???",
+        "text": "Well... in theory... if each card was magically as big as a building... and also indestructible...",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "Kitty",
+        "text": "Sooooooooooooo you just made it up?",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "Not made up!!!",
+        "next": "npc7"
+      },
+      "npc7": {
+        "speaker": "???",
+        "text": "H-Y-P-O-T-H-E-T-I-C-A-L.",
+        "next": "npc8"
+      },
+      "npc8": {
+        "speaker": "???",
+        "text": "There is a difference!",
+        "next": "npc9"
+      },
+      "npc9": {
+        "speaker": "Kitty",
+        "text": "Right... so what happens if you get to the Moon?",
+        "next": "npc10"
+      },
+      "npc10": {
+        "speaker": "???",
+        "text": "You get to eat all the delicious cheese there!",
+        "next": "npc11"
+      },
+      "npc11": {
+        "speaker": "Kitty",
+        "text": "I'm not the biggest fan of cheese, I think it's more for m-... mm-..... mmmii-........... mmiiiccc-",
+        "next": "npc12"
+      },
+      "npc12": {
+        "speaker": "???",
+        "text": "Mice?",
+        "next": "npc13"
+      },
+      "npc13": {
+        "speaker": "Kitty",
+        "text": "WWAAAAAAAAAHHHHHH WHERE???!?!?!?!?!??!",
+        "next": "npc14"
+      },
+      "npc14": {
+        "speaker": "???",
+        "text": "...",
+        "next": "npc15"
+      },
+      "npc15": {
+        "speaker": "???",
+        "text": "You're so weird.",
+        "next": null
+      },
+    }
+  },
+
+  "NPC6_2": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "???",
+        "text": "Why are you so scared of mice? Are you not like....... a cat?",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "Kitty",
+        "text": "I can't help it!!! It's just... a thing that happened when I was a tiny kitten.",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "???",
+        "text": "Ohh? Go on.",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "Kitty",
+        "text": "I was walking home one evening, and I saw this HUUUUUGGGGE shadow on the wall moving towards me!",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "Kitty",
+        "text": "It was ENORMOUS!!! I thought it was a monster, or a thief, or... or something awful!",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "Let me guess - it wasn't.",
+        "next": "npc7"
+      },
+      "npc7": {
+        "speaker": "Kitty",
+        "text": "Nope! A little mouse stepped into the light and the shadow disappeared! I nearly fainted...",
+        "next": "npc8"
+      },
+      "npc8": {
+        "speaker": "???",
+        "text": "So now you get nervous when you see big shadows?",
+        "next": "npc9"
+      },
+      "npc9": {
+        "speaker": "Kitty",
+        "text": "Only if they're mou-... mouse-shaped... I am still a little jumpy when someone mentions them, okay??",
+        "next": "npc10"
+      },
+      "npc10": {
+        "speaker": "???",
+        "text": "No wonder they call you a scaredy-cat...",
+        "next": null
+      },
+    }
+  },
+
+  "NPC7_": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "???",
+        "text": "AARRRGRRGGHHHHHH I'M SOOOOOO TIRED!!!",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "Kitty",
+        "text": "Wooooooah, what happened???",
+        "next": "npc3"
+      },
+      "npc3": {
+        "speaker": "???",
+        "text": "You know I'm making a video game, right?",
+        "next": "npc4"
+      },
+      "npc4": {
+        "speaker": "Kitty",
+        "text": "Nope!",
+        "next": "npc5"
+      },
+      "npc5": {
+        "speaker": "???",
+        "text": "Well, I AM!",
+        "next": "npc6"
+      },
+      "npc6": {
+        "speaker": "???",
+        "text": "And I'm SOOOOO tired of writing all of those dialogues for side characters!",
+        "next": "npc7"
+      },
+      "npc7": {
+        "speaker": "???",
+        "text": "Like, I have to include some cool lore information so it's not just useless chatting!",
+        "next": "npc8"
+      },
+      "npc8": {
+        "speaker": "???",
+        "text": "Do you know how much time I've spent on that!?!?!?!?!!?",
+        "next": "npc9"
+      },
+      "npc9": {
+        "speaker": "Kitty",
+        "text": "Ehmmmmm... two hours?",
+        "next": "npc10"
+      },
+      "npc10": {
+        "speaker": "???",
+        "text": "W H A T! Okay, you probably can't even count yet...",
+        "next": "npc11"
+      },
+      "npc11": {
+        "speaker": "???",
+        "text": "You're like... eight years old in human years?",
+        "next": "npc12"
+      },
+      "npc12": {
+        "speaker": "Kitty",
+        "text": "What's a... 'human'?",
+        "next": "npc13"
+      },
+      "npc13": {
+        "speaker": "???",
+        "text": "!!!!!!!!! It doesn't matter!!! Go on now, I have stuff to do!",
+        "next": "npc14"
+      },
+      "npc14": {
+        "speaker": "Kitty",
+        "text": "...",
+        "next": "npc15"
+      },
+      "npc15": {
+        "speaker": "Kitty",
+        "text": "Fourth wall breaking is scawyyy.........",
+        "next": null
+      },
+    }
+  },
+
+  "NPC7_2": {
+    "start": "npc1",
+    "nodes": {
+      "npc1": {
+        "speaker": "???",
+        "text": "Go away or I'll spoil your story!!!",
+        "next": "npc2"
+      },
+      "npc2": {
+        "speaker": "Kitty",
+        "text": "WWWWOOOAAHAHHHHHH!!!",
+        "next": null
+      },
     }
   },
 
@@ -119,12 +711,12 @@
       },
       "tireReply1": {
         "speaker": "Tire",
-        "text": "Hey scaredy-cat!",
+        "text": "Hey, scaredy-cat!",
         "next": "tireReply2"
       },
       "tireReply2": {
         "speaker": "Tire",
-        "text": "Did you hear about the mouse who EATS Kittens?",
+        "text": "Have you heard about the mouse who EATS kittens?",
         "next": "tireReply3"
       },
       "tireReply3": {
@@ -134,7 +726,7 @@
       },
       "tireReply4": {
         "speaker": "Tire",
-        "text": "Apparently it lives just across the river in the park.",
+        "text": "Apparently it lives just across the river.",
         "next": "kittyScared"
       },
       "kittyScared": {
@@ -169,12 +761,12 @@
       },
       "kittyReply1": {
         "speaker": "Kitty",
-        "text": "What… guys, that's so mean :(",
+        "text": "What... guys, that's so mean :(",
         "next": "oliverReply1"
       },
       "oliverReply1": {
         "speaker": "Oliver",
-        "text": "Awh Kitty, it's okay we will protect you from the cat-eating mouse, HAHAHA!",
+        "text": "Awh, Kitty, it's okay, we'll protect you from the cat-eating mouse, HAHAHA!",
         "next": "allLaughing"
       },
       "allLaughing": {
@@ -184,7 +776,7 @@
       },
       "kittyReply2": {
         "speaker": "Kitty",
-        "text": "I AM NOT SCARED OF A MOUSE >:( , I will show you all that I am brave!",
+        "text": "I'M NOT SCARED OF SOME LITTLE MOUSE >:(((!!! I'll show you all that I'm brave!",
         "next": "tireReply5"
       },
       "tireReply5": {
@@ -194,17 +786,17 @@
       },
       "ydnaReply6": {
         "speaker": "Ydna",
-        "text": "Yeah, Kitty– tell you what. If you go to that park way over there…",
+        "text": "Yeah, Kitty- tell you what. If you go to that forest way over there...",
         "next": "oliverReply2"
       },
       "oliverReply2": {
         "speaker": "Oliver",
-        "text": "And retrieve a super duper rare flower ALL alone…",
+        "text": "And retrieve a super-duper rare flower ALL alone...",
         "next": "oliverReply3"
       },
       "oliverReply3": {
-        "speaker": "Oliver",
-        "text": "We will not call you scaredy-cat anymore!",
+        "speaker": "Tire",
+        "text": "We won't call you a scaredy-cat anymore!",
         "next": "kittyReply3"
       },
       "kittyReply3": {
@@ -220,7 +812,7 @@
     "nodes": {
       "Tire1": {
         "speaker": "Tire",
-        "text": "Too scared to find that rare flower, Scaredy Cat?",
+        "text": "Too scared to find that rare flower, scaredy-cat?",
         "next": "kitty1"
       },
       "kitty1": {
