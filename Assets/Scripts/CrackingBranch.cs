@@ -19,6 +19,7 @@ public class CrakingBranch : MonoBehaviour
 
     private bool hasCollided = false;
     private Coroutine shakeRoutine;
+    private Coroutine hideRoutine;
     private Vector3 originalLocalPos;
 
     public static List<CrakingBranch> AllBranches = new List<CrakingBranch>();
@@ -48,8 +49,12 @@ public class CrakingBranch : MonoBehaviour
         if (collision.gameObject.GetComponent<PlayerMovement>() != null)
         {
             hasCollided = true;
-            shakeRoutine = StartCoroutine(Shake());
-            StartCoroutine(HideAfterDelay());
+
+            if (shakeRoutine == null)
+                shakeRoutine = StartCoroutine(Shake());
+
+            if (hideRoutine == null)
+                hideRoutine = StartCoroutine(HideAfterDelay());
         }
     }
 
@@ -61,10 +66,15 @@ public class CrakingBranch : MonoBehaviour
         if (shakeRoutine != null)
         {
             StopCoroutine(shakeRoutine);
-            visualTarget.transform.localPosition = originalLocalPos;
+            shakeRoutine = null;
+            if (visualTarget != null)
+                visualTarget.transform.localPosition = originalLocalPos;
         }
 
-        visualTarget.SetActive(false);
+        if (visualTarget != null)
+            visualTarget.SetActive(false);
+
+        hideRoutine = null;
     }
 
     private IEnumerator Shake()
@@ -74,7 +84,8 @@ public class CrakingBranch : MonoBehaviour
             float shakeOffsetX = Mathf.Sin(Time.time * shakeSpeed) * shakeMagnitude;
             float shakeOffsetY = Mathf.Cos(Time.time * shakeSpeed) * shakeMagnitude;
 
-            visualTarget.transform.localPosition = originalLocalPos + new Vector3(shakeOffsetX, shakeOffsetY, 0f);
+            if (visualTarget != null)
+                visualTarget.transform.localPosition = originalLocalPos + new Vector3(shakeOffsetX, shakeOffsetY, 0f);
 
             yield return null;
         }
@@ -82,8 +93,64 @@ public class CrakingBranch : MonoBehaviour
 
     public void ReappearNow()
     {
-        visualTarget.SetActive(true);
-        visualTarget.transform.localPosition = originalLocalPos;
+        // Fully reset a single branch immediately
+        if (hideRoutine != null)
+        {
+            StopCoroutine(hideRoutine);
+            hideRoutine = null;
+        }
+        if (shakeRoutine != null)
+        {
+            StopCoroutine(shakeRoutine);
+            shakeRoutine = null;
+        }
+
+        if (visualTarget != null)
+        {
+            visualTarget.SetActive(true);
+            visualTarget.transform.localPosition = originalLocalPos;
+        }
+
+        hasCollided = false;
+    }
+
+    /// <summary>
+    /// Call this from your respawn code to ensure no previously-touched branches
+    /// disappear due to pre-death timers. It cancels any hide timers and resets state.
+    /// </summary>
+    public static void OnPlayerRespawned()
+    {
+        for (int i = 0; i < AllBranches.Count; i++)
+        {
+            var b = AllBranches[i];
+            if (b != null)
+                b.ResetAfterRespawn();
+        }
+    }
+
+    private void ResetAfterRespawn()
+    {
+        // Cancel pending hide
+        if (hideRoutine != null)
+        {
+            StopCoroutine(hideRoutine);
+            hideRoutine = null;
+        }
+
+        // Stop shaking
+        if (shakeRoutine != null)
+        {
+            StopCoroutine(shakeRoutine);
+            shakeRoutine = null;
+        }
+
+        // Ensure visible & reset position/state
+        if (visualTarget != null)
+        {
+            visualTarget.SetActive(true);
+            visualTarget.transform.localPosition = originalLocalPos;
+        }
+
         hasCollided = false;
     }
 }
