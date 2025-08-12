@@ -173,7 +173,7 @@ public class PlayerMovement : MonoBehaviour
             QuestManager.instance?.ToggleQuestPanel();
         }
 #endif
-
+        
         // --- Combine Inputs ---
         Vector2 rawMove = new Vector2(kbX + gpX, kbZ + gpZ);
         if (rawMove.sqrMagnitude > 1f) rawMove.Normalize();
@@ -184,33 +184,38 @@ public class PlayerMovement : MonoBehaviour
         bool sprintInput = (sprintKb || sprintGp) && !blockSprint;
         bool interact = interactKb || interactGp;
 
-        animator.SetBool("moveInput", hasInput);
+        
 
-        Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
-        Vector3 camR = Vector3.Cross(Vector3.up, camF);
-        Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
-        if (moveDir != Vector3.zero) direction = moveDir;
-
-        float currentSpeed = speed;
-        if (hasInput && sprintInput)
+        if (speed > 0)
         {
-            currentSpeed *= runMultiplier;
-            animator.SetBool("isRunning", true);
-        }
-        else
-        {
-            animator.SetBool("isRunning", false);
-        }
+            animator.SetBool("moveInput", hasInput);
 
-        rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
+            Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
+            Vector3 camR = Vector3.Cross(Vector3.up, camF);
+            Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
+            if (moveDir != Vector3.zero) direction = moveDir;
 
-        if (moveState == MoveState.Idle && !blockJump && jumpPressed && isGrounded && !hasJumped)
-        {
-            animator.SetTrigger("jump");
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            hasJumped = true;
-            moveState = MoveState.Jumping;
+            float currentSpeed = speed;
+            if (hasInput && sprintInput)
+            {
+                currentSpeed *= runMultiplier;
+                animator.SetBool("isRunning", true);
+            }
+            else
+            {
+                animator.SetBool("isRunning", false);
+            }
+
+            rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
+
+            if (moveState == MoveState.Idle && !blockJump && jumpPressed && isGrounded && !hasJumped)
+            {
+                animator.SetTrigger("jump");
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                hasJumped = true;
+                moveState = MoveState.Jumping;
+            }
         }
 
         if (interact)

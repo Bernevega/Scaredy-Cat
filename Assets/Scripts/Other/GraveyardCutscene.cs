@@ -8,6 +8,7 @@ public class GraveyardCutscene : MonoBehaviour
     Collider triggerCollider;
 
     [SerializeField] AutoRotate oyen;
+    [SerializeField] Animator oyenAnimator;
     PlayerMovement player;
 
     [SerializeField] Transform[] cameraWaypoints;
@@ -131,6 +132,24 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void KittyOyenWalk1State()
     {
+        if (kittyStep < 2)
+        {
+            player.GetAnimator().SetBool("moveInput", true);
+        }
+        else
+        {
+            player.GetAnimator().SetBool("moveInput", false);
+        }
+
+        if (oyenStep < 2)
+        {
+            oyenAnimator.SetBool("Walking", true);
+        }
+        else
+        {
+            oyenAnimator.SetBool("Walking", false);
+        }
+
         if (kittyStep < 2 && player.transform.position != kittyWaypoints[kittyStep].position)
         {
             player.transform.position =
@@ -148,6 +167,8 @@ public class GraveyardCutscene : MonoBehaviour
             }
             
             kittyStep++;
+
+        
         }
 
         // Oyen Movement
@@ -174,6 +195,7 @@ public class GraveyardCutscene : MonoBehaviour
         {
             cutState = CutsceneState.Idle;
             Invoke("KittyOyenWalkWait", 1f);
+            
         }
     }
 
@@ -196,11 +218,13 @@ public class GraveyardCutscene : MonoBehaviour
     {
         if (player.transform.position != kittyWaypoints[kittyStep].position)
         {
+            player.GetAnimator().SetBool("moveInput", true);
             player.transform.position =
                 Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
         }
         else
         {
+            player.GetAnimator().SetBool("moveInput", false);
             player.SetDirection(kittyWaypoints[kittyStep].forward);
             cutState = CutsceneState.Idle;
             Invoke("KittyFlowerPlace2StateTransition", 1f);
@@ -248,11 +272,13 @@ public class GraveyardCutscene : MonoBehaviour
     {
         if (player.transform.position != kittyWaypoints[kittyStep].position)
         {
+            player.GetAnimator().SetBool("moveInput", true);
             player.transform.position =
                 Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
         }
         else
         {
+            player.GetAnimator().SetBool("moveInput", false);
             player.SetDirection(kittyWaypoints[kittyStep].forward);
             cutState = CutsceneState.Idle;
             Invoke("SayTitleDrop", 1f);
@@ -263,6 +289,24 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void KittyOyenWalkOffState()
     {
+        if (kittyStep < kittyWaypoints.Length)
+        {
+            player.GetAnimator().SetBool("moveInput", true);
+        }
+        else
+        {
+            player.GetAnimator().SetBool("moveInput", false);
+        }
+
+        if (oyenStep < oyenWaypoints.Length)
+        {
+            oyenAnimator.SetBool("Walking", true);
+        }
+        else
+        {
+            oyenAnimator.SetBool("Walking", false);
+        }
+
         if (kittyStep < kittyWaypoints.Length && player.transform.position != kittyWaypoints[kittyStep].position)
         {
             player.transform.position =
