@@ -92,6 +92,7 @@ public class DanceMinigame : MonoBehaviour
 
     private void EndMinigame(bool win)
     {
+        Debug.Log("DANCE MINIGAME RESTART");
         panelObject.SetActive(false);
         interactable.enabled = true;
         gameActive = false;
