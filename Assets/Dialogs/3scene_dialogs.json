@@ -4,17 +4,17 @@
     "nodes": {
       "kitty1": {
         "speaker": "Kitty",
-        "text": "Oof… My head hurts…",
+        "text": "Oof… My head hurts...",
         "next": "kitty2"
       },
       "kitty2": {
         "speaker": "Kitty",
-        "text": "I cannot believe I actually made it across…",
+        "text": "I can't believe I actually made it across...",
         "next": "kitty3"
       },
       "kitty3": {
         "speaker": "Kitty",
-        "text": "Now I just need to find that super duper rare flower to prove that I am not a scaredy-cat.",
+        "text": "Now I just need to find that super-duper rare flower to prove that I'm not a scaredy-cat!",
         "next": "kitty4"
       },
       "kitty4": {
@@ -29,7 +29,7 @@
     "nodes": {
       "kitty1": {
         "speaker": "Kitty",
-        "text": "The log is broken, I cannot go back!",
+        "text": "The log is broken, I can't go back!",
         "next": null
       }
     }
@@ -39,46 +39,254 @@
     "nodes": {
       "kitty1": {
         "speaker": "Kitty",
-        "text": "Gulp… it is so high… where is mom? I wanna go home...",
+        "text": "Gulp... It's so high... Where is mom? I wanna go home...",
         "next": null
       }
     }
   },
-  "KittyCrowResque": {
-    "start": "crow1",
-    "nodes": {
-      "crow1": {
-        "speaker": "The Crow",
-        "text": "Wake up Kitty, are you okay?",
-        "next": "crow2"
-      },
-      "crow2": {
-        "speaker": "The Crow",
-        "text": "Caw.",
-        "next": "crow3"
-      },
-      "crow3": {
-        "speaker": "The Crow",
-        "text": "Caw caw!",
-        "next": "crow4"
-      },
-      "crow4": {
-        "speaker": "The Crow",
-        "text": "You have my second monocle, now I can see clearly how brave you were.",
-        "next": "crow5"
-      },
-      "crow5": {
-        "speaker": "The Crow",
-        "text": "Thank you for helping me.",
-        "next": "crow6"
-      },
-      "crow6": {
-        "speaker": "The Crow",
-        "text": "Caw.",
-        "next": null
-      }
+
+"KittyCrowResque_": {
+  "start": "crow1",
+  "nodes": {
+    "crow1": {
+      "speaker": "The Crow",
+      "text": "Wake up, Kitty, are you okay?",
+      "next": "kitty1"
+    },
+    "kitty1": {
+      "speaker": "Kitty",
+      "text": "Wwaaaoaohhhhhhhhhhhhh...",
+      "next": "crow2"
+    },
+    "crow2": {
+      "speaker": "The Crow",
+      "text": "Caw...",
+      "next": "crow3"
+    },
+    "crow3": {
+      "speaker": "The Crow",
+      "text": "CAW CAW!",
+      "next": "crow4"
+    },
+    "crow4": {
+      "speaker": "The Crow",
+      "text": "You've found my second monocle. Now I can CLEARLY see how brave you are!",
+      "next": "kitty2"
+    },
+    "kitty2": {
+      "speaker": "Kitty",
+      "text": "Ughhhh, how did I get here? The last thing I remember is being on top of the tree and everything was spinning...",
+      "next": "crow5"
+    },
+    "crow5": {
+      "speaker": "The Crow",
+      "text": "Kitty, I'm a crow. I brought you down.",
+      "next": "kitty3"
+    },
+    "kitty3": {
+      "speaker": "Kitty",
+      "text": "Oh no!!! That means... I failed...",
+      "next": "kitty4"
+    },
+    "kitty4": {
+      "speaker": "Kitty",
+      "text": "I'll never get that stupid flower now!!",
+      "next": "kitty5"
+    },
+    "kitty5": {
+      "speaker": "Kitty",
+      "text": "I'll always be a scaredy-cat...",
+      "next": "crow7"
+    },
+    "crow7": {
+      "speaker": "The Crow",
+      "text": "Hmm...",
+      "next": "crow8"
+    },
+    "crow8": {
+      "speaker": "The Crow",
+      "text": "Why do you think you failed, Kitty?",
+      "next": "kitty6"
+    },
+    "kitty6": {
+      "speaker": "Kitty",
+      "text": "What do you mean? I fainted and you had to bring me down!!",
+      "next": "kitty6_1"
+    },
+    "kitty6_1": {
+      "speaker": "Kitty",
+      "text": "I'm clearly not brave enough to get the super-duper rare flower...",
+      "next": "crow9"
+    },
+    "crow9": {
+      "speaker": "The Crow",
+      "text": "But you DID cross the river, even though it was super dark and scary for you.",
+      "next": "kitty7"
+    },
+    "kitty7": {
+      "speaker": "Kitty",
+      "text": "I guess...",
+      "next": "crow10"
+    },
+    "crow10": {
+      "speaker": "The Crow",
+      "text": "And you DID go to that scary labyrinth, even though you're afraid of the dark.",
+      "next": "kitty8"
+    },
+    "kitty8": {
+      "speaker": "Kitty",
+      "text": "I did...",
+      "next": "crow11"
+    },
+    "crow11": {
+      "speaker": "The Crow",
+      "text": "And you DID climb that tree despite your fear of heights!!!",
+      "next": "crow12"
+    },
+    "crow12": {
+      "speaker": "The Crow",
+      "text": "It doesn't matter to me that you failed in the end.",
+      "next": "crow13"
+    },
+    "crow13": {
+      "speaker": "The Crow",
+      "text": "You faced your fears with a bravery I haven't seen in any other kitten!",
+      "next": "crow14"
+    },
+    "crow14": {
+      "speaker": "The Crow",
+      "text": "You aren't afraid to challenge yourself, and you aren't afraid of change.",
+      "next": "crow15"
+    },
+    "crow15": {
+      "speaker": "The Crow",
+      "text": "I'm proud of you, Kitty. You deserve the... 'super-duper rare flower'.",
+      "next": "crow16"
+    },
+    "crow16": {
+      "speaker": "The Crow",
+      "text": "Caw.",
+      "next": "kitty9"
+    },
+    "kitty9": {
+      "speaker": "Kitty",
+      "text": "WWWWAAAAAAAHHHHH!!",
+      "next": "kitty9_1"
+    },
+    "kitty9_1": {
+      "speaker": "Kitty",
+      "text": "Thank you, Mr. Crow!!!",
+      "next": "kitty9_2"
+    },
+    "kitty9_2": {
+      "speaker": "Kitty",
+      "text": "That's the kindest thing anyone has ever said to me!!!",
+      "next": "crow17"
+    },
+    "crow17": {
+      "speaker": "The Crow",
+      "text": "But don't get ahead of yourself just yet. You still have some challenges to overcome.",
+      "next": "kitty10"
+    },
+    "kitty10": {
+      "speaker": "Kitty",
+      "text": "Gulp... What challenges??",
+      "next": "crow18"
+    },
+    "crow18": {
+      "speaker": "The Crow",
+      "text": "...",
+      "next": "kitty11"
+    },
+    "kitty11": {
+      "speaker": "Kitty",
+      "text": "...",
+      "next": "crow19"
+    },
+    "crow19": {
+      "speaker": "The Crow",
+      "text": "..........",
+      "next": "kitty12"
+    },
+    "kitty12": {
+      "speaker": "Kitty",
+      "text": "...................",
+      "next": "crow20"
+    },
+    "crow20": {
+      "speaker": "The Crow",
+      "text": "..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................",
+      "next": "kitty13"
+    },
+    "kitty13": {
+      "speaker": "Kitty",
+      "text": "...Aaaaaalrighttttttyy!",
+      "next": null
     }
-  },
+  }
+},
+
+"KittyCrowResque_2": {
+  "start": "kitty1",
+  "nodes": {
+    "kitty1": {
+      "speaker": "Kitty",
+      "text": "Before I go, can I ask you a question?",
+      "next": "crow1"
+    },
+    "crow1": {
+      "speaker": "The Crow",
+      "text": "Yes, Kitty.",
+      "next": "kitty2"
+    },
+    "kitty2": {
+      "speaker": "Kitty",
+      "text": "Why do you need... two monocles?",
+      "next": "crow2"
+    },
+    "crow2": {
+      "speaker": "The Crow",
+      "text": "...",
+      "next": "crow3"
+    },
+    "crow3": {
+      "speaker": "The Crow",
+      "text": "To see things, of course!",
+      "next": "crow4"
+    },
+    "crow4": {
+      "speaker": "The Crow",
+      "text": "CAW!",
+      "next": "kitty3"
+    },
+    "kitty3": {
+      "speaker": "Kitty",
+      "text": "Euuhhhhmmmmmmm...",
+      "next": "kitty4"
+    },
+    "kitty4": {
+      "speaker": "Kitty",
+      "text": "Why don't you wear glasses then?",
+      "next": "crow5"
+    },
+    "crow5": {
+      "speaker": "The Crow",
+      "text": "...",
+      "next": "crow6"
+    },
+    "crow6": {
+      "speaker": "The Crow",
+      "text": "What's... 'glasses'?",
+      "next": "kitty5"
+    },
+    "kitty5": {
+      "speaker": "Kitty",
+      "text": "...Nevermind.",
+      "next": null
+    }
+  }
+},
+
   "CrowFirstTalk": {
     "start": "caw1",
     "nodes": {
@@ -89,7 +297,7 @@
       },
       "caw2": {
         "speaker": "The Crow",
-        "text": "How… unexpected… you do not seem old enough to be here. ",
+        "text": "How... unexpected... you don't seem old enough to be here.",
         "next": "caw3"
       },
       "caw3": {
@@ -99,17 +307,17 @@
       },
       "kitty1": {
         "speaker": "Kitty",
-        "text": "Uhm… Mr. Crow, may I ask if you happen to know where a super duper rare flower may be?",
+        "text": "Uhm... Mr. Crow, may I ask if you happen to know where a super-duper rare flower may be?",
         "next": "caw4"
       },
       "caw4": {
         "speaker": "The Crow",
-        "text": "Perhaps…",
+        "text": "Perhaps...",
         "next": "caw5"
       },
       "caw5": {
         "speaker": "The Crow",
-        "text": "But how do I know if you are brave enough to enter?",
+        "text": "But how do I know if you are brave enough to get it? Only the brave ones are allowed into the forest!",
         "next": "caw6"
       },
       "caw6": {
@@ -119,7 +327,7 @@
       },
       "kitty2": {
         "speaker": "Kitty",
-        "text": "Gulp. Uh uhmm…",
+        "text": "Gulp. Uh-uhmm...",
         "next": "caw7"
       },
       "caw7": {
@@ -129,7 +337,7 @@
       },
       "caw8": {
         "speaker": "The Crow",
-        "text": "Unless… You are too scared?",
+        "text": "Unless... You are too scared?",
         "next": "caw9"
       },
       "caw9": {
