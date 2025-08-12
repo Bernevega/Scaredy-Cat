@@ -44,6 +44,8 @@ public class MainMenu : MonoBehaviour
 
     private string saveFilePath;
     private Controls inputControls;
+    public MenuSetup setup;
+    bool gameStarted = false;
 
     private void Awake()
     {
@@ -123,20 +125,32 @@ public class MainMenu : MonoBehaviour
 
     public void MainGameStart()
     {
-        SceneManager.LoadScene("1City");
+        if (!gameStarted)
+        {
+            SceneManager.LoadScene("1City");
+            gameStarted = true;
+            setup.MovingToNewScene();
+        }
+        
     }
 
     public void LoadGame()
     {
-        bool success = SaveManager.Instance.LoadGame();
-        if (!success)
+        if (!gameStarted)
         {
-            Debug.LogWarning("MainMenu: No save file found to load.");
+            bool success = SaveManager.Instance.LoadGame();
+            if (!success)
+            {
+                Debug.LogWarning("MainMenu: No save file found to load.");
+            }
+            else
+            {
+                Debug.Log("MainMenu: Loaded saved game.");
+                gameStarted = true;
+                setup.MovingToNewScene();
+            }
         }
-        else
-        {
-            Debug.Log("MainMenu: Loaded saved game.");
-        }
+        
     }
 
     public void OpenVideoSettings()

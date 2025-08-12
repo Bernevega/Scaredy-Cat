@@ -25,7 +25,10 @@ public class MenuSetup : MonoBehaviour
     [Header("Background Videos")]
     [SerializeField] RenderTextureVideoObject[] videos;
     [SerializeField] int currentVideoIndex = 0;
+    [SerializeField] Image faderImage;
 
+    bool startFade = true;
+    bool endFade;
     bool _started;
     CanvasGroup _pressCG;
     CanvasGroup[] _buttonCGs;
@@ -45,6 +48,8 @@ public class MenuSetup : MonoBehaviour
             if (_buttonCGs[i] == null)
                 _buttonCGs[i] = buttons[i].AddComponent<CanvasGroup>();
         }
+
+        faderImage.color = new Color(0, 0, 0, 1);
     }
 
     void Start()
@@ -68,13 +73,32 @@ public class MenuSetup : MonoBehaviour
 
     void Update()
     {
-        if (!_started && Input.anyKeyDown)
+        if (startFade && faderImage.color.a > 0)
+        {
+            faderImage.color = Vector4.MoveTowards(faderImage.color, new Color(0, 0, 0, 0), Time.deltaTime * 0.5f);
+            if (faderImage.color.a <= 0)
+            {
+                startFade = false;
+            }
+        }
+        else if (endFade && faderImage.color.a < 1)
+        {
+            faderImage.color = Vector4.MoveTowards(faderImage.color, new Color(0, 0, 0, 1), Time.deltaTime);
+            if (faderImage.color.a <= 0)
+            {
+                endFade = false;
+            }
+        }
+        else if (!_started && Input.anyKeyDown)
         {
             _started = true;
             StartCoroutine(TransitionVideo(videos[0], videos[1]));
         }
     }
-
+    public void MovingToNewScene()
+    {
+        endFade = true;
+    }
     private void VideoTransitionFinished(VideoPlayer vp)
     {
         StartCoroutine(TransitionVideo(videos[1], videos[2]));
