@@ -329,6 +329,6 @@ public class DanceMinigame : MonoBehaviour
             }
         }
 
-        keyTimer = 0.7f + 1f * Mathf.Min(Mathf.Max(keysLeft - 10, 0) / 20f, 1);
+        keyTimer = 0.7f + 1f * Mathf.Min(keysLeft / 20f, 1);
     }
 }
