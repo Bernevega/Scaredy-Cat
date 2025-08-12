@@ -205,8 +205,9 @@ public class MainMenu : MonoBehaviour
 
     public void ClosePanel()
     {
+        Debug.Log("CLOSED PANEL");
         SettingsPanel.SetActive(false);
-        CreditsPanel.SetActive(false);
+        //CreditsPanel.SetActive(false);
         MenuPanel.SetActive(true);
 
         if (DefaultMainMenuButton != null)
