@@ -216,9 +216,9 @@
     "crow20": {
       "speaker": "The Crow",
       "text": "..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................",
-      "next": "kitty13"
+      "next": "kitty13final"
     },
-    "kitty13": {
+    "kitty13final": {
       "speaker": "Kitty",
       "text": "...Aaaaaalrighttttttyy!",
       "next": null
@@ -398,7 +398,7 @@
       },
       "caw2": {
         "speaker": "The Crow",
-        "text": "You found ONE of my monocles!!!",
+        "text": "You've found ONE of my monocles!!!",
         "next": "caw3"
       },
       "caw3": {
@@ -408,7 +408,7 @@
       },
       "kitty1": {
         "speaker": "Kitty",
-        "text": "There is a second one…?",
+        "text": "There's a second one...?",
         "next": "caw4"
       },
       "caw4": {
@@ -489,16 +489,21 @@
     }
   },
   "FlowerPickup": {
-    "start": "kitty1",
+    "start": "kitty1final",
     "nodes": {
-      "kitty1": {
+      "kitty1final": {
         "speaker": "Kitty",
-        "text": "Finally! I got the super duper rare flower!",
+        "text": "Finally! I got the super-duper rare flower!",
         "next": "kitty2"
       },
       "kitty2": {
         "speaker": "Kitty",
-        "text": "Oh No! When did it get so dark? I need to get home.",
+        "text": "Oh no!!! When did it get so dark? I need to get home!",
+        "next": "kitty3"
+      },
+      "kitty3": {
+        "speaker": "Kitty",
+        "text": "My mom's gonna kill me...",
         "next": null
       }
     }
@@ -528,12 +533,12 @@
     "nodes": {
       "caw1": {
         "speaker": "Kitty",
-        "text": "Hmm... This paper contains directions to a festival deeper in the forest.",
-        "next": "caw2"
+        "text": "Hmm... This paper has directions to a festival deeper in the forest.",
+        "next": "caw2festival"
       },
-      "caw2": {
+      "caw2festival": {
         "speaker": "Kitty",
-        "text": "The log is broken... I should go to the festival and ask around for other directions to the city.",
+        "text": "The log is broken... I should go to the festival and ask around for other directions to the city!",
         "next": null
       }
     }
