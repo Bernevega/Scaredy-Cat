@@ -23,6 +23,15 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+            player = null;
+        }
+    }
+
     public static GameObject PM_GetPlayer()
     {
         if (instance)

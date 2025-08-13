@@ -64,6 +64,8 @@ public class PauseMenu : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        isPaused = false;
     }
 
     private void Update()
@@ -216,6 +218,20 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        PlayerManager pm = PlayerManager.instance;
+        SimpleDialogManager dm = SimpleDialogManager.Instance;
+
+        if (pm)
+        {
+            Destroy(pm.player.gameObject);
+            Destroy(pm.gameObject);
+        }
+        if (dm)
+        {
+            Destroy(dm.gameObject);
+        }
+
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -266,6 +282,8 @@ public class PauseMenu : MonoBehaviour
             sfxVolumeSlider.value = sfx;
             AudioManager.Instance.SetSFXVolume(sfx);
         }
+
+        
     }
 
     // ---------------- Video Settings Logic ----------------
