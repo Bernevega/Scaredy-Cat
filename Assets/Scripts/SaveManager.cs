@@ -8,6 +8,10 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance { get; private set; }
     private string saveFilePath;
 
+    // When true, skip the autosave that happens on scene load
+    // (used when we are loading a scene from a save to avoid overwriting).
+    private bool _suppressAutoSaveThisLoad = false;
+
     void Awake()
     {
         // Singleton setup
@@ -37,6 +41,22 @@ public class SaveManager : MonoBehaviour
         if (scene.name == "MainMenu")
             return;
 
+        // If we just initiated a LoadGame, we skip this autosave.
+        if (_suppressAutoSaveThisLoad)
+            return;
+
+        // Autosave at the start of each scene, after one frame to ensure everything spawned.
+        StartCoroutine(DelayedAutoSave());
+    }
+
+    private IEnumerator DelayedAutoSave(float extraDelaySeconds = 0f)
+    {
+        // Wait for all Awake/Start calls and one rendered frame
+        yield return new WaitForEndOfFrame();
+
+        if (extraDelaySeconds > 0f)
+            yield return new WaitForSeconds(extraDelaySeconds);
+
         AutoSave();
     }
 
@@ -48,6 +68,9 @@ public class SaveManager : MonoBehaviour
         SaveGame();
     }
 
+    /// <summary>
+    /// Public entry to autosave. Used by scene start and after load+apply.
+    /// </summary>
     public void AutoSave()
     {
         string sceneName = SceneManager.GetActiveScene().name;
@@ -67,6 +90,11 @@ public class SaveManager : MonoBehaviour
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
         string targetScene = data.sceneName;
+
+        // Suppress the autosave that happens on scene load so we don't overwrite
+        // the file with default spawn position before we re-position the player.
+        _suppressAutoSaveThisLoad = true;
+
         if (SceneManager.GetActiveScene().name != targetScene)
         {
             StartCoroutine(LoadSceneAndApply(targetScene, data));
@@ -74,6 +102,9 @@ public class SaveManager : MonoBehaviour
         else
         {
             ApplyPlayerPosition(data);
+            // After applying, autosave on next frame at the correct position.
+            StartCoroutine(DelayedAutoSave());
+            _suppressAutoSaveThisLoad = false;
         }
 
         return true;
@@ -121,10 +152,15 @@ public class SaveManager : MonoBehaviour
         while (!op.isDone)
             yield return null;
 
-        // Wait one more frame so any Awake/Start calls finish
-        yield return null;
+        // Wait one more frame so any Awake/Start calls finish and spawns settle
+        yield return new WaitForEndOfFrame();
 
         ApplyPlayerPosition(data);
+
+        // Now that the player is placed, autosave to lock in correct position.
+        yield return StartCoroutine(DelayedAutoSave());
+
+        _suppressAutoSaveThisLoad = false;
     }
 
     private void ApplyPlayerPosition(SaveData data)
