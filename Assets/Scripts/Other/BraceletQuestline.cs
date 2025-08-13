@@ -85,7 +85,7 @@ public class BraceletQuestline : MonoBehaviour
                     braceletObject.SetActive(true);
                     mouse.sceneId.value = "MouseThank";
 
-                    quest.description = "Give the bracelet to the orange cat.";
+                    quest.description = "Give the bracelet to Oyen.";
                     QuestManager.instance.UpdateQuest(quest);
                 }
                 break;

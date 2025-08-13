@@ -134,7 +134,13 @@ public class Oyen : MonoBehaviour
         {
             if (currKey == null)
             {
-                nextSceneTransition.SetActive(true);
+                // Disable the interaction canvas after the last interaction
+                if (interactionCanvas != null)
+                    interactionCanvas.gameObject.SetActive(false);
+
+                // Continue with scene transition
+                if (nextSceneTransition != null)
+                    nextSceneTransition.SetActive(true);
             }
             else if (currKey == "boo2")
             {
