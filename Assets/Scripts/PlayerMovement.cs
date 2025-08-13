@@ -83,6 +83,8 @@ public class PlayerMovement : MonoBehaviour
             else
                 WakeUp();
         }
+
+        SetDirection(transform.forward);
     }
 
     private IEnumerator CoDelayedWakeUp(float delay)
