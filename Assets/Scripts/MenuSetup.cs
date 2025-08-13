@@ -49,6 +49,8 @@ public class MenuSetup : MonoBehaviour
         }
 
         faderImage.color = new Color(0, 0, 0, 1);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     void Start()

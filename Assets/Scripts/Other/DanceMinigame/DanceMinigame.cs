@@ -20,6 +20,7 @@ public class DanceMinigame : MonoBehaviour
     public float keyTimer = 2f;
     public int losses = 0;
     public int keysLeft = 25;
+    public int startingKeys = 20;
     public int activeKeys = 0;
 
     bool gameActive = false;
@@ -44,7 +45,11 @@ public class DanceMinigame : MonoBehaviour
 
     private void OnDialogueAdvance(string sceneID, string currentKey)
     {
-        musicAudio.Stop();
+        if (sceneID == "AssylaDance" || sceneID == "AssylaRestart")
+        {
+            musicAudio.Stop();
+        }
+        
         if ((sceneID == "AssylaDance" && currentKey == null) ||
             (sceneID == "AssylaRestart" && currentKey == null))
         {
@@ -66,7 +71,7 @@ public class DanceMinigame : MonoBehaviour
         QuestManager.instance.SetUIEnabled(false);
 
         losses = 0;
-        keysLeft = 25;
+        keysLeft = startingKeys;
         activeKeys = 0;
 
         for (int i = 0; i < keyPool.Length; i++)
@@ -329,6 +334,6 @@ public class DanceMinigame : MonoBehaviour
             }
         }
 
-        keyTimer = 0.7f + 1f * Mathf.Min(keysLeft / 20f, 1);
+        keyTimer = 0.7f + 1f * Mathf.Min(Mathf.Max(keysLeft - 5, 0) / 20f, 1);
     }
 }
