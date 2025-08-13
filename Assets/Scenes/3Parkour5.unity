@@ -2633,6 +2633,55 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 4519543177444823831, guid: cfe786d29ffc05b4f9f7e72eaedc867b, type: 3}
   m_PrefabInstance: {fileID: 1697239255}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1711137898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1711137900}
+  - component: {fileID: 1711137899}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1711137899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711137898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ee0f8fd807e2f4389658f7fde539b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initPools:
+  - objectToPool: {fileID: 2223675114723871067, guid: afde63e0790772946b7058d947247034, type: 3}
+    initSize: 15
+  - objectToPool: {fileID: 4229327393208528227, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
+    initSize: 15
+--- !u!4 &1711137900
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711137898}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.8314643, y: -3.4352164, z: 5.380576}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1723567169
 GameObject:
   m_ObjectHideFlags: 0
@@ -3738,6 +3787,7 @@ SceneRoots:
   - {fileID: 1321547628}
   - {fileID: 1958680915}
   - {fileID: 515574348}
+  - {fileID: 1711137900}
   - {fileID: 2115267755}
   - {fileID: 1950511022}
   - {fileID: 1511644375}

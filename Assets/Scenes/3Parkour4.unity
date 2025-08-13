@@ -2480,6 +2480,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.9108121, z: 1}
   m_Center: {x: 0.00000016540827, y: -0.45540464, z: 0.00000065493924}
+--- !u!1 &1218461817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1218461819}
+  - component: {fileID: 1218461818}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1218461818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218461817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ee0f8fd807e2f4389658f7fde539b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initPools:
+  - objectToPool: {fileID: 2223675114723871067, guid: afde63e0790772946b7058d947247034, type: 3}
+    initSize: 15
+  - objectToPool: {fileID: 4229327393208528227, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
+    initSize: 15
+--- !u!4 &1218461819
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218461817}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.8314643, y: -3.4352164, z: 5.380576}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1220347904
 GameObject:
   m_ObjectHideFlags: 0
@@ -4601,6 +4650,7 @@ SceneRoots:
   - {fileID: 1049638704}
   - {fileID: 1946251643}
   - {fileID: 1430725946}
+  - {fileID: 1218461819}
   - {fileID: 3399928}
   - {fileID: 254236798}
   - {fileID: 1806979011}
