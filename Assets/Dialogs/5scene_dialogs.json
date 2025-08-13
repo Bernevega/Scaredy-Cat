@@ -4,7 +4,7 @@
     "nodes": {
       "boo1": {
         "speaker": "Kitty",
-        "text": "Oyen..? This is not Kitty Town. Where is mom?",
+        "text": "Oyen..? This isn't the Kitty Town. Where are we?",
         "next": "boo2"
       },
       "boo2": {
@@ -39,7 +39,7 @@
     "nodes": {
       "boo1": {
         "speaker": "Gravestone",
-        "text": "Oyen Orange-Juice\n2012-2022\nDied by choking on friendship beads",
+        "text": "Oyen Orange-Juice.\n2012-2022.\nDied by choking on friendship beads.",
         "next": "boo2"
       },
       "boo2": {
@@ -64,32 +64,169 @@
     "nodes": {
       "boo1": {
         "speaker": "Kitty",
-        "text": "MOMMA, I'M HERE!!!",
+        "text": "MOM, I'M HERE!!!",
         "next": null
       }
     }
   },
-  "GoodbyeDialogue": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Oyen",
-        "text": "Are you brave enough to say goodbye, Kitty?",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Kitty",
-        "text": "...Yeah.",
-        "next": null
-      }
+
+"GoodbyeDialogue": {
+  "start": "boo1",
+  "nodes": {
+    "boo1": {
+      "speaker": "Oyen",
+      "text": "Kitty...",
+      "next": "boo2"
+    },
+    "boo2": {
+      "speaker": "Kitty",
+      "text": "What is happening???? Is this a joke?",
+      "next": "boo3"
+    },
+    "boo3": {
+      "speaker": "Oyen",
+      "text": "I'm sorry, but it's not a joke.",
+      "next": "boo4"
+    },
+    "boo4": {
+      "speaker": "Oyen",
+      "text": "...",
+      "next": "boo5"
+    },
+    "boo5": {
+      "speaker": "Oyen",
+      "text": "Remember crossing that log in the forest?",
+      "next": "boo6"
+    },
+    "boo6": {
+      "speaker": "Oyen",
+      "text": "You... Didn't just slip and faint.....",
+      "next": "boo7"
+    },
+    "boo7": {
+      "speaker": "Kitty",
+      "text": "What??? No... I-",
+      "next": "boo8"
+    },
+    "boo8": {
+      "speaker": "Kitty",
+      "text": "But I'm here! And you're here! We are both-",
+      "next": "boo9"
+    },
+    "boo9": {
+      "speaker": "Oyen",
+      "text": "We are both dead, Kitty.",
+      "next": "boo10"
+    },
+    "boo10": {
+      "speaker": "Oyen",
+      "text": "I'm so sorry...",
+      "next": "boo11"
+    },
+    "boo11": {
+      "speaker": "Kitty",
+      "text": "So all of those people at the ghost party are...?",
+      "next": "boo12"
+    },
+    "boo12": {
+      "speaker": "Oyen",
+      "text": "Dead too, yes. That's why we call it a 'Ghost Party', you know?",
+      "next": "boo13"
+    },
+    "boo13": {
+      "speaker": "Kitty",
+      "text": "Ha-ha, makes sense...",
+      "next": "boo14"
+    },
+    "boo14": {
+      "speaker": "Oyen",
+      "text": "Sometimes we can't change our fate.",
+      "next": "boo15"
+    },
+    "boo15": {
+      "speaker": "Oyen",
+      "text": "But we can still choose how to face it.",
+      "next": "boo16"
+    },
+    "boo16": {
+      "speaker": "Oyen",
+      "text": "And you proved again and again how brave you truly are.",
+      "next": "boo17"
+    },
+    "boo17": {
+      "speaker": "Kitty",
+      "text": "But... What about my mom, my friends? My life?",
+      "next": "boo18"
+    },
+    "boo18": {
+      "speaker": "Oyen",
+      "text": "You'll always be alive in their hearts.",
+      "next": "boo19"
+    },
+    "boo19": {
+      "speaker": "Oyen",
+      "text": "And one day, you'll meet them again.",
+      "next": "boo20"
+    },
+    "boo20": {
+      "speaker": "Oyen",
+      "text": "So it's not a forever goodbye, Kitty!",
+      "next": "boo21"
+    },
+    "boo21": {
+      "speaker": "Kitty",
+      "text": "You're right...",
+      "next": "boo22"
+    },
+    "boo22": {
+      "speaker": "Kitty",
+      "text": "What am I supposed to do now?...",
+      "next": "boo23"
+    },
+    "boo23": {
+      "speaker": "Oyen",
+      "text": "Whatever happens next, we'll face it together.",
+      "next": "boo24"
+    },
+    "boo24": {
+      "speaker": "Oyen",
+      "text": "Me, John Daniel, Assyla, even Mousie and every other spirit of the forest will always support you!",
+      "next": "boo25"
+    },
+    "boo25": {
+      "speaker": "Oyen",
+      "text": "You don't have to face it alone, Kitty.",
+      "next": "boo26"
+    },
+    "boo26": {
+      "speaker": "Kitty",
+      "text": "BBBWWWAHHHHHH, THANK YOU, OYEN!",
+      "next": "boo27"
+    },
+    "boo27": {
+      "speaker": "Kitty",
+      "text": "...",
+      "next": "boo28"
+    },
+    "boo28": {
+      "speaker": "Kitty",
+      "text": "*sigh*",
+      "next": "boo29"
+    },
+    "boo29": {
+      "speaker": "Kitty",
+      "text": "I'm ready.",
+      "next": null
     }
-  },
+  }
+},
+
   "FinalTitleDrop": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Kitty",
-        "text": "I'm not a scaredy cat anymore.",
+        "text": "I'm not a scaredy-cat anymore.",
         "next": null
       }
     }
