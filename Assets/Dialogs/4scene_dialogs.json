@@ -4,12 +4,12 @@
     "nodes": {
       "boo1": {
         "speaker": "Kitty",
-        "text": "Hi",
+        "text": "WAAAAAAAHHHHHHHH!!!",
         "next": "boo2"
       },
       "boo2": {
         "speaker": "Mousie",
-        "text": "Who are you.",
+        "text": "?????????",
         "next": null
       }
     }
@@ -19,27 +19,63 @@
     "nodes": {
       "boo1": {
         "speaker": "Kitty",
-        "text": "Hi, can you return the bracelet you stole?",
+        "text": "...",
         "next": "boo2"
       },
       "boo2": {
         "speaker": "Mousie",
-        "text": "Give me <b>cheese<\b>.",
+        "text": "...?",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Kitty",
+        "text": "-Hhhh.. hiiiii!!!",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "Mousie",
+        "text": "...Wasap?",
+        "next": "boo5"
+      },
+      "boo5": {
+        "speaker": "Kitty",
+        "text": "Could you... return Oyen's braclet pretty please?",
+        "next": "boo6"
+      },
+      "boo6": {
+        "speaker": "Mousie",
+        "text": "Huh? Why would I?",
+        "next": "boo7"
+      },
+      "boo7": {
+        "speaker": "Kitty",
+        "text": "...I- I can give you something in return?",
+        "next": "boo8"
+      },
+      "boo8": {
+        "speaker": "Mousie",
+        "text": "Hmmmm......",
+        "next": "boo9"
+      },
+      "boo9": {
+        "speaker": "Mousie",
+        "text": "Bring me some CHEESE!",
         "next": null
       }
     }
   },
+
   "MouseCheeseWait": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Mousie",
-        "text": "Have you found my cheese?",
+        "text": "Have you found my CHEESE?",
         "next": "boo2"
       },
       "boo2": {
         "speaker": "Kitty",
-        "text": "no.",
+        "text": "AHH!! I mean... No... Not yet...",
         "next": null
       }
     }
@@ -49,12 +85,67 @@
     "nodes": {
       "boo1": {
         "speaker": "Mousie",
-        "text": "Have you found my cheese? ...",
+        "text": "Have you found my CHEESE??",
         "next": "boo2"
       },
       "boo2": {
+        "speaker": "Kitty",
+        "text": "Yes, here you go!",
+        "next": "boo3"
+      },
+      "boo3": {
         "speaker": "Mousie",
-        "text": "Thanks! Here's the bracelet. Bye now.",
+        "text": "YUM! Okay, here is your stupid braclet.",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "Mousie",
+        "text": "It's ugly anyways.",
+        "next": "boo5"
+      },
+      "boo5": {
+        "speaker": "Kitty",
+        "text": "DON'T SAY THAT!!!!!",
+        "next": "boo6"
+      },
+      "boo6": {
+        "speaker": "Mousie",
+        "text": "!!!",
+        "next": "boo7"
+      },
+      "boo7": {
+        "speaker": "Kitty",
+        "text": "Oyen said this braclet is her EVERYTHING!",
+        "next": "boo8"
+      },
+      "boo8": {
+        "speaker": "Kitty",
+        "text": "And you just stole it!!!",
+        "next": "boo9"
+      },
+      "boo9": {
+        "speaker": "Kitty",
+        "text": "Don't you even DARE to call it ugly!!",
+        "next": "boo10"
+      },
+      "boo10": {
+        "speaker": "Kitty",
+        "text": "I'm not afraid of you anymore, and I won't let you bully others!",
+        "next": "boo11"
+      },
+      "boo11": {
+        "speaker": "Mousie",
+        "text": "Sheeeesh, chill!!!",
+        "next": "boo12"
+      },
+      "boo12": {
+        "speaker": "Mousie",
+        "text": "I was just kidding...",
+        "next": "boo13"
+      },
+      "boo13": {
+        "speaker": "Mousie",
+        "text": "Now just go already!!!",
         "next": null
       }
     }
@@ -64,7 +155,7 @@
     "nodes": {
       "boo1": {
         "speaker": "Mousie",
-        "text": "Thanks for the cheese",
+        "text": "Why was she afraid of me......... Am I that ugly?",
         "next": null
       }
     }
@@ -435,6 +526,16 @@
         "speaker": "Oyen",
         "text": "THANK YOU SO MUCCCCCHHHHH!!!!!!",
         "next": "boo11"
+      },
+      "boo11": {
+        "speaker": "Oyen",
+        "text": "My name is Oyen by the way!",
+        "next": "boo12"
+      },
+      "boo12": {
+        "speaker": "Kitty",
+        "text": "I'm Kitty, nice to meet you!",
+        "next": null
       }
     }
   },
