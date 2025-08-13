@@ -19,12 +19,19 @@ public class DialogueOnInteract : MonoBehaviour
     [Tooltip("Hide the interaction UI while dialogue is open.")]
     [SerializeField] private bool hideWhileDialogueOpen = true;
 
+    [Header("External Control")]
+    [Tooltip("If true, other systems can temporarily hide this prompt (e.g., minigames).")]
+    [SerializeField] private bool allowExternalHide = true;
+
     // internals
     private GameObject playerObject;
     private Graphic[] _uiGraphics;
     private Coroutine _uiFadeRoutine;
     private bool _isPlayerInRange = false;
     private float _currentUIAlpha = 0f;
+
+    // NEW: external hide flag
+    private bool _externallyHidden = false;
 
     private void Awake()
     {
@@ -65,6 +72,14 @@ public class DialogueOnInteract : MonoBehaviour
         if (playerObject == null)
             playerObject = GameObject.FindGameObjectWithTag("Player");
 
+        // If externally hidden, force hide and skip other visibility logic.
+        if (allowExternalHide && _externallyHidden)
+        {
+            if (_currentUIAlpha > 0f)
+                StartUIFade(0f, 0.1f);
+            return;
+        }
+
         // Show/hide prompt based on distance unless dialogue is open (handled below)
         if (interactionCanvas != null && playerObject != null)
         {
@@ -82,8 +97,7 @@ public class DialogueOnInteract : MonoBehaviour
         // If dialogue is open and we want to hide the prompt, enforce it.
         if (hideWhileDialogueOpen && interactionCanvas != null)
         {
-            var dm = SimpleDialogManager.Instance;
-            bool isOpen = (dm != null && dm.dialogPanel != null && dm.dialogPanel.activeSelf);
+            bool isOpen = IsDialogueOpen();
             if (isOpen)
             {
                 // Make sure it’s hidden regardless of range.
@@ -128,6 +142,9 @@ public class DialogueOnInteract : MonoBehaviour
         bool dialogueEnded = string.IsNullOrEmpty(nodeKey);
         if (interactionCanvas == null) return;
 
+        // If externally hidden, we keep it hidden regardless.
+        if (allowExternalHide && _externallyHidden) return;
+
         if (!dialogueEnded)
         {
             // Any node inside our dialogue => hide prompt
@@ -140,6 +157,43 @@ public class DialogueOnInteract : MonoBehaviour
             if (_isPlayerInRange && hideWhileDialogueOpen)
                 StartUIFade(1f, interactionFadeDuration);
         }
+    }
+
+    // -------- PUBLIC API: External hide control --------
+    /// <summary>
+    /// Allows other systems (e.g., minigames) to temporarily hide the interaction prompt.
+    /// </summary>
+    public void SetExternallyHidden(bool hidden)
+    {
+        if (!allowExternalHide) return;
+
+        _externallyHidden = hidden;
+
+        if (interactionCanvas == null) return;
+
+        if (hidden)
+        {
+            // Hide immediately (quick fade)
+            StartUIFade(0f, 0.1f);
+        }
+        else
+        {
+            // Restore based on current state (only if dialogue is not open)
+            if (!IsDialogueOpen())
+            {
+                if (_isPlayerInRange)
+                    StartUIFade(1f, interactionFadeDuration);
+                else
+                    StartUIFade(0f, interactionFadeDuration);
+            }
+        }
+    }
+
+    // -------- Helpers --------
+    private bool IsDialogueOpen()
+    {
+        var dm = SimpleDialogManager.Instance;
+        return (dm != null && dm.dialogPanel != null && dm.dialogPanel.activeSelf);
     }
 
     // -------- Canvas-based UI Fade (no CanvasGroup) --------

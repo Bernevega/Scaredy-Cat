@@ -81,6 +81,26 @@ public class Oyen : MonoBehaviour
                 else StartUIFade(0f, interactionFadeDuration);
             }
         }
+
+        // >>> NEW: enforce hiding while dialogue is open; re-show when it closes (unless we've finished and want it hidden)
+        var dm = SimpleDialogManager.Instance;
+        bool dialogOpen = (dm != null && dm.dialogPanel != null && dm.dialogPanel.activeSelf);
+
+        if (interactionCanvas != null)
+        {
+            if (dialogOpen)
+            {
+                if (_currentUIAlpha > 0f)
+                    StartUIFade(0f, interactionFadeDuration);
+            }
+            else
+            {
+                // Only re-show if player is in range AND we aren't supposed to keep it hidden after completing the event
+                bool shouldStayHidden = hideInteractionUIAfterEvent && hasBracelet;
+                if (_isPlayerInRange && _currentUIAlpha <= 0f && !shouldStayHidden)
+                    StartUIFade(1f, interactionFadeDuration);
+            }
+        }
     }
 
     private void OnInteract(Interactor interactor, Interactable interactable, InteractActionType type)
@@ -130,6 +150,10 @@ public class Oyen : MonoBehaviour
         SimpleDialogManager dm = SimpleDialogManager.Instance;
         if (dm != null && dm.dialogPanel != null && dm.dialogPanel.activeSelf)
             return;
+
+        // >>> NEW: hide the prompt immediately when starting any dialogue from here
+        if (interactionCanvas != null)
+            StartUIFade(0f, interactionFadeDuration);
 
         if (!waitingForBracelet && !hasBracelet)
         {

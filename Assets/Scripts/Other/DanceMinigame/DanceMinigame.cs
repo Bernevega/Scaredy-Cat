@@ -70,6 +70,10 @@ public class DanceMinigame : MonoBehaviour
         PlayerManager.instance.player.GetComponent<PlayerMovement>().enabled = false;
         QuestManager.instance.SetUIEnabled(false);
 
+        // NEW: hide interaction prompt while the minigame is active
+        if (assyla != null)
+            assyla.SetExternallyHidden(true);
+
         losses = 0;
         keysLeft = startingKeys;
         activeKeys = 0;
@@ -103,6 +107,10 @@ public class DanceMinigame : MonoBehaviour
         gameActive = false;
         PlayerManager.instance.player.GetComponent<PlayerMovement>().enabled = true;
         QuestManager.instance.SetUIEnabled(true);
+
+        // NEW: restore interaction prompt visibility rules
+        if (assyla != null)
+            assyla.SetExternallyHidden(false);
 
         SimpleDialogManager dm = SimpleDialogManager.Instance;
 
@@ -198,7 +206,6 @@ public class DanceMinigame : MonoBehaviour
                     success = true;
                     break;
                 }
-                
             }
 
             if (success)
@@ -213,7 +220,6 @@ public class DanceMinigame : MonoBehaviour
                     activeKeys--;
                 }
                 FailKey();
-                
             }
         }
     }
@@ -336,7 +342,6 @@ public class DanceMinigame : MonoBehaviour
 
         }
 
-        //keyTimer = 0.7f + 1f * Mathf.Min(Mathf.Max(keysLeft - 5, 0) / 20f, 1);
         keyTimer = 0.7f + 1f * Mathf.Min(Mathf.Max(keysLeft - 5, 0) / 20f, 1);
 
     }

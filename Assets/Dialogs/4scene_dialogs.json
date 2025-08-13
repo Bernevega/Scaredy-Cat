@@ -14,56 +14,91 @@
       }
     }
   },
-  "MouseCheese": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "...",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Mousie",
-        "text": "...?",
-        "next": "boo3"
-      },
-      "boo3": {
-        "speaker": "Kitty",
-        "text": "-Hhhh.. hiiiii!!!",
-        "next": "boo4"
-      },
-      "boo4": {
-        "speaker": "Mousie",
-        "text": "...Wasap?",
-        "next": "boo5"
-      },
-      "boo5": {
-        "speaker": "Kitty",
-        "text": "Could you... return Oyen's braclet pretty please?",
-        "next": "boo6"
-      },
-      "boo6": {
-        "speaker": "Mousie",
-        "text": "Huh? Why would I?",
-        "next": "boo7"
-      },
-      "boo7": {
-        "speaker": "Kitty",
-        "text": "...I- I can give you something in return?",
-        "next": "boo8"
-      },
-      "boo8": {
-        "speaker": "Mousie",
-        "text": "Hmmmm......",
-        "next": "boo9"
-      },
-      "boo9": {
-        "speaker": "Mousie",
-        "text": "Bring me some CHEESE!",
-        "next": null
-      }
+"MouseCheese": {
+  "start": "boo1",
+  "nodes": {
+    "boo1": {
+      "speaker": "Kitty",
+      "text": "...",
+      "next": "boo2"
+    },
+    "boo2": {
+      "speaker": "Mousie",
+      "text": "...? What, lost your tongue, furball?",
+      "next": "boo3"
+    },
+    "boo3": {
+      "speaker": "Kitty",
+      "text": "-Hhhh.. hiiiii!!!",
+      "next": "boo4"
+    },
+    "boo4": {
+      "speaker": "Mousie",
+      "text": "Pfft— you look like you've seen a ghost. Oh wait... it’s just me.",
+      "next": "boo5"
+    },
+    "boo5": {
+      "speaker": "Kitty",
+      "text": "Could you... return Oyen's bracelet, pretty please?",
+      "next": "boo6"
+    },
+    "boo6": {
+      "speaker": "Mousie",
+      "text": "Bracelet? Ohhh, you mean that shiny thing I found just lying around~",
+      "next": "boo7"
+    },
+    "boo7": {
+      "speaker": "Kitty",
+      "text": "...It wasn’t lying around... it’s hers...",
+      "next": "boo8"
+    },
+    "boo8": {
+      "speaker": "Mousie",
+      "text": "Hers, mine— does it matter? It looks way better on me.",
+      "next": "boo9"
+    },
+    "boo9": {
+      "speaker": "Kitty",
+      "text": "...I- I can give you something in return?",
+      "next": "boo10"
+    },
+    "boo10": {
+      "speaker": "Mousie",
+      "text": "Hmmm... bribes already? You must really want it back.",
+      "next": "boo11"
+    },
+    "boo11": {
+      "speaker": "Kitty",
+      "text": "Please... I just... I don’t like being here...",
+      "next": "boo12"
+    },
+    "boo12": {
+      "speaker": "Mousie",
+      "text": "Aww, poor kitty scared of a little mouse! What, heard a scary story about me?",
+      "next": "boo13"
+    },
+    "boo13": {
+      "speaker": "Kitty",
+      "text": ".......................................",
+      "next": "boo14"
+    },
+    "boo14": {
+      "speaker": "Mousie",
+      "text": "Ha! That’s adorable. Alright, if you want the bracelet...",
+      "next": "boo15"
+    },
+    "boo15": {
+      "speaker": "Mousie",
+      "text": "Bring me some CHEESE. The stinkier, the better.",
+      "next": "boo16"
+    },
+    "boo16": {
+      "speaker": "Mousie",
+      "text": "And don’t take too long. I might just ‘lose’ the bracelet by accident~",
+      "next": null
     }
-  },
+  }
+},
 
   "MouseCheeseWait": {
     "start": "boo1",
@@ -80,6 +115,7 @@
       }
     }
   },
+
   "MouseBraceletGive": {
     "start": "boo1",
     "nodes": {
@@ -160,21 +196,6 @@
       }
     }
   },
-  "JohnDanielCheese": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "Hi, can you return the cheese you stole?",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Mousie",
-        "text": "Give me hat and tie.",
-        "next": null
-      }
-    }
-  },
 
   "MangleMouse": {
     "start": "boo1",
@@ -191,6 +212,7 @@
       }
     }
   },
+
   "MangleStart": {
     "start": "boo1",
     "nodes": {
@@ -202,83 +224,112 @@
     }
   },
 
-  // John Daniels
-  "JDMouse": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "Hi, I heard you knew where a mouse is.",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "John Daniel",
-        "text": "Ohhh yes. I knew I smelled a mouse nearby… Heh. I think it might have headed in Assyla’s direction, that yellow stanker with a bib. Tell me when you find that mouse though… Heh.",
-        "next": null
-      }
-    }
-  },
   "JDStart": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "John Daniel",
-        "text": "sup",
+        "text": "I'm eating cheese, go away!",
         "next": null
       }
     }
   },
+
   "JDCheese": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Kitty",
-        "text": "Hi, can i have some cheeese?",
+        "text": "Hi, can you give me some cheese?",
         "next": "boo2"
       },
       "boo2": {
         "speaker": "John Daniel",
-        "text": "Sure, just bring me a silly hat and a tie.",
+        "text": "Whaaaaaatttt? Why would I - John Daniel - give you my precious cheese?",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Kitty",
+        "text": "Please! I need to give Mousie some cheese so they return Oyen her braclet!",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "John Daniel",
+        "text": "Mousie???",
+        "next": "boo5"
+      },
+      "boo5": {
+        "speaker": "John Daniel",
+        "text": "That stupid rat always steals everyone's stuff!",
+        "next": "boo6"
+      },
+      "boo6": {
+        "speaker": "John Daniel",
+        "text": "Hm... Alright.",
+        "next": "boo7"
+      },
+      "boo7": {
+        "speaker": "John Daniel",
+        "text": "Bring me a FUNNY HAT and then I'll share some of my cheese.",
+        "next": "boo8"
+      },
+      "boo8": {
+        "speaker": "John Daniel",
+        "text": "But only because I hate that braclet-cheese-stealing rat!",
         "next": null
       }
     }
   },
+
   "JDWait": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "John Daniel",
-        "text": "Have you gotten the hat and tie?",
+        "text": "Have you gotten me a FUNNY HAT?",
         "next": null
       }
     }
   },
+
   "JDGive": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "John Daniel",
-        "text": "Thanks! Here's the Cheese.",
+        "text": "WOWSIE, YOU ACTUALLY GOT IT!",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "John Daniel",
+        "text": "Alright, here is some of my cheese.........",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Kitty",
+        "text": "Thank you so much!!",
         "next": null
       }
     }
   },
+
   "JDThank": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "John Daniel",
-        "text": "Thanks!",
+        "text": "That stupid rat... Always bullying others...........",
         "next": null
       }
     }
   },
+  
   "AssylaStart": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Assyla",
-        "text": "Oh ignore me.. I have no one to dance with.",
+        "text": "Oh, ignore me... I have no one to dance with...........",
         "next": null
       }
     }
@@ -288,7 +339,62 @@
     "nodes": {
       "boo1": {
         "speaker": "Assyla",
-        "text": "Dance minigame",
+        "text": "Hi!",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "Hey, could I borrow your hat?",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Assyla",
+        "text": "WHAT!?!?!?!?!?!!? NO WAY!",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "Assyla",
+        "text": "Only the absolute DANCE CHAMPION is worthy of this beautiful, majestic, whimsical hat!",
+        "next": "boo5"
+      },
+      "boo5": {
+        "speaker": "Kitty",
+        "text": "...And I guess YOU are the dance champion...",
+        "next": "boo6"
+      },
+      "boo6": {
+        "speaker": "Assyla",
+        "text": "DUUUH!",
+        "next": "boo7"
+      },
+      "boo7": {
+        "speaker": "Assyla",
+        "text": "Have been for five years in a row!",
+        "next": "boo8"
+      },
+      "boo8": {
+        "speaker": "Assyla",
+        "text": "I'm so good at dancing that no one wants to compete with me anymore! :(",
+        "next": "boo9"
+      },
+      "boo9": {
+        "speaker": "Kitty",
+        "text": "Hmmmm....",
+        "next": "boo10"
+      },
+      "boo10": {
+        "speaker": "Kitty",
+        "text": "Maybe... I could try?",
+        "next": "boo11"
+      },
+      "boo11": {
+        "speaker": "Assyla",
+        "text": "OOOOOHHHHH!!! THAT'S A BRILLIANT IDEA!",
+        "next": "boo12"
+      },
+      "boo12": {
+        "speaker": "Assyla",
+        "text": "GIVE IT YOUR BEST, AHAHAHAHAHAHA!",
         "next": null
       }
     }
@@ -298,37 +404,155 @@
     "nodes": {
       "boo1": {
         "speaker": "Assyla",
-        "text": "Do you want to try again?",
+        "text": "YOU'RE SOOOOO BAAAAAAAD!",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Assyla",
+        "text": "Okay, since I'm SO kind, I'll let you try again.",
         "next": null
       }
     }
   },
+
   "AssylaGive": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Assyla",
-        "text": "Thanks for dancing with me. Here's my hat.",
+        "text": "WHAT.",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Assyla",
+        "text": "NO.",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Assyla",
+        "text": "NO WAY.",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "Assyla",
+        "text": "THAT CAN'T BE HAPPENING.............",
+        "next": "boo5"
+      },
+      "boo5": {
+        "speaker": "Kitty",
+        "text": "I'm so sorry!!",
+        "next": "boo6"
+      },
+      "boo6": {
+        "speaker": "Assyla",
+        "text": "BBBAAAWWWWWAAAHHHHHHHHHH!!!!",
+        "next": "boo7"
+      },
+      "boo7": {
+        "speaker": "Assyla",
+        "text": "NOW MOUSIE WILL MAKE FUN OF ME AGAIN!!!",
+        "next": "boo8"
+      },
+      "boo8": {
+        "speaker": "Kitty",
+        "text": "What? Mousie?",
+        "next": "boo9"
+      },
+      "boo9": {
+        "speaker": "Assyla",
+        "text": "Yes!! They were making fun of me for not knowing how to dance!",
+        "next": "boo10"
+      },
+      "boo10": {
+        "speaker": "Assyla",
+        "text": "So I decided to learn and become the very best!",
+        "next": "boo11"
+      },
+      "boo11": {
+        "speaker": "Assyla",
+        "text": "But now...... I know I'm not the best...........",
+        "next": "boo12"
+      },
+      "boo12": {
+        "speaker": "Kitty",
+        "text": "OMG, I'm so sorry!",
+        "next": "boo13"
+      },
+      "boo13": {
+        "speaker": "Kitty",
+        "text": "I didn't even want your hat, but...",
+        "next": "boo14"
+      },
+      "boo14": {
+        "speaker": "Assyla",
+        "text": "...but what?",
+        "next": "boo15"
+      },
+      "boo15": {
+        "speaker": "Kitty",
+        "text": "I promised John Daniel to bring him your hat.",
+        "next": "boo16"
+      }, 
+      "boo16": {
+        "speaker": "Assyla",
+        "text": "Why would you promise something like that to that nasty dog???!!?!?!?!?",
+        "next": "boo17"
+      }, 
+      "boo17": {
+        "speaker": "Kitty",
+        "text": "So he could give me some cheese for Mousie!",
+        "next": "boo18"
+      }, 
+      "boo18": {
+        "speaker": "Kitty",
+        "text": "They stole Oyen's braclet and...",
+        "next": "boo19"
+      }, 
+      "boo19": {
+        "speaker": "Assyla",
+        "text": "...of course asked for cheese!!!!!",
+        "next": "boo20"
+      }, 
+      "boo20": {
+        "speaker": "Assyla",
+        "text": "They ALWAYS do that!",
+        "next": "boo21"
+      }, 
+      "boo21": {
+        "speaker": "Assyla",
+        "text": "But Oyen is my friend, so I'll help you.",
+        "next": "boo22"
+      }, 
+      "boo22": {
+        "speaker": "Assyla",
+        "text": "Here you go...",
+        "next": "boo23"
+      }, 
+      "boo23": {
+        "speaker": "Kitty",
+        "text": "Thank you so much!!! Let's dance again later!",
         "next": null
       }
     }
   },
+
   "AssylaBetterLuck": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Assyla",
-        "text": "Better luck next time.",
+        "text": "...",
         "next": null
       }
     }
   },
+
   "AssylaThank": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Assyla",
-        "text": "Thanks for dancing with me.",
+        "text": "...that stupid mouse, I'll have my revenge one day..........",
         "next": null
       }
     }

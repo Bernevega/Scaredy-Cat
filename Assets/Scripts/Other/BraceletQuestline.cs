@@ -55,6 +55,7 @@ public class BraceletQuestline : MonoBehaviour
                     QuestManager.instance.UpdateQuest(quest);
                 }
                 assyla.sceneId.value = "AssylaDance";
+                jD.sceneId.value = "JDWait";
                 break;
             case "AssylaGive":
                 jD.sceneId.value = "JDGive";
@@ -73,7 +74,6 @@ public class BraceletQuestline : MonoBehaviour
                 {
                     braceletObject.SetActive(true);
                     mouse.sceneId.value = "MouseThank";
-                    mouse.gameObject.SetActive(false);
 
                     quest.description = "Give the bracelet to the orange cat.";
                     QuestManager.instance.UpdateQuest(quest);
@@ -87,7 +87,7 @@ public class BraceletQuestline : MonoBehaviour
         for (int i = 0; i < npcs.Length; i++)
         {
             if (npcs[i] == null) continue;
-            npcs[i].eventOnInteract += OnInteract;
+            npcs[i].eventOnInteract -= OnInteract;
         }
 
         if (SimpleDialogManager.Instance != null)
