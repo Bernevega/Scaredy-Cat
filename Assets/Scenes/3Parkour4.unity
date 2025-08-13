@@ -668,6 +668,22 @@ PrefabInstance:
       propertyPath: ControlsSettingsPanel
       value: 
       objectReference: {fileID: 1099667161}
+    - target: {fileID: 5082679000986886834, guid: d90526a4511f30940969046aacdbbe60, type: 3}
+      propertyPath: DefaultPauseMenuButton
+      value: 
+      objectReference: {fileID: 407004154}
+    - target: {fileID: 5082679000986886834, guid: d90526a4511f30940969046aacdbbe60, type: 3}
+      propertyPath: DefaultAudioSettingsButton
+      value: 
+      objectReference: {fileID: 407004152}
+    - target: {fileID: 5082679000986886834, guid: d90526a4511f30940969046aacdbbe60, type: 3}
+      propertyPath: DefaultVideoSettingsButton
+      value: 
+      objectReference: {fileID: 407004153}
+    - target: {fileID: 5082679000986886834, guid: d90526a4511f30940969046aacdbbe60, type: 3}
+      propertyPath: DefaultControlsSettingsButton
+      value: 
+      objectReference: {fileID: 407004151}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -943,6 +959,50 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.99999845, y: 1.9577329, z: 1}
   m_Center: {x: -0.0000000046964796, y: -0.47886845, z: -0.00000050554127}
+--- !u!114 &407004151 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8570072555355787348, guid: 84787b68efea3fa42a63b45ef1c72cc0, type: 3}
+  m_PrefabInstance: {fileID: 1099667155}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &407004152 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6839310191046215997, guid: 84787b68efea3fa42a63b45ef1c72cc0, type: 3}
+  m_PrefabInstance: {fileID: 1099667155}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &407004153 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3054937349284798793, guid: 84787b68efea3fa42a63b45ef1c72cc0, type: 3}
+  m_PrefabInstance: {fileID: 1099667155}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &407004154 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5594499129314521713, guid: 84787b68efea3fa42a63b45ef1c72cc0, type: 3}
+  m_PrefabInstance: {fileID: 1099667155}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &414604594
 GameObject:
   m_ObjectHideFlags: 0
