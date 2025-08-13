@@ -388,21 +388,57 @@
     "nodes": {
       "boo1": {
         "speaker": "Oyen",
-        "text": "<b>*Looking very sad*<\b>",
+        "text": "WWWWAAHHHHHHH... My bracelet.........",
         "next": "boo2"
       },
       "boo2": {
         "speaker": "Kitty",
-        "text": "What happened?",
+        "text": "...Are you okay??? What happened?",
         "next": "boo3"
       },
       "boo3": {
         "speaker": "Oyen",
-        "text": "That mouse over there took my bracelet.",
-        "next": null
+        "text": "THE STUPID MOUSE STOLE MY BRACELET!!!",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "Kitty",
+        "text": "M- MMM- MMMMMMOUSE???? Oh noooooo---...",
+        "next": "boo5"
+      },
+      "boo5": {
+        "speaker": "Oyen",
+        "text": "Can you please help me??",
+        "next": "boo6"
+      },
+      "boo6": {
+        "speaker": "Oyen",
+        "text": "*sniffle*",
+        "next": "boo7"
+      },
+      "boo7": {
+        "speaker": "Oyen",
+        "text": "This bracelet was my magnum opus!",
+        "next": "boo8"
+      },
+      "boo8": {
+        "speaker": "Oyen",
+        "text": "It means EVERYTHING to me.",
+        "next": "boo9"
+      },
+      "boo9": {
+        "speaker": "Kitty",
+        "text": "...I can try, I guess!",
+        "next": "boo10"
+      },
+      "boo10": {
+        "speaker": "Oyen",
+        "text": "THANK YOU SO MUCCCCCHHHHH!!!!!!",
+        "next": "boo11"
       }
     }
   },
+
   "OyenWait": {
     "start": "boo1",
     "nodes": {
@@ -457,5 +493,45 @@
         "next": null
       }
     }
-  }
+  },
+  "NPC1_GF_": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Hiiiiiii, do you know how I can go back to the Kitty City?",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "???",
+        "text": "To the other side? I wish we knew!",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Kitty",
+        "text": "....??",
+        "next": null
+      }
+    }
+  },
+  "NPC1_GF_2": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "???",
+        "text": "Poor kitten, I hope she'll be fine!",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "???",
+        "text": "Yeahhhhhhh, it's always hard to accept!",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Kitty",
+        "text": "...",
+        "next": null
+      }
+    }
+  },
 }
