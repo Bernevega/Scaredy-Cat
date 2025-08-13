@@ -12,6 +12,11 @@ public class BraceletQuestline : MonoBehaviour
     [SerializeField] GameObject braceletObject;
     [SerializeField] GameObject nextSceneTransition;
     [SerializeField] Quest quest;
+
+    [Header("Player Control")]
+    [SerializeField] PlayerMovement playerMovement; // Drag your player movement script here
+    [SerializeField] Canvas interactionCanvas;      // Drag the interaction canvas here
+
     private void Start()
     {
         for (int i = 0; i < npcs.Length; i++) 
@@ -25,7 +30,7 @@ public class BraceletQuestline : MonoBehaviour
 
     private void OnInteract(Interactor interactor, Interactable interactable, InteractActionType type)
     {
-        
+        // Not used here, but keeping it in case you want interaction-specific logic
     }
 
     private void OnDialogAdvance(string sceneID, string nextNode)
@@ -39,6 +44,7 @@ public class BraceletQuestline : MonoBehaviour
                     QuestManager.instance.AddQuest(quest);
                 }
                 break;
+
             case "MouseCheese":
                 mouse.sceneId.value = "MouseCheeseWait";
                 jD.sceneId.value = "JDCheese";
@@ -48,6 +54,7 @@ public class BraceletQuestline : MonoBehaviour
                     QuestManager.instance.UpdateQuest(quest);
                 }
                 break;
+
             case "JDCheese":
                 if (nextNode == null)
                 {
@@ -57,9 +64,11 @@ public class BraceletQuestline : MonoBehaviour
                 assyla.sceneId.value = "AssylaDance";
                 jD.sceneId.value = "JDWait";
                 break;
+
             case "AssylaGive":
                 jD.sceneId.value = "JDGive";
                 break;
+
             case "JDGive":
                 jD.sceneId.value = "JDThank";
                 mouse.sceneId.value = "MouseBraceletGive";
@@ -69,6 +78,7 @@ public class BraceletQuestline : MonoBehaviour
                     QuestManager.instance.UpdateQuest(quest);
                 }
                 break;
+
             case "MouseBraceletGive":
                 if (nextNode == null)
                 {
@@ -79,7 +89,30 @@ public class BraceletQuestline : MonoBehaviour
                     QuestManager.instance.UpdateQuest(quest);
                 }
                 break;
+
+            case "OyenThank":
+                if (nextNode == null)
+                {
+                    // Bracelet given to Oyen → Start scene transition
+                    StartSceneTransition();
+                }
+                break;
         }
+    }
+
+    private void StartSceneTransition()
+    {
+        // Disable player movement
+        if (playerMovement != null)
+            playerMovement.enabled = false;
+
+        // Hide interaction canvas
+        if (interactionCanvas != null)
+            interactionCanvas.gameObject.SetActive(false);
+
+        // Activate next scene transition object
+        if (nextSceneTransition != null)
+            nextSceneTransition.SetActive(true);
     }
 
     private void OnDestroy()

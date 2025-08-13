@@ -34,7 +34,7 @@
     },
     "boo4": {
       "speaker": "Mousie",
-      "text": "Pfft— you look like you've seen a ghost. Oh wait... it’s just me.",
+      "text": "Pfft- you look like you've seen a ghost. Oh wait... it’s just me.",
       "next": "boo5"
     },
     "boo5": {
@@ -54,7 +54,7 @@
     },
     "boo8": {
       "speaker": "Mousie",
-      "text": "Hers, mine— does it matter? It looks way better on me.",
+      "text": "Hers, mine- does it matter? It looks way better on me.",
       "next": "boo9"
     },
     "boo9": {
@@ -116,109 +116,103 @@
     }
   },
 
-  "MouseBraceletGive": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Mousie",
-        "text": "Have you found my CHEESE??",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Kitty",
-        "text": "Yes, here you go!",
-        "next": "boo3"
-      },
-      "boo3": {
-        "speaker": "Mousie",
-        "text": "YUM! Okay, here is your stupid braclet.",
-        "next": "boo4"
-      },
-      "boo4": {
-        "speaker": "Mousie",
-        "text": "It's ugly anyways.",
-        "next": "boo5"
-      },
-      "boo5": {
-        "speaker": "Kitty",
-        "text": "DON'T SAY THAT!!!!!",
-        "next": "boo6"
-      },
-      "boo6": {
-        "speaker": "Mousie",
-        "text": "!!!",
-        "next": "boo7"
-      },
-      "boo7": {
-        "speaker": "Kitty",
-        "text": "Oyen said this braclet is her EVERYTHING!",
-        "next": "boo8"
-      },
-      "boo8": {
-        "speaker": "Kitty",
-        "text": "And you just stole it!!!",
-        "next": "boo9"
-      },
-      "boo9": {
-        "speaker": "Kitty",
-        "text": "Don't you even DARE to call it ugly!!",
-        "next": "boo10"
-      },
-      "boo10": {
-        "speaker": "Kitty",
-        "text": "I'm not afraid of you anymore, and I won't let you bully others!",
-        "next": "boo11"
-      },
-      "boo11": {
-        "speaker": "Mousie",
-        "text": "Sheeeesh, chill!!!",
-        "next": "boo12"
-      },
-      "boo12": {
-        "speaker": "Mousie",
-        "text": "I was just kidding...",
-        "next": "boo13"
-      },
-      "boo13": {
-        "speaker": "Mousie",
-        "text": "Now just go already!!!",
-        "next": null
-      }
+"MouseBraceletGive": {
+  "start": "boo1",
+  "nodes": {
+    "boo1": {
+      "speaker": "Mousie",
+      "text": "Have you found my CHEESE??",
+      "next": "boo2"
+    },
+    "boo2": {
+      "speaker": "Kitty",
+      "text": "Yes, here you go!",
+      "next": "boo3"
+    },
+    "boo3": {
+      "speaker": "Mousie",
+      "text": "YUM! Okay, here is your stupid bracelet.",
+      "next": "boo4"
+    },
+    "boo4": {
+      "speaker": "Mousie",
+      "text": "It's ugly anyways.",
+      "next": "boo5"
+    },
+    "boo5": {
+      "speaker": "Kitty",
+      "text": "DON'T SAY THAT!!!!!",
+      "next": "boo6"
+    },
+    "boo6": {
+      "speaker": "Mousie",
+      "text": "!!!",
+      "next": "boo7"
+    },
+    "boo7": {
+      "speaker": "Kitty",
+      "text": "Oyen said this bracelet is her EVERYTHING!",
+      "next": "boo8"
+    },
+    "boo8": {
+      "speaker": "Kitty",
+      "text": "And you just STOLE it- like you’ve stolen from John Daniel...",
+      "next": "boo9"
+    },
+    "boo9": {
+      "speaker": "Kitty",
+      "text": "And bullied Assyla so much she spent YEARS learning how to dance just to stop you laughing at her!!!",
+      "next": "boo10"
+    },
+    "boo10": {
+      "speaker": "Kitty",
+      "text": "I’ve been afraid of mice my whole life... And of everything else too........",
+      "next": "boo11"
+    },
+    "boo11": {
+      "speaker": "Kitty",
+      "text": "But now I see who you really are.",
+      "next": "boo12"
+    },
+    "boo12": {
+      "speaker": "Kitty",
+      "text": "You're a bully!",
+      "next": "boo13"
+    },
+    "boo13": {
+      "speaker": "Kitty",
+      "text": "I’m done being scared - of you or anything else! And I’m done letting you push anyone around!!!",
+      "next": "boo14"
+    },
+    "boo14": {
+      "speaker": "Mousie",
+      "text": "Sheeeesh, chill!!!",
+      "next": "boo15"
+    },
+    "boo15": {
+      "speaker": "Mousie",
+      "text": "I was just kidding... geez...",
+      "next": "boo16"
+    },
+    "boo16": {
+      "speaker": "Mousie",
+      "text": "Here. Take it. Whatever.",
+      "next": "boo17"
+    },
+    "boo17": {
+      "speaker": "Mousie",
+      "text": "And tell Oyen I don’t want her junk anyway.",
+      "next": null
     }
-  },
+  }
+},
+
   "MouseThank": {
     "start": "boo1",
     "nodes": {
       "boo1": {
         "speaker": "Mousie",
         "text": "Why was she afraid of me......... Am I that ugly?",
-        "next": null
-      }
-    }
-  },
-
-  "MangleMouse": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "Hi, have you seen a mouse?",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Mangle",
-        "text": "A mouse..? That freaky dog, John Daniel, in that ridiculous hat probably saw it. He loves rodents. A little too much maybe.",
-        "next": null
-      }
-    }
-  },
-
-  "MangleStart": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Mangle",
-        "text": "sup",
         "next": null
       }
     }
@@ -558,146 +552,6 @@
     }
   },
 
-  "ChicaMouse": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "Hi, I heard you knew where a mouse is.",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Chica",
-        "text": "Oh.. I did see a mouse. He liked my cheese, but I think he scurried off to N’s direction near the end of that road…",
-        "next": null
-      }
-    }
-  },
-  "ChicaStart": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Chica",
-        "text": "sup",
-        "next": null
-      }
-    }
-  },
-  "NerdStart": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "Can I have your tie?",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Nerd",
-        "text": "Sure, but you have to play a game.",
-        "next": "boo3"
-      },
-      "boo3": {
-        "speaker": "Nerd",
-        "text": "I'll give you a sequence of colours and you have to memorize it.",
-        "next": null
-      }
-    }
-  },
-  "NerdOver": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Nerd",
-        "text": "You chose the wrong color! Better luck next time!",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Kitty",
-        "text": "):",
-        "next": null
-      }
-    }
-  },
-  "NerdRestart": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Nerd",
-        "text": "Wanna try again?",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Kitty",
-        "text": "Yes.",
-        "next": null
-      }
-    }
-  },
-  "NerdWin": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Nerd",
-        "text": "Thanks for playing with me! Heres my bowtie.",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Kitty",
-        "text": "Thank you.",
-        "next": null
-      }
-    }
-  },
-  "NerdThank": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Nerd",
-        "text": "Thanks for playing with me!",
-        "next": null
-      }
-    }
-  },
-  "NMouse": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "Uh, I am looking for a mouse with a bracelet. Is that your mouse? Perchance?",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "N",
-        "text": "Oh word. Yeah I can hook you up with me mousie. No worries dawg.",
-        "next": "MouseAppear"
-      },
-      "MouseAppear": {
-        "speaker": "Mousie",
-        "text": "You can’t just say “perchance”. Here's the bracelet.",
-        "next": "AfterMouseGivesBracelet"
-      },
-      "AfterMouseGivesBracelet": {
-        "speaker": "Kitty",
-        "text": "Oh, thank you mousie... Please do not eat me.",
-        "next": "MouseBye"
-      },
-      "MouseBye": {
-        "speaker": "Mousie",
-        "text": "HAHA, nice joke. We will see you around then, bye!",
-        "next": null
-      }
-    }
-  },
-  "NStart": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "N",
-        "text": "sup",
-        "next": null
-      }
-    }
-  },
   "OyenStart": {
     "start": "boo1",
     "nodes": {
@@ -784,41 +638,98 @@
       }
     }
   },
-  "OyenThank": {
-    "start": "boo1",
-    "nodes": {
-      "boo1": {
-        "speaker": "Kitty",
-        "text": "Hey, I got your bracelet back..",
-        "next": "boo2"
-      },
-      "boo2": {
-        "speaker": "Oyen",
-        "text": "Really? You got it back? Thank you, thank you! This means a lot to me. My name is Oyen, by the way. Let us be friends!",
-        "next": "boo3"
-      },
-      "boo3": {
-        "speaker": "Kitty",
-        "text": "Friends… ? Sure! I'm Kitty. But I have to find a way back home to Kitty Town… Do you happen to know how?",
-        "next": "boo4"
-      },
-      "boo4": {
-        "speaker": "Oyen",
-        "text": "Oh… you live in Kitty-Town across that river? … … …",
-        "next": "boo5"
-      },
-      "boo5": {
-        "speaker": "Kitty",
-        "text": "Yeah, can you take me there?",
-        "next": "boo6"
-      },
-      "boo6": {
-        "speaker": "Oyen",
-        "text": "Sure, follow me.",
-        "next": null
-      }
+
+"OyenThank": {
+  "start": "boo1",
+  "nodes": {
+    "boo1": {
+      "speaker": "Kitty",
+      "text": "Hey, I got your bracelet back!",
+      "next": "boo2"
+    },
+    "boo2": {
+      "speaker": "Oyen",
+      "text": "Really? You got it back?",
+      "next": "boo3"
+    },
+    "boo3": {
+      "speaker": "Oyen",
+      "text": "Thank you, thank you, thank you!!!",
+      "next": "boo4"
+    },
+    "boo4": {
+      "speaker": "Oyen",
+      "text": "This means a lot to me!",
+      "next": "boo5"
+    },
+    "boo5": {
+      "speaker": "Oyen",
+      "text": "You can't even imagine...",
+      "next": "boo6"
+    },
+    "boo6": {
+      "speaker": "Oyen",
+      "text": "Let's be friends! :)",
+      "next": "boo7"
+    },
+    "boo7": {
+      "speaker": "Kitty",
+      "text": "Friends...?",
+      "next": "boo8"
+    },
+    "boo8": {
+      "speaker": "Kitty",
+      "text": "Sure!!",
+      "next": "boo9"
+    },
+    "boo9": {
+      "speaker": "Kitty",
+      "text": "Oh yeah! Could you help me, please?",
+      "next": "boo10"
+    },
+    "boo10": {
+      "speaker": "Kitty",
+      "text": "I have to find a way back home to Kitty Town...",
+      "next": "boo11"
+    },
+    "boo11": {
+      "speaker": "Kitty",
+      "text": "Do you happen to know how?",
+      "next": "boo12"
+    },
+    "boo12": {
+      "speaker": "Oyen",
+      "text": "Oh... you live in Kitty-Town across that river?",
+      "next": "boo13"
+    },
+    "boo13": {
+      "speaker": "Oyen",
+      "text": "...",
+      "next": "boo14"
+    },
+    "boo14": {
+      "speaker": "Oyen",
+      "text": "........",
+      "next": "boo15"
+    },
+    "boo15": {
+      "speaker": "Oyen",
+      "text": ".................",
+      "next": "boo16"
+    },
+    "boo16": {
+      "speaker": "Kitty",
+      "text": "Yeah, can you take me there?",
+      "next": "boo17"
+    },
+    "boo17": {
+      "speaker": "Oyen",
+      "text": "Sure, follow me.",
+      "next": null
     }
-  },
+  }
+},
+
   "NPC1_GF_": {
     "start": "boo1",
     "nodes": {
