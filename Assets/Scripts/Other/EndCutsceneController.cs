@@ -7,6 +7,7 @@ public class EndCutsceneController : MonoBehaviour
 {
     [SerializeField] TMP_Text endText;
     [SerializeField] Image fadeImage;
+    [SerializeField] AudioSource endMusicSource;
 
     State state = State.CUTSCENEPLAYING;
 
@@ -66,5 +67,6 @@ public class EndCutsceneController : MonoBehaviour
     public void OnCutsceneFinish()
     {
         state = State.END_FADEIN;
+        endMusicSource.Play();
     }
 }
