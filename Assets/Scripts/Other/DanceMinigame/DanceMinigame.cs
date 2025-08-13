@@ -17,11 +17,11 @@ public class DanceMinigame : MonoBehaviour
     [SerializeField] AudioClip normalMusic;
     [SerializeField] AudioMixerGroup mix;
 
-    public float keyTimer = 2f;
-    public int losses = 0;
-    public int keysLeft = 25;
+    private float keyTimer = 2f;
+    private int losses = 0;
+    private int keysLeft = 25;
     public int startingKeys = 20;
-    public int activeKeys = 0;
+    private int activeKeys = 0;
 
     bool gameActive = false;
 
