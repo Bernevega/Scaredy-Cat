@@ -102,10 +102,6 @@ public class BraceletQuestline : MonoBehaviour
 
     private void StartSceneTransition()
     {
-        // Disable player movement
-        if (playerMovement != null)
-            playerMovement.enabled = false;
-
         // Hide interaction canvas
         if (interactionCanvas != null)
             interactionCanvas.gameObject.SetActive(false);
