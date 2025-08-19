@@ -36,6 +36,16 @@ public class PauseMenu : MonoBehaviour
 
     private Controls inputControls;
 
+    // --- Video settings state (same approach as MainMenu) ---
+    private readonly List<Vector2Int> _resOptions = new List<Vector2Int>();
+    private int _selectedWidth;
+    private int _selectedHeight;
+
+    // PlayerPrefs keys (shared with main menu if desired)
+    private const string PP_WIDTH = "Video_Width";
+    private const string PP_HEIGHT = "Video_Height";
+    private const string PP_MODE = "Video_Mode"; // 0=ExclusiveFS,1=Windowed,2=Borderless
+
     private void Awake()
     {
         inputControls = new Controls();
@@ -58,8 +68,11 @@ public class PauseMenu : MonoBehaviour
         PauseMenuCanvas.SetActive(false);
         SettingsPanel.SetActive(false);
 
-        SetupResolutionOptions();
-        SetupScreenModeOptions();
+        // Populate & hook video settings UI
+        VerifyAndPopulateDropdowns();
+        if (resolutionDropdown) resolutionDropdown.onValueChanged.AddListener(SetResolution);
+        if (screenModeDropdown) screenModeDropdown.onValueChanged.AddListener(SetScreenMode);
+
         LoadVolumeSliders();
 
         Cursor.visible = false;
@@ -159,6 +172,9 @@ public class PauseMenu : MonoBehaviour
         VideoSettingsPanel.SetActive(true);
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(false);
+
+        // Ensure options/UI reflect current state when panel opens
+        VerifyAndPopulateDropdowns();
 
         if (DefaultVideoSettingsButton != null)
         {
@@ -282,68 +298,145 @@ public class PauseMenu : MonoBehaviour
             sfxVolumeSlider.value = sfx;
             AudioManager.Instance.SetSFXVolume(sfx);
         }
-
-        
     }
 
-    // ---------------- Video Settings Logic ----------------
+    // ---------------- Video Settings Logic (same behavior as in MainMenu) ----------------
+
+    private void VerifyAndPopulateDropdowns()
+    {
+        if (!resolutionDropdown || !screenModeDropdown) return;
+
+        // Populate resolution list (keep the three common presets)
+        if (resolutionDropdown.options.Count == 0 ||
+            resolutionDropdown.options[0].text.StartsWith("Option"))
+        {
+            SetupResolutionOptions();
+        }
+
+        // Populate screen mode list
+        if (screenModeDropdown.options.Count == 0 ||
+            screenModeDropdown.options[0].text.StartsWith("Option"))
+        {
+            SetupScreenModeOptions();
+        }
+
+        // Load saved (or current) settings and apply to UI + screen
+        LoadAndApplyVideoSettings();
+    }
 
     private void SetupResolutionOptions()
     {
+        if (!resolutionDropdown) return;
+
         resolutionDropdown.ClearOptions();
+        _resOptions.Clear();
 
-        List<string> options = new List<string>
-        {
-            "1280 x 720",
-            "1600 x 900",
-            "1920 x 1080"
-        };
+        _resOptions.Add(new Vector2Int(1280, 720));
+        _resOptions.Add(new Vector2Int(1600, 900));
+        _resOptions.Add(new Vector2Int(1920, 1080));
 
-        int currentResolutionIndex = 0;
-        string currentRes = Screen.currentResolution.width + " x " + Screen.currentResolution.height;
-
-        for (int i = 0; i < options.Count; i++)
-        {
-            if (options[i] == currentRes)
-            {
-                currentResolutionIndex = i;
-                break;
-            }
-        }
+        List<string> options = new List<string>(_resOptions.Count);
+        for (int i = 0; i < _resOptions.Count; i++)
+            options.Add($"{_resOptions[i].x} x {_resOptions[i].y}");
 
         resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentResolutionIndex;
+
+        // Select current screen res if found, else default to largest
+        int idx = _resOptions.FindIndex(v => v.x == Screen.width && v.y == Screen.height);
+        if (idx < 0) idx = Mathf.Max(0, _resOptions.Count - 1);
+        resolutionDropdown.value = idx;
         resolutionDropdown.RefreshShownValue();
+
+        _selectedWidth = _resOptions[idx].x;
+        _selectedHeight = _resOptions[idx].y;
     }
 
     private void SetupScreenModeOptions()
     {
+        if (!screenModeDropdown) return;
+
         screenModeDropdown.ClearOptions();
         screenModeDropdown.AddOptions(new List<string> { "Fullscreen", "Windowed", "Borderless" });
-        screenModeDropdown.value = GetCurrentScreenModeIndex();
+
+        int idx = GetCurrentScreenModeIndex();
+        screenModeDropdown.value = idx;
         screenModeDropdown.RefreshShownValue();
+
+        UpdateResolutionInteractable(GetScreenModeFromDropdown(idx));
     }
 
+    // Dropdown callback
     public void SetResolution(int index)
     {
-        string[] dims = resolutionDropdown.options[index].text.Split('x');
-        int width = int.Parse(dims[0].Trim());
-        int height = int.Parse(dims[1].Trim());
+        if (index < 0 || index >= _resOptions.Count) return;
+
+        _selectedWidth = _resOptions[index].x;
+        _selectedHeight = _resOptions[index].y;
+
         FullScreenMode mode = GetScreenModeFromDropdown();
 
-        Screen.SetResolution(width, height, mode);
+        // Apply reliably (preserve refresh rate) and save
+        ApplyResolution(_selectedWidth, _selectedHeight, mode);
+        SaveVideoSettings();
     }
 
+    // Dropdown callback
     public void SetScreenMode(int index)
     {
-        FullScreenMode mode = GetScreenModeFromDropdown();
-        Screen.fullScreenMode = mode;
-        Screen.SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, mode);
+        FullScreenMode mode = GetScreenModeFromDropdown(index);
+
+        if (_selectedWidth <= 0 || _selectedHeight <= 0)
+        {
+            _selectedWidth = Screen.width;
+            _selectedHeight = Screen.height;
+        }
+
+        ApplyResolution(_selectedWidth, _selectedHeight, mode);
+        SaveVideoSettings();
     }
 
-    private FullScreenMode GetScreenModeFromDropdown()
+    private void LoadAndApplyVideoSettings()
     {
-        switch (screenModeDropdown.value)
+        // Defaults: current screen values
+        int width = PlayerPrefs.GetInt(PP_WIDTH, Screen.width);
+        int height = PlayerPrefs.GetInt(PP_HEIGHT, Screen.height);
+        int modeIdx = PlayerPrefs.GetInt(PP_MODE, GetCurrentScreenModeIndex());
+
+        _selectedWidth = width;
+        _selectedHeight = height;
+
+        if (resolutionDropdown)
+        {
+            int found = _resOptions.FindIndex(v => v.x == width && v.y == height);
+            if (found >= 0) resolutionDropdown.value = found;
+            resolutionDropdown.RefreshShownValue();
+        }
+        if (screenModeDropdown)
+        {
+            screenModeDropdown.value = Mathf.Clamp(modeIdx, 0, 2);
+            screenModeDropdown.RefreshShownValue();
+        }
+
+        var mode = GetScreenModeFromDropdown(modeIdx);
+        ApplyResolution(width, height, mode);
+    }
+
+    private void SaveVideoSettings()
+    {
+        PlayerPrefs.SetInt(PP_WIDTH, _selectedWidth);
+        PlayerPrefs.SetInt(PP_HEIGHT, _selectedHeight);
+        PlayerPrefs.SetInt(PP_MODE, screenModeDropdown ? screenModeDropdown.value : GetCurrentScreenModeIndex());
+        PlayerPrefs.Save();
+    }
+
+    // Map dropdown index -> Unity mode
+    private FullScreenMode GetScreenModeFromDropdown(int forcedIndex = -1)
+    {
+        int idx = forcedIndex >= 0
+            ? forcedIndex
+            : (screenModeDropdown ? screenModeDropdown.value : GetCurrentScreenModeIndex());
+
+        switch (idx)
         {
             case 0: return FullScreenMode.ExclusiveFullScreen;
             case 1: return FullScreenMode.Windowed;
@@ -361,6 +454,26 @@ public class PauseMenu : MonoBehaviour
             case FullScreenMode.FullScreenWindow: return 2;
             default: return 2;
         }
+    }
+
+    private void ApplyResolution(int w, int h, FullScreenMode mode)
+    {
+#if UNITY_2021_2_OR_NEWER
+        var rr = Screen.currentResolution.refreshRateRatio;
+        Screen.SetResolution(w, h, mode, rr);
+#else
+        int rr = Screen.currentResolution.refreshRate;
+        Screen.SetResolution(w, h, mode, rr);
+#endif
+        UpdateResolutionInteractable(mode);
+        Debug.Log($"[PauseMenu] Requested {w}x{h} {mode}, now Screen={Screen.width}x{Screen.height} mode={Screen.fullScreenMode}");
+    }
+
+    // Disable the resolution dropdown when using Borderless; it ignores width/height.
+    private void UpdateResolutionInteractable(FullScreenMode mode)
+    {
+        if (resolutionDropdown)
+            resolutionDropdown.interactable = (mode != FullScreenMode.FullScreenWindow);
     }
 
     private void OnApplicationQuit()
