@@ -25,7 +25,15 @@ public class MenuSetup : MonoBehaviour
     [Header("Background Videos")]
     [SerializeField] RenderTextureVideoObject[] videos;
     [SerializeField] int currentVideoIndex = 0;
+
+    [Header("Fader")]
     [SerializeField] Image faderImage;
+    [Tooltip("Screen fade-out speed at start (higher = faster)")]
+    public float startFadeSpeed = 0.6f; // was 0.25
+
+    [Header("Video Crossfade")]
+    [Tooltip("Crossfade speed between background videos (higher = faster)")]
+    public float videoCrossfadeSpeed = 6f; // increase for faster transitions
 
     bool startFade = true;
     bool _started;
@@ -48,7 +56,7 @@ public class MenuSetup : MonoBehaviour
                 _buttonCGs[i] = buttons[i].AddComponent<CanvasGroup>();
         }
 
-        faderImage.color = new Color(0, 0, 0, 1);
+        if (faderImage) faderImage.color = new Color(0, 0, 0, 1);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -65,33 +73,37 @@ public class MenuSetup : MonoBehaviour
         }
 
         for (int i = 0; i < videos.Length; i++)
-        {
             videos[i].videoPlayer.gameObject.SetActive(false);
-        }
+
         videos[0].videoPlayer.gameObject.SetActive(true);
         videos[1].videoPlayer.loopPointReached += VideoTransitionFinished;
     }
 
     void Update()
     {
-        if (startFade && faderImage.color.a > 0)
-        {
-            faderImage.color = Vector4.MoveTowards(faderImage.color, new Color(0, 0, 0, 0), Time.deltaTime * 0.25f);
-            if (faderImage.color.a <= 0)
-            {
-                startFade = false;
-            }
-        }
-        else if (!_started && Input.anyKeyDown)
+        // accept input anytime
+        if (!_started && Input.anyKeyDown)
         {
             _started = true;
             StartCoroutine(TransitionVideo(videos[0], videos[1]));
+            // Optionally start UI transition immediately:
+            // StartCoroutine(DoTransition());
+        }
+
+        // keep running the fade independently
+        if (startFade && faderImage && faderImage.color.a > 0f)
+        {
+            faderImage.color = Vector4.MoveTowards(
+                faderImage.color,
+                new Color(0, 0, 0, 0),
+                Time.deltaTime * startFadeSpeed
+            );
+            if (faderImage.color.a <= 0f) startFade = false;
         }
     }
-    public void MovingToNewScene()
-    {
 
-    }
+    public void MovingToNewScene() { }
+
     private void VideoTransitionFinished(VideoPlayer vp)
     {
         StartCoroutine(TransitionVideo(videos[1], videos[2]));
@@ -100,28 +112,48 @@ public class MenuSetup : MonoBehaviour
 
     IEnumerator TransitionVideo(RenderTextureVideoObject currentVideo, RenderTextureVideoObject nextVideo)
     {
-        nextVideo.rawImage.color = new Vector4(1, 1, 1, 0);
-        nextVideo.rawImage.gameObject.SetActive(true);
+        // Prepare next
+        if (nextVideo.rawImage)
+        {
+            var c = nextVideo.rawImage.color;
+            c.a = 0f;
+            nextVideo.rawImage.color = c;
+            nextVideo.rawImage.gameObject.SetActive(true);
+        }
+
+        // Pause until visible, then play
         nextVideo.videoPlayer.Pause();
 
+        // Faster crossfade using deltaTime and per-frame updates
         if (nextVideo.videoPlayer != currentVideo.videoPlayer)
         {
-            while (nextVideo.rawImage.color.a < 1)
-            {
-                nextVideo.rawImage.color =
-                    Vector4.MoveTowards(
-                        nextVideo.rawImage.color,
-                        new Color(1, 1, 1, 1),
-                        Time.fixedDeltaTime * 1f
-                        );
+            // Activate target video object if needed
+            if (!nextVideo.videoPlayer.gameObject.activeSelf)
+                nextVideo.videoPlayer.gameObject.SetActive(true);
 
-                yield return new WaitForFixedUpdate();
+            // Ramp alpha up quickly
+            while (nextVideo.rawImage && nextVideo.rawImage.color.a < 0.999f)
+            {
+                float step = Time.deltaTime * Mathf.Max(0.01f, videoCrossfadeSpeed);
+                var col = nextVideo.rawImage.color;
+                col.a = Mathf.Min(1f, col.a + step);
+                nextVideo.rawImage.color = col;
+
+                // (No physics wait — render tick for smoothness & speed)
+                yield return null;
             }
         }
 
+        // Play next, hide current
         nextVideo.videoPlayer.Play();
-        currentVideo.rawImage.color = new Vector4(1, 1, 1, 0);
-        currentVideo.rawImage.gameObject.SetActive(false);
+
+        if (currentVideo.rawImage)
+        {
+            var curCol = currentVideo.rawImage.color;
+            curCol.a = 0f;
+            currentVideo.rawImage.color = curCol;
+            currentVideo.rawImage.gameObject.SetActive(false);
+        }
 
         yield return null;
     }

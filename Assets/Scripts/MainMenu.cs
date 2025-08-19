@@ -17,7 +17,6 @@ public class MainMenu : MonoBehaviour
     public GameObject VideoSettingsPanel;
     public GameObject AudioSettingsPanel;
     public GameObject ControlsSettingsPanel;
-    public GameObject CreditsPanel;
 
     [Header("Buttons")]
     public Button ContinueButton;
@@ -25,14 +24,12 @@ public class MainMenu : MonoBehaviour
     public Button OpenAudioSettingsButton;
     public Button OpenControlsSettingsButton;
     public Button BackFromSettingsButton;
-    public Button BackFromCreditsButton;
 
     [Header("Default Selected Buttons")]
     public Button DefaultMainMenuButton;
     public Button DefaultVideoSettingsButton;
     public Button DefaultAudioSettingsButton;
     public Button DefaultControlsSettingsButton;
-    public Button DefaultCreditsButton;
 
     [Header("Audio Settings UI")]
     [Tooltip("Slider range: 0..1")]
@@ -81,9 +78,8 @@ public class MainMenu : MonoBehaviour
     {
         MenuPanel.SetActive(true);
         SettingsPanel.SetActive(false);
-        CreditsPanel.SetActive(false);
 
-        // --- Optional: auto-wire dropdowns if you forgot in Inspector ---
+        // Auto-wire dropdowns if missing in Inspector
         if (!resolutionDropdown || !screenModeDropdown)
         {
             var drops = GetComponentsInChildren<TMP_Dropdown>(true);
@@ -97,10 +93,7 @@ public class MainMenu : MonoBehaviour
             }
         }
 
-        // --- Video settings init (robust verify + populate) ---
         VerifyAndPopulateDropdowns();
-
-        // Hook dropdowns (no need to wire in Inspector)
         if (resolutionDropdown) resolutionDropdown.onValueChanged.AddListener(SetResolution);
         if (screenModeDropdown) screenModeDropdown.onValueChanged.AddListener(SetScreenMode);
 
@@ -112,7 +105,6 @@ public class MainMenu : MonoBehaviour
 
     private void Update()
     {
-        // Detect gamepad usage and reselect button if lost focus
         if (Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame)
         {
             if (EventSystem.current.currentSelectedGameObject == null)
@@ -130,8 +122,6 @@ public class MainMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(DefaultAudioSettingsButton.gameObject);
         else if (ControlsSettingsPanel.activeInHierarchy && DefaultControlsSettingsButton != null)
             EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
-        else if (CreditsPanel.activeInHierarchy && DefaultCreditsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultCreditsButton.gameObject);
     }
 
     // ---------------- Main Menu Buttons ----------------
@@ -173,7 +163,6 @@ public class MainMenu : MonoBehaviour
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(false);
 
-        // Ensure the dropdowns are correctly populated whenever this panel opens
         VerifyAndPopulateDropdowns();
 
         if (DefaultVideoSettingsButton != null)
@@ -198,15 +187,6 @@ public class MainMenu : MonoBehaviour
 
         if (DefaultControlsSettingsButton != null)
             EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
-    }
-
-    public void OpenCredits()
-    {
-        MenuPanel.SetActive(false);
-        CreditsPanel.SetActive(true);
-
-        if (DefaultCreditsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultCreditsButton.gameObject);
     }
 
     public void ClosePanel()
@@ -272,10 +252,7 @@ public class MainMenu : MonoBehaviour
 
     private void VerifyAndPopulateDropdowns()
     {
-        Debug.Log($"[MainMenu] resolutionDropdown assigned: {resolutionDropdown != null}, screenModeDropdown assigned: {screenModeDropdown != null}");
         if (!resolutionDropdown || !screenModeDropdown) return;
-
-        Debug.Log($"[MainMenu] BEFORE populate -> Res options: {resolutionDropdown.options.Count}, ScreenMode options: {screenModeDropdown.options.Count}");
 
         bool resLooksDefault =
             resolutionDropdown.options.Count > 0 &&
@@ -297,8 +274,6 @@ public class MainMenu : MonoBehaviour
             SetupScreenModeOptions();
 
         LoadAndApplyVideoSettings();
-
-        Debug.Log($"[MainMenu] AFTER populate -> Res options: {resolutionDropdown.options.Count}, ScreenMode options: {screenModeDropdown.options.Count}");
     }
 
     private void SetupResolutionOptions()
@@ -308,7 +283,6 @@ public class MainMenu : MonoBehaviour
         resolutionDropdown.ClearOptions();
         _resOptions.Clear();
 
-        // Only keep the 3 most popular resolutions
         _resOptions.Add(new Vector2Int(1280, 720));
         _resOptions.Add(new Vector2Int(1600, 900));
         _resOptions.Add(new Vector2Int(1920, 1080));
@@ -316,9 +290,8 @@ public class MainMenu : MonoBehaviour
         List<string> options = _resOptions.Select(v => $"{v.x} x {v.y}").ToList();
         resolutionDropdown.AddOptions(options);
 
-        // Find current screen size in the list
         int currentIndex = _resOptions.FindIndex(v => v.x == Screen.width && v.y == Screen.height);
-        if (currentIndex < 0) currentIndex = Mathf.Max(0, _resOptions.Count - 1); // default to largest
+        if (currentIndex < 0) currentIndex = Mathf.Max(0, _resOptions.Count - 1);
 
         resolutionDropdown.value = currentIndex;
         resolutionDropdown.RefreshShownValue();
@@ -338,10 +311,9 @@ public class MainMenu : MonoBehaviour
         screenModeDropdown.value = idx;
         screenModeDropdown.RefreshShownValue();
 
-        Debug.Log($"[MainMenu] SetupScreenModeOptions -> mode idx {idx}");
+        UpdateResolutionInteractable(GetScreenModeFromDropdown(idx));
     }
 
-    // Dropdown callback
     public void SetResolution(int index)
     {
         if (index < 0 || index >= _resOptions.Count) return;
@@ -350,28 +322,22 @@ public class MainMenu : MonoBehaviour
         _selectedHeight = _resOptions[index].y;
 
         FullScreenMode mode = GetScreenModeFromDropdown();
-        Screen.SetResolution(_selectedWidth, _selectedHeight, mode);
-
+        ApplyResolution(_selectedWidth, _selectedHeight, mode);
         SaveVideoSettings();
-        Debug.Log($"Video: SetResolution -> { _selectedWidth }x{ _selectedHeight } ({mode})");
     }
 
-    // Dropdown callback
     public void SetScreenMode(int index)
     {
         FullScreenMode mode = GetScreenModeFromDropdown(index);
-        Screen.fullScreenMode = mode;
 
-        // Re-apply with currently selected resolution so mode change doesn't override size
         if (_selectedWidth <= 0 || _selectedHeight <= 0)
         {
             _selectedWidth = Screen.width;
             _selectedHeight = Screen.height;
         }
-        Screen.SetResolution(_selectedWidth, _selectedHeight, mode);
 
+        ApplyResolution(_selectedWidth, _selectedHeight, mode);
         SaveVideoSettings();
-        Debug.Log($"Video: SetScreenMode -> { mode } at {_selectedWidth}x{_selectedHeight}");
     }
 
     private FullScreenMode GetScreenModeFromDropdown(int forcedIndex = -1)
@@ -382,9 +348,9 @@ public class MainMenu : MonoBehaviour
 
         switch (idx)
         {
-            case 0: return FullScreenMode.ExclusiveFullScreen; // "Fullscreen"
-            case 1: return FullScreenMode.Windowed;            // "Windowed"
-            case 2: return FullScreenMode.FullScreenWindow;    // "Borderless"
+            case 0: return FullScreenMode.ExclusiveFullScreen;
+            case 1: return FullScreenMode.Windowed;
+            case 2: return FullScreenMode.FullScreenWindow;
             default: return FullScreenMode.FullScreenWindow;
         }
     }
@@ -422,9 +388,7 @@ public class MainMenu : MonoBehaviour
         }
 
         var mode = GetScreenModeFromDropdown(modeIdx);
-        Screen.SetResolution(width, height, mode);
-
-        Debug.Log($"[MainMenu] LoadAndApplyVideoSettings -> {width}x{height}, mode idx {modeIdx}");
+        ApplyResolution(width, height, mode);
     }
 
     private void SaveVideoSettings()
@@ -438,5 +402,24 @@ public class MainMenu : MonoBehaviour
     private void OnApplicationQuit()
     {
         PlayerPrefs.Save();
+    }
+
+    private void ApplyResolution(int w, int h, FullScreenMode mode)
+    {
+#if UNITY_2021_2_OR_NEWER
+        var rr = Screen.currentResolution.refreshRateRatio;
+        Screen.SetResolution(w, h, mode, rr);
+#else
+        int rr = Screen.currentResolution.refreshRate;
+        Screen.SetResolution(w, h, mode, rr);
+#endif
+        UpdateResolutionInteractable(mode);
+        Debug.Log($"[Video] Requested {w}x{h} {mode}, now Screen={Screen.width}x{Screen.height} mode={Screen.fullScreenMode}");
+    }
+
+    private void UpdateResolutionInteractable(FullScreenMode mode)
+    {
+        if (resolutionDropdown)
+            resolutionDropdown.interactable = (mode != FullScreenMode.FullScreenWindow);
     }
 }

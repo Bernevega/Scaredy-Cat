@@ -232,18 +232,15 @@ MonoBehaviour:
   VideoSettingsPanel: {fileID: 2605816272281197088}
   AudioSettingsPanel: {fileID: 1445240229043649668}
   ControlsSettingsPanel: {fileID: 1779508481543813008}
-  CreditsPanel: {fileID: 0}
   ContinueButton: {fileID: 829865994}
   OpenVideoSettingsButton: {fileID: 3547817181485739443}
   OpenAudioSettingsButton: {fileID: 7230775279342667982}
   OpenControlsSettingsButton: {fileID: 4388828710870637344}
   BackFromSettingsButton: {fileID: 3156232450327170296}
-  BackFromCreditsButton: {fileID: 0}
   DefaultMainMenuButton: {fileID: 829865994}
   DefaultVideoSettingsButton: {fileID: 3547817181485739443}
   DefaultAudioSettingsButton: {fileID: 7230775279342667982}
   DefaultControlsSettingsButton: {fileID: 4388828710870637344}
-  DefaultCreditsButton: {fileID: 0}
   generalVolumeSlider: {fileID: 4214373444888391018}
   musicVolumeSlider: {fileID: 4235636822467385747}
   sfxVolumeSlider: {fileID: 6952979119104789107}
@@ -1896,10 +1893,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1066104722}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800, y: 450}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1676261659
 GameObject:
