@@ -2260,6 +2260,8 @@ MonoBehaviour:
     rawImage: {fileID: 1066498171}
   currentVideoIndex: 0
   faderImage: {fileID: 1666135064}
+  startFadeSpeed: 0.6
+  videoCrossfadeSpeed: 6
 --- !u!4 &1825102424
 Transform:
   m_ObjectHideFlags: 0
@@ -2671,11 +2673,11 @@ PrefabInstance:
     - target: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: 74fca8705cee8a94bbae5b8ca21b4243, type: 3}
+      objectReference: {fileID: 8300000, guid: e54281b3eaf186846a4d40bc836310d9, type: 3}
     - target: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 74fca8705cee8a94bbae5b8ca21b4243, type: 3}
+      objectReference: {fileID: 8300000, guid: e54281b3eaf186846a4d40bc836310d9, type: 3}
     - target: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
       propertyPath: m_PlayOnAwake
       value: 1
