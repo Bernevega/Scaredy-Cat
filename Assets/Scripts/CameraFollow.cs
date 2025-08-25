@@ -17,6 +17,10 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
     [Min(0f)] public float introSmoothTime = 1f;
     public float rotationSpeed = 100f;
 
+    [Header("Intro Settings")]
+    [Tooltip("How long to keep the player movement disabled at scene start (seconds).")]
+    [Min(0f)] public float introLockDuration = 5f;
+
     // internals
     private Vector3 _velocity = Vector3.zero;
     private Vector3 _introVelocity = Vector3.zero;
@@ -51,7 +55,8 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
         if (_playerMovement != null)
             _playerMovement.SetCanMove(false);
 
-        StartCoroutine(EndIntroAfterDelay(5f));
+        // use public delay
+        StartCoroutine(EndIntroAfterDelay(introLockDuration));
     }
 
     private IEnumerator EndIntroAfterDelay(float delay)

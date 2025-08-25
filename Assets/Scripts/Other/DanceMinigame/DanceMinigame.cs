@@ -45,21 +45,15 @@ public class DanceMinigame : MonoBehaviour
 
     private void OnDialogueAdvance(string sceneID, string currentKey)
     {
-        if (sceneID == "AssylaDance" || sceneID == "AssylaRestart")
-        {
-            musicAudio.Stop();
-        }
-        
+        // Only start minigame when its dialogue finishes.
         if ((sceneID == "AssylaDance" && currentKey == null) ||
             (sceneID == "AssylaRestart" && currentKey == null))
         {
             StartMinigame();
         }
-        else if (currentKey == null)
-        {
-            musicAudio.clip = normalMusic;
-            musicAudio.Play();
-        }
+
+        // NOTE: We no longer swap to normalMusic here.
+        // Music returns to normal ONLY inside EndMinigame(win/lose).
     }
 
     private void StartMinigame()
@@ -70,7 +64,7 @@ public class DanceMinigame : MonoBehaviour
         PlayerManager.instance.player.GetComponent<PlayerMovement>().enabled = false;
         QuestManager.instance.SetUIEnabled(false);
 
-        // NEW: hide interaction prompt while the minigame is active
+        // Hide interaction prompt while the minigame is active
         if (assyla != null)
             assyla.SetExternallyHidden(true);
 
@@ -87,16 +81,14 @@ public class DanceMinigame : MonoBehaviour
         for (int i = 0; i < lives.Length; i++)
         {
             if (i < lives.Length - losses)
-            {
                 lives[i].SetActive(true);
-            }
             else
-            {
                 lives[i].SetActive(false);
-            }
         }
-        musicAudio.clip = danceMusic;
-        musicAudio.Play();
+
+        // Switch to minigame track ONLY now; avoid restarting if already set/playing.
+        if (musicAudio != null && danceMusic != null)
+            SafePlay(musicAudio, danceMusic, restartIfSame: false);
     }
 
     private void EndMinigame(bool win)
@@ -108,9 +100,13 @@ public class DanceMinigame : MonoBehaviour
         PlayerManager.instance.player.GetComponent<PlayerMovement>().enabled = true;
         QuestManager.instance.SetUIEnabled(true);
 
-        // NEW: restore interaction prompt visibility rules
+        // Restore interaction prompt visibility rules
         if (assyla != null)
             assyla.SetExternallyHidden(false);
+
+        // >>> Return to normal music HERE (after minigame ends), regardless of win/lose
+        if (musicAudio != null && normalMusic != null)
+            SafePlay(musicAudio, normalMusic, restartIfSame: false);
 
         SimpleDialogManager dm = SimpleDialogManager.Instance;
 
@@ -129,10 +125,7 @@ public class DanceMinigame : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!gameActive)
-        {
-            return;
-        }
+        if (!gameActive) return;
 
         if (keyTimer > 0)
         {
@@ -165,10 +158,7 @@ public class DanceMinigame : MonoBehaviour
 
     private void Update()
     {
-        if (!gameActive)
-        {
-            return;
-        }
+        if (!gameActive) return;
 
         KeyCode pressedKey = KeyCode.None;
         for (int i = 0; i < DanceKey.randomKeyList.Length; i++)
@@ -241,17 +231,13 @@ public class DanceMinigame : MonoBehaviour
 
             splr.PlaySound(soundInfo);
         }
-        
+
         for (int i = 0; i < lives.Length; i++)
         {
             if (i < lives.Length - losses)
-            {
                 lives[i].SetActive(true);
-            }
             else
-            {
                 lives[i].SetActive(false);
-            }
         }
 
         if (losses >= lives.Length)
@@ -290,10 +276,7 @@ public class DanceMinigame : MonoBehaviour
 
     private void SpawnKey()
     {
-        if (keysLeft <= 0)
-        {
-            return;
-        }
+        if (keysLeft <= 0) return;
 
         for (int i = 0; i < keyPool.Length; i++)
         {
@@ -337,13 +320,32 @@ public class DanceMinigame : MonoBehaviour
                 activeKeys++;
                 keysLeft -= 1;
                 break;
-
             }
-
         }
 
         keyTimer = 0.7f + 1f * Mathf.Min(Mathf.Max(keysLeft - 5, 0) / 20f, 1);
-
     }
 
+    // ---- helper to avoid restarting the same track unnecessarily ----
+    private static void SafePlay(AudioSource src, AudioClip clip, bool restartIfSame)
+    {
+        if (src == null || clip == null) return;
+
+        if (src.clip == clip)
+        {
+            // If already playing the same clip and we don't want to restart, do nothing.
+            if (src.isPlaying && !restartIfSame) return;
+
+            // If it's the same clip but not playing, just (un)pause or Play.
+            if (!src.isPlaying && !restartIfSame)
+            {
+                src.UnPause();
+                if (!src.isPlaying) src.Play();
+                return;
+            }
+        }
+
+        src.clip = clip;
+        src.Play();
+    }
 }
