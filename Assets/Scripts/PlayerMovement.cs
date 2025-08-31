@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio; // for AudioMixerGroup
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -23,6 +24,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private AudioClip[] walkSoundEffects;
     [SerializeField] private AudioClip jumpSoundEffect;
     [SerializeField] private AudioClip landSoundEffect;
+
+    [Header("Audio Routing")]
+    [Tooltip("Mixer group where all Player SFX should be routed.")]
+    public AudioMixerGroup soundsOutput;
 
     [HideInInspector] public bool blockRightMovement = false;
     [HideInInspector] public bool blockJump = false;
@@ -75,7 +80,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (animEvents) animEvents.stringEvent += AnimStringEvent;
 
-        // Auto-play wake up at scene start (optional)
         if (playWakeUpOnSceneStart)
         {
             if (wakeUpSceneStartDelay > 0f)
@@ -158,7 +162,6 @@ public class PlayerMovement : MonoBehaviour
             interactGp = Gamepad.current.buttonEast.wasPressedThisFrame;
             toggleQuestGp = Gamepad.current.buttonNorth.wasPressedThisFrame;
 
-            // Toggle Quest with Gamepad
             if (toggleQuestGp)
             {
                 QuestManager.instance?.ToggleQuestPanel();
@@ -175,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
             QuestManager.instance?.ToggleQuestPanel();
         }
 #endif
-        
+
         // --- Combine Inputs ---
         Vector2 rawMove = new Vector2(kbX + gpX, kbZ + gpZ);
         if (rawMove.sqrMagnitude > 1f) rawMove.Normalize();
@@ -185,8 +188,6 @@ public class PlayerMovement : MonoBehaviour
         bool jumpPressed = jumpKb || jumpGp;
         bool sprintInput = (sprintKb || sprintGp) && !blockSprint;
         bool interact = interactKb || interactGp;
-
-        
 
         if (speed > 0)
         {
@@ -263,7 +264,8 @@ public class PlayerMovement : MonoBehaviour
             var info = new PlaySoundInfo(jumpSoundEffect)
             {
                 pitch = Random.Range(0.7f, 1.3f),
-                volume = 0.5f
+                volume = 0.5f,
+                mixer = soundsOutput
             };
             sp.PlaySound(info);
         }
@@ -280,7 +282,8 @@ public class PlayerMovement : MonoBehaviour
             var info = new PlaySoundInfo(landSoundEffect)
             {
                 pitch = Random.Range(0.7f, 1.3f),
-                volume = 0.5f
+                volume = 0.5f,
+                mixer = soundsOutput
             };
             sp.PlaySound(info);
         }
@@ -310,7 +313,8 @@ public class PlayerMovement : MonoBehaviour
             var info = new PlaySoundInfo(clip)
             {
                 pitch = Random.Range(0.7f, 1.3f),
-                volume = 0.5f
+                volume = 0.5f,
+                mixer = soundsOutput
             };
             sp.PlaySound(info);
         }
