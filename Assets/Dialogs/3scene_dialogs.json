@@ -528,6 +528,41 @@
       }
     }
   },
+  "GotMonocle": {
+    "start": "caw1",
+    "nodes": {
+      "caw1": {
+        "speaker": "Kitty",
+        "text": "I've got the monocle! Yippie!",
+        "next": null
+      }
+    }
+  },
+  "KittyLabyrinth": {
+    "start": "kitty1",
+    "nodes": {
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "Maybe the monocle is here?",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "It's so foggy and dark...",
+        "next": "kitty3"
+      },
+      "kitty3": {
+        "speaker": "Kitty",
+        "text": "But I have to do it!!",
+        "next": "kitty4"
+      },
+      "kitty4": {
+        "speaker": "Kitty",
+        "text": "Just gotta stay close to the lights! Maybe I won't faint then...",
+        "next": null     
+      }
+    }
+  },
   "GhostPaperPickUp": {
     "start": "caw1",
     "nodes": {
