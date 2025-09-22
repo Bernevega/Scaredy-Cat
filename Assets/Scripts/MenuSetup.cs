@@ -38,7 +38,9 @@ public class MenuSetup : MonoBehaviour
     bool startFade = true;
     bool _started;
     CanvasGroup _pressCG;
+
     CanvasGroup[] _buttonCGs;
+    bool[] _initialActive; // NEW: remember which buttons were active initially
 
     void Awake()
     {
@@ -47,13 +49,22 @@ public class MenuSetup : MonoBehaviour
         if (_pressCG == null)
             _pressCG = pressAnyKeyText.gameObject.AddComponent<CanvasGroup>();
 
-        // Ensure each button has a CanvasGroup for fading
-        _buttonCGs = new CanvasGroup[buttons.Length];
-        for (int i = 0; i < buttons.Length; i++)
+        // Prepare arrays
+        int len = buttons != null ? buttons.Length : 0;
+        _buttonCGs = new CanvasGroup[len];
+        _initialActive = new bool[len];
+
+        // Ensure each button has a CanvasGroup and record initial active state
+        for (int i = 0; i < len; i++)
         {
-            _buttonCGs[i] = buttons[i].GetComponent<CanvasGroup>();
-            if (_buttonCGs[i] == null)
-                _buttonCGs[i] = buttons[i].AddComponent<CanvasGroup>();
+            if (buttons[i] == null) continue;
+
+            // IMPORTANT: snapshot initial active state BEFORE we hide anything.
+            _initialActive[i] = buttons[i].activeSelf;
+
+            var cg = buttons[i].GetComponent<CanvasGroup>();
+            if (cg == null) cg = buttons[i].AddComponent<CanvasGroup>();
+            _buttonCGs[i] = cg;
         }
 
         if (faderImage) faderImage.color = new Color(0, 0, 0, 1);
@@ -65,18 +76,28 @@ public class MenuSetup : MonoBehaviour
     {
         // “Press any key” visible; buttons hidden
         _pressCG.alpha = 1f;
-        foreach (var cg in _buttonCGs)
+
+        // Hide ALL buttons for the intro; we will only re-enable those that were initially active.
+        for (int i = 0; i < _buttonCGs.Length; i++)
         {
+            var cg = _buttonCGs[i];
+            if (cg == null) continue;
+
             cg.alpha = 0f;
             cg.gameObject.SetActive(false);
-            videos[0].videoPlayer.Play();
         }
 
-        for (int i = 0; i < videos.Length; i++)
-            videos[i].videoPlayer.gameObject.SetActive(false);
+        // Video boot
+        if (videos != null && videos.Length > 0 && videos[0].videoPlayer)
+            videos[0].videoPlayer.Play();
 
-        videos[0].videoPlayer.gameObject.SetActive(true);
-        videos[1].videoPlayer.loopPointReached += VideoTransitionFinished;
+        // Make only first video object active
+        for (int i = 0; i < videos.Length; i++)
+            if (videos[i].videoPlayer)
+                videos[i].videoPlayer.gameObject.SetActive(i == 0);
+
+        if (videos.Length > 1 && videos[1].videoPlayer)
+            videos[1].videoPlayer.loopPointReached += VideoTransitionFinished;
     }
 
     void Update()
@@ -85,7 +106,9 @@ public class MenuSetup : MonoBehaviour
         if (!_started && Input.anyKeyDown)
         {
             _started = true;
-            StartCoroutine(TransitionVideo(videos[0], videos[1]));
+            if (videos.Length > 1)
+                StartCoroutine(TransitionVideo(videos[0], videos[1]));
+
             // Optionally start UI transition immediately:
             // StartCoroutine(DoTransition());
         }
@@ -106,13 +129,14 @@ public class MenuSetup : MonoBehaviour
 
     private void VideoTransitionFinished(VideoPlayer vp)
     {
-        StartCoroutine(TransitionVideo(videos[1], videos[2]));
+        if (videos.Length > 2)
+            StartCoroutine(TransitionVideo(videos[1], videos[2]));
+
         StartCoroutine(DoTransition()); // UI transition.
     }
 
     IEnumerator TransitionVideo(RenderTextureVideoObject currentVideo, RenderTextureVideoObject nextVideo)
     {
-        // Prepare next
         if (nextVideo.rawImage)
         {
             var c = nextVideo.rawImage.color;
@@ -121,30 +145,23 @@ public class MenuSetup : MonoBehaviour
             nextVideo.rawImage.gameObject.SetActive(true);
         }
 
-        // Pause until visible, then play
         nextVideo.videoPlayer.Pause();
 
-        // Faster crossfade using deltaTime and per-frame updates
         if (nextVideo.videoPlayer != currentVideo.videoPlayer)
         {
-            // Activate target video object if needed
             if (!nextVideo.videoPlayer.gameObject.activeSelf)
                 nextVideo.videoPlayer.gameObject.SetActive(true);
 
-            // Ramp alpha up quickly
             while (nextVideo.rawImage && nextVideo.rawImage.color.a < 0.999f)
             {
                 float step = Time.deltaTime * Mathf.Max(0.01f, videoCrossfadeSpeed);
                 var col = nextVideo.rawImage.color;
                 col.a = Mathf.Min(1f, col.a + step);
                 nextVideo.rawImage.color = col;
-
-                // (No physics wait — render tick for smoothness & speed)
                 yield return null;
             }
         }
 
-        // Play next, hide current
         nextVideo.videoPlayer.Play();
 
         if (currentVideo.rawImage)
@@ -179,17 +196,23 @@ public class MenuSetup : MonoBehaviour
         _pressCG.alpha = 0f;
         pressAnyKeyText.gameObject.SetActive(false);
 
-        // 2) Fade in buttons
-        foreach (var cg in _buttonCGs)
-            cg.gameObject.SetActive(true);
+        // 2) Fade in ONLY the buttons that were initially active (e.g., Continue stays hidden if no save).
+        for (int i = 0; i < _buttonCGs.Length; i++)
+        {
+            if (_buttonCGs[i] == null) continue;
+            if (_initialActive[i]) _buttonCGs[i].gameObject.SetActive(true);
+        }
 
         elapsed = 0f;
         while (elapsed < buttonFadeDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / buttonFadeDuration);
-            foreach (var cg in _buttonCGs)
-                cg.alpha = t;
+            for (int i = 0; i < _buttonCGs.Length; i++)
+            {
+                if (_buttonCGs[i] == null) continue;
+                if (_initialActive[i]) _buttonCGs[i].alpha = t; // only fade the ones meant to be visible
+            }
             yield return null;
         }
     }

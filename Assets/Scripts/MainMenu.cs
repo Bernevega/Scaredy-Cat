@@ -56,16 +56,30 @@ public class MainMenu : MonoBehaviour
     private const string PP_HEIGHT = "Video_Height";
     private const string PP_MODE = "Video_Mode"; // 0=ExclusiveFS,1=Windowed,2=Borderless
 
+    // Optional PlayerPrefs marker some save systems set when a save exists
+    private const string PP_HAS_SAVE_MARKER = "HasSave";
+
     private void Awake()
     {
+        // Build the expected save path (adjust the file name if your SaveManager uses another one)
         saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
-
-        if (ContinueButton != null && !File.Exists(saveFilePath))
-            ContinueButton.gameObject.SetActive(false);
 
         inputControls = new Controls();
         inputControls.UI.Enable();
         inputControls.Player.Disable();
+
+        // Hide Continue by default to avoid showing it on first boot / fresh installs.
+        if (ContinueButton != null)
+            ContinueButton.gameObject.SetActive(false);
+
+        // Then check for real save data and show it if present.
+        RefreshContinueButton();
+    }
+
+    private void OnEnable()
+    {
+        // In case the object is re-enabled, keep the button state in sync.
+        RefreshContinueButton();
     }
 
     private void OnDestroy()
@@ -99,6 +113,9 @@ public class MainMenu : MonoBehaviour
 
         LoadVolumeSliders();
 
+        // Ensure Continue reflects current disk state on first frame, too.
+        RefreshContinueButton();
+
         if (DefaultMainMenuButton != null)
             EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
     }
@@ -124,6 +141,52 @@ public class MainMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
     }
 
+    // ---------- Continue button visibility ----------
+
+    private void RefreshContinueButton()
+    {
+        if (ContinueButton == null) return;
+        bool hasSave = DetectSaveData();
+        ContinueButton.gameObject.SetActive(hasSave);
+        // Optional log to verify on player builds (remove later if noisy).
+        Debug.Log($"[MainMenu] Save detected: {hasSave} | path: {saveFilePath}");
+    }
+
+    private bool DetectSaveData()
+    {
+        // 1) Direct, exact file
+        try
+        {
+            if (File.Exists(saveFilePath))
+                return true;
+        }
+        catch { /* ignore */ }
+
+        // 2) Any common “save” file names in the persistent data folder
+        try
+        {
+            string dir = Application.persistentDataPath;
+            if (Directory.Exists(dir))
+            {
+                // Any file with "save" in its name
+                if (Directory.GetFiles(dir, "*save*.*").Length > 0) return true;
+                // Common patterns
+                if (Directory.GetFiles(dir, "*.sav").Length > 0) return true;
+                if (Directory.GetFiles(dir, "*.save").Length > 0) return true;
+                if (Directory.GetFiles(dir, "*.json").Any(f => Path.GetFileName(f).ToLowerInvariant().Contains("save")))
+                    return true;
+            }
+        }
+        catch { /* ignore */ }
+
+        // 3) Optional PlayerPrefs marker (use this if your SaveManager sets it when saving)
+        if (PlayerPrefs.GetInt(PP_HAS_SAVE_MARKER, 0) == 1)
+            return true;
+
+        // If none of the above hit, assume no save.
+        return false;
+    }
+
     // ---------------- Main Menu Buttons ----------------
 
     public void MainGameStart()
@@ -138,19 +201,28 @@ public class MainMenu : MonoBehaviour
 
     public void LoadGame()
     {
-        if (!gameStarted)
+        if (gameStarted) return;
+
+        // Extra guard: if no save detected, keep the button hidden.
+        if (!DetectSaveData())
         {
-            bool success = SaveManager.Instance.LoadGame();
-            if (!success)
-            {
-                Debug.LogWarning("MainMenu: No save file found to load.");
-            }
-            else
-            {
-                Debug.Log("MainMenu: Loaded saved game.");
-                gameStarted = true;
-                if (setup) setup.MovingToNewScene();
-            }
+            Debug.LogWarning("MainMenu: Load requested but no save data detected. Hiding Continue.");
+            RefreshContinueButton();
+            return;
+        }
+
+        bool success = SaveManager.Instance.LoadGame();
+        if (!success)
+        {
+            Debug.LogWarning("MainMenu: No save file found to load. Hiding Continue.");
+            // If load failed (e.g., corrupted/missing), hide the button.
+            RefreshContinueButton();
+        }
+        else
+        {
+            Debug.Log("MainMenu: Loaded saved game.");
+            gameStarted = true;
+            if (setup) setup.MovingToNewScene();
         }
     }
 
@@ -194,6 +266,9 @@ public class MainMenu : MonoBehaviour
         Debug.Log("CLOSED PANEL");
         SettingsPanel.SetActive(false);
         MenuPanel.SetActive(true);
+
+        // Keep Continue button visibility fresh when returning
+        RefreshContinueButton();
 
         if (DefaultMainMenuButton != null)
             EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
