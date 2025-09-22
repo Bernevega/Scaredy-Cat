@@ -32,6 +32,10 @@ public class Labyrinth : MonoBehaviour
     [Tooltip("Target light intensity when outside the zone")]
     public float outsideLightIntensity = 1f;
 
+    [Header("Respawn")]
+    [Tooltip("How long to keep the screen black after respawn before fading back")]
+    public float respawnHoldBlackSeconds = 1f;
+
     private Coroutine timerCoroutine;
     private Coroutine vignetteFadeOutCoroutine;
     private Coroutine lightCoroutine;
@@ -155,10 +159,12 @@ public class Labyrinth : MonoBehaviour
             yield return null;
         }
 
+        // Fade to black
         reviving = true;
         yield return StartCoroutine(FadeIn());
         reviving = false;
 
+        // Teleport while black
         if (spawnPoint != null)
         {
             var rb = player.GetComponent<Rigidbody>();
@@ -172,12 +178,18 @@ public class Labyrinth : MonoBehaviour
             Debug.LogWarning("Spawn point not assigned!");
         }
 
+        // Reset vignette after teleport
         if (vignetteEffect != null)
         {
             vignetteEffect.intensity.value = 0f;
             vignetteEffect.active = false;
         }
 
+        // >>> Hold black before fading back <<<
+        if (respawnHoldBlackSeconds > 0f)
+            yield return new WaitForSeconds(respawnHoldBlackSeconds);
+
+        // Fade from black
         yield return StartCoroutine(FadeOut());
     }
 
