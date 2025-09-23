@@ -51,6 +51,9 @@ public class SimpleDialogManager : MonoBehaviour
     public NPCVoiceScriptable crowVoice;
 
     public Sprite assylaSprite;
+    [Tooltip("Alternate portrait for Assyla without a hat.")]
+    public Sprite assylaNoHatSprite;
+
     public Sprite johnDanielSprite;
     public NPCVoiceScriptable johnDanielVoice;
     public Sprite mangleSprite;
@@ -72,6 +75,10 @@ public class SimpleDialogManager : MonoBehaviour
 
     [Tooltip("Optional: existing AudioSource. If empty, one is created automatically.")]
     public AudioSource voiceSource;
+
+    [Header("Portrait State")]
+    [Tooltip("When true, use Assyla's no-hat portrait for any 'Assyla' speaker.")]
+    public bool useAssylaNoHatPortrait = false;
 
     // Input System
     private Controls controls;
@@ -120,11 +127,14 @@ public class SimpleDialogManager : MonoBehaviour
             Instance.crowSprite = crowSprite;
 
             Instance.assylaSprite = assylaSprite;
+            Instance.assylaNoHatSprite = assylaNoHatSprite;
+
             Instance.johnDanielSprite = johnDanielSprite;
             Instance.mangleSprite = mangleSprite;
             Instance.nSprite = nSprite;
             Instance.chicaSprite = chicaSprite;
             Instance.oyenSprite = oyenSprite;
+            Instance.mousieSprite = mousieSprite;
 
             Instance.defaultNpcSprite = defaultNpcSprite;
 
@@ -134,6 +144,9 @@ public class SimpleDialogManager : MonoBehaviour
             if (soundsOutputGroup != null) Instance.soundsOutputGroup = soundsOutputGroup;
             if (voiceSource != null) Instance.voiceSource = voiceSource;
             Instance.EnsureVoiceSourceConfigured();
+
+            // Copy portrait state toggle
+            Instance.useAssylaNoHatPortrait = useAssylaNoHatPortrait;
 
             Instance.Initialize();
             Destroy(gameObject);
@@ -228,7 +241,23 @@ public class SimpleDialogManager : MonoBehaviour
             case "Ydna, Tire, Oliver":  speakerIcon.sprite = groupFriendsSprite;  vtp = friendsVoice;       break;
             case "The Crow":            speakerIcon.sprite = crowSprite;          vtp = crowVoice;          break;
 
-            case "Assyla":              speakerIcon.sprite = assylaSprite;        vtp = friendsVoice;       break;
+            case "Assyla":
+                speakerIcon.sprite = (useAssylaNoHatPortrait && assylaNoHatSprite != null)
+                    ? assylaNoHatSprite
+                    : assylaSprite;
+                vtp = friendsVoice;
+                break;
+
+            // Aliases that always force no-hat portrait
+            case "Assyla (No Hat)":
+            case "Assyla (no hat)":
+            case "Assyla no hat":
+            case "Assyla_NoHat":
+            case "AssylaNoHat":
+                speakerIcon.sprite = assylaNoHatSprite != null ? assylaNoHatSprite : assylaSprite;
+                vtp = friendsVoice;
+                break;
+
             case "John Daniel":         speakerIcon.sprite = johnDanielSprite;    vtp = johnDanielVoice;    break;
             case "Mangle":              speakerIcon.sprite = mangleSprite;        vtp = friendsVoice;       break;
             case "N":                   speakerIcon.sprite = nSprite;             vtp = friendsVoice;       break;
@@ -271,7 +300,6 @@ public class SimpleDialogManager : MonoBehaviour
         var t = scriptable.GetType();
 
         // 1) Try methods that return AudioClip (no PlaySoundInfo!)
-        // e.g., GetRandomVoiceClip(), GetRandomClip()
         MethodInfo[] candidateMethods = {
             t.GetMethod("GetRandomVoiceClip", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic),
             t.GetMethod("GetRandomClip",      BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -419,5 +447,11 @@ public class SimpleDialogManager : MonoBehaviour
 
         if (to == 0f) dialogPanel.SetActive(false);
         isFading = false;
+    }
+
+    // ---------- NEW PUBLIC API ----------
+    public void SetAssylaHatless(bool value)
+    {
+        useAssylaNoHatPortrait = value;
     }
 }

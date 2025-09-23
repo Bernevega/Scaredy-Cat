@@ -52,7 +52,6 @@ public class DanceMinigame : MonoBehaviour
             StartMinigame();
         }
 
-        // NOTE: We no longer swap to normalMusic here.
         // Music returns to normal ONLY inside EndMinigame(win/lose).
     }
 
@@ -112,9 +111,16 @@ public class DanceMinigame : MonoBehaviour
 
         if (win)
         {
+            // Tell the dialog system to use Assyla's hatless portrait from now on
+            if (dm != null)
+                dm.SetAssylaHatless(true);
+
             dm.StartDialogue("AssylaGive");
             assyla.sceneId.value = "AssylaThank";
-            hatObject.SetActive(false);
+
+            // Hide the actual hat in-world
+            if (hatObject != null)
+                hatObject.SetActive(false);
         }
         else
         {
@@ -333,10 +339,8 @@ public class DanceMinigame : MonoBehaviour
 
         if (src.clip == clip)
         {
-            // If already playing the same clip and we don't want to restart, do nothing.
             if (src.isPlaying && !restartIfSame) return;
 
-            // If it's the same clip but not playing, just (un)pause or Play.
             if (!src.isPlaying && !restartIfSame)
             {
                 src.UnPause();

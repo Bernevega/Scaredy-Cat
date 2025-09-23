@@ -48,17 +48,12 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    // 🟡 Used by PlayerMovement.cs
     public void ToggleQuestPanel()
     {
         if (questPanels != null)
         {
             bool isActive = questPanels.activeSelf;
             questPanels.SetActive(!isActive);
-
-            // Optional: Pause/unpause game or cursor here
-            // Cursor.visible = !isActive;
-            // Cursor.lockState = isActive ? CursorLockMode.Locked : CursorLockMode.None;
         }
     }
 
