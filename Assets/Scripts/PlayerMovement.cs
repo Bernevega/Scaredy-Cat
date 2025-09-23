@@ -18,6 +18,10 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.2f;
     public LayerMask groundMask;
 
+    [Header("Movement Constraints")]
+    [Tooltip("If enabled, the player can only move left/right relative to the camera (no forward/back).")]
+    public bool leftRightOnly = false;
+
     [SerializeField] private GameObject model;
     [SerializeField] private Animator animator;
     [SerializeField] private AnimEventInvoker animEvents;
@@ -182,9 +186,18 @@ public class PlayerMovement : MonoBehaviour
         // --- Combine Inputs ---
         Vector2 rawMove = new Vector2(kbX + gpX, kbZ + gpZ);
         if (rawMove.sqrMagnitude > 1f) rawMove.Normalize();
+
         float moveX = rawMove.x;
         float moveZ = rawMove.y;
-        bool hasInput = rawMove.sqrMagnitude > 0f;
+
+        // >>> Left/Right only constraint <<<
+        if (leftRightOnly)
+        {
+            // kill forward/back component; keep only left/right (camera-right axis)
+            moveZ = 0f;
+        }
+
+        bool hasInput = (moveX != 0f) || (moveZ != 0f);
         bool jumpPressed = jumpKb || jumpGp;
         bool sprintInput = (sprintKb || sprintGp) && !blockSprint;
         bool interact = interactKb || interactGp;
@@ -195,7 +208,10 @@ public class PlayerMovement : MonoBehaviour
 
             Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
             Vector3 camR = Vector3.Cross(Vector3.up, camF);
-            Vector3 moveDir = (camF * moveZ + camR * moveX).normalized;
+
+            Vector3 moveDir = (camF * moveZ + camR * moveX);
+            if (moveDir.sqrMagnitude > 0f) moveDir.Normalize();
+
             if (moveDir != Vector3.zero) direction = moveDir;
 
             float currentSpeed = speed;
