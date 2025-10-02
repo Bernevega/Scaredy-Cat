@@ -45,6 +45,8 @@ public class Labyrinth : MonoBehaviour
 
     private Collider zoneCollider;
     private PlayerMovement trackedPM;
+
+    // ---- Blackout/respawn state guard ----
     public bool reviving { get; private set; } = false;
 
     void Start()
@@ -103,6 +105,7 @@ public class Labyrinth : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
+        if (reviving) return; // Ignore while black/respawning
 
         isPlayerInside = true;
 
@@ -129,6 +132,7 @@ public class Labyrinth : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
+        if (reviving) return; // Don’t touch fades while black
 
         isPlayerInside = false;
 
@@ -137,6 +141,7 @@ public class Labyrinth : MonoBehaviour
             StopCoroutine(timerCoroutine);
             StartCoroutine(FadeOut());
             timerCoroutine = null;
+
             if (vignetteEffect != null)
                 vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
         }
@@ -159,10 +164,19 @@ public class Labyrinth : MonoBehaviour
             yield return null;
         }
 
-        // Fade to black
+        // ---- Begin blackout/respawn section ----
         reviving = true;
+
+        // Prevent re-triggering while black
+        bool restoreCollider = false;
+        if (zoneCollider != null && zoneCollider.enabled)
+        {
+            zoneCollider.enabled = false;
+            restoreCollider = true;
+        }
+
+        // Full fade to black
         yield return StartCoroutine(FadeIn());
-        reviving = false;
 
         // Teleport while black
         if (spawnPoint != null)
@@ -172,6 +186,10 @@ public class Labyrinth : MonoBehaviour
                 rb.MovePosition(spawnPoint.position);
             else
                 player.transform.position = spawnPoint.position;
+
+            // Make sure jump isn’t stuck blocked after teleport
+            var pm = player.GetComponent<PlayerMovement>();
+            if (pm != null) pm.blockJump = false;
         }
         else
         {
@@ -185,12 +203,23 @@ public class Labyrinth : MonoBehaviour
             vignetteEffect.active = false;
         }
 
-        // >>> Hold black before fading back <<<
+        // Hold black
         if (respawnHoldBlackSeconds > 0f)
             yield return new WaitForSeconds(respawnHoldBlackSeconds);
 
-        // Fade from black
+        // Fade back from black (ALWAYS)
         yield return StartCoroutine(FadeOut());
+
+        // Restore collider after we’re visible again
+        if (restoreCollider && zoneCollider != null)
+            zoneCollider.enabled = true;
+
+        // Reset state
+        isPlayerInside = false;
+        reviving = false;
+
+        // Softly restore outside lighting
+        StartLightLerp(outsideLightIntensity);
     }
 
     IEnumerator FadeOutVignetteSmoothly()
@@ -209,6 +238,7 @@ public class Labyrinth : MonoBehaviour
 
     IEnumerator FadeIn()
     {
+        if (fadeImage == null) yield break;
         float t = 0f;
         Color c = fadeImage.color;
         while (t < fadeDuration)
@@ -218,10 +248,14 @@ public class Labyrinth : MonoBehaviour
             fadeImage.color = c;
             yield return null;
         }
+        // Ensure exact black
+        c.a = 1f;
+        fadeImage.color = c;
     }
 
     IEnumerator FadeOut()
     {
+        if (fadeImage == null) yield break;
         float t = 0f;
         Color c = fadeImage.color;
         while (t < fadeDuration)
@@ -231,10 +265,16 @@ public class Labyrinth : MonoBehaviour
             fadeImage.color = c;
             yield return null;
         }
+        // Ensure exact clear
+        c.a = 0f;
+        fadeImage.color = c;
     }
 
     public void PauseFadeTimer()
     {
+        // New: don’t allow pausing while we’re black/respawning
+        if (reviving) return;
+
         if (timerCoroutine != null)
         {
             StopCoroutine(timerCoroutine);
@@ -249,6 +289,9 @@ public class Labyrinth : MonoBehaviour
 
     public void ResumeFadeTimer(GameObject player)
     {
+        // New: ignore resumes while black/respawning
+        if (reviving) return;
+
         if (isPlayerInside && timerCoroutine == null)
         {
             if (vignetteEffect != null)
