@@ -7,11 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Water 1
+  m_Name: DarkWater
   m_Shader: {fileID: -6465566751694194690, guid: e5f8f434dc0fbdf42ae4fa014c80951e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _REFLECTIONSON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,7 +21,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _Brightness
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -100,7 +101,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Bands: 279
+    - _Bands: 200
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _Brightness: 80
@@ -111,7 +112,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cloud_Change: 0.2
     - _Cloud_Cover: 0.5
-    - _Cloud_Density: 0.7
+    - _Cloud_Density: 0
     - _Cloud_Strength: 2.5
     - _Cull: 2
     - _Cutoff: 0.5
@@ -120,21 +121,21 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DistortionSpeed: 0.15
-    - _DistortionThreshold: 2.87
+    - _DistortionThreshold: 1.12
     - _DistortionTiling: 2.07
     - _DstBlend: 10
     - _DstBlendAlpha: 10
     - _EnvironmentReflections: 1
     - _Exposure: 1
-    - _FoamAmount: 3.62
-    - _FoamScale: 33.49
+    - _FoamAmount: 0.2
+    - _FoamScale: 150
     - _FoamSpeed: 0.1
     - _FoamStrength: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
-    - _MinimumDarkness: 0.5
+    - _MinimumDarkness: -1
     - _MinimumTint: 0.3
     - _MinimumTransparency: 0.1
     - _OcclusionStrength: 1
@@ -144,10 +145,10 @@ Material:
     - _ParticleThreshold: 0.01
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _REFLECTIONSON: 0
+    - _REFLECTIONSON: 1
     - _Ramp: 4
     - _ReceiveShadows: 0
-    - _ReflectionStrength: 10
+    - _ReflectionStrength: -0.49
     - _Rotation: 0
     - _Shades: 100
     - _Smoothness: 0.5
@@ -165,12 +166,12 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Cloud_Movement: {r: -0.1, g: 0.01, b: 0, a: 0}
     - _Cloud_Step: {r: 10, g: 10, b: 0, a: 0}
-    - _Color: {r: 0.3496351, g: 0.9150943, b: 0.8322194, a: 0.57254905}
+    - _Color: {r: 0.6728373, g: 0.7411765, b: 0.74509805, a: 0.74509805}
     - _DistortionDirection: {r: 1.11, g: 0.9, b: 0, a: 0}
-    - _DistortionStrength: {r: 0.05, g: 0.02, b: 0, a: 0}
+    - _DistortionStrength: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
-    - _ReflectionDistortion: {r: 24.3, g: 0.03, b: 0, a: 0}
+    - _ReflectionDistortion: {r: 5.15, g: 0.03, b: 0, a: 0}
     - _ReflectionTint: {r: 0.13333334, g: 0.5176471, b: 0.74509805, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tint: {r: 0.13333334, g: 0.5176471, b: 0.74509805, a: 1}
