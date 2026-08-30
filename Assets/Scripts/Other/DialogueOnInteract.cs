@@ -7,7 +7,6 @@ public class DialogueOnInteract : MonoBehaviour
     [Header("Core")]
     [SerializeField] Interactable interactable;
     public SharedString sceneId;
-    [SerializeField] RotateToPlayerOnDialogue rotateToPlayer;
 
     [Header("Interaction UI (Proximity Prompt) - Uses Canvas")]
     [Tooltip("Canvas containing the interaction prompt UI (no CanvasGroup needed).")]
@@ -37,9 +36,6 @@ public class DialogueOnInteract : MonoBehaviour
     {
         if (interactable != null)
             interactable.eventOnInteract += OnInteract;
-
-        if (rotateToPlayer != null)
-            rotateToPlayer.sceneId = sceneId;
 
         // Prepare UI graphics for manual alpha fading
         if (interactionCanvas != null)
