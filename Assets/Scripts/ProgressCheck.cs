@@ -3,53 +3,67 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class ProgressCheck : MonoBehaviour
 {
-    [Tooltip("Drag in your friend NPCs (each must have a DialogActor)")]
+    [Tooltip("Drag in your friend NPCs.")]
     public DialogActor[] friends;
 
-    [Tooltip("The sceneID of the 'NotYet' dialog in your JSON")]
+    [Tooltip("The sceneID of the 'NotYet' dialogue.")]
     public string notYetSceneID = "NotYet";
 
     private Collider _col;
 
-    void Awake()
+    private void Awake()
     {
         _col = GetComponent<Collider>();
-        _col.isTrigger = true;
+
+        // A solid collider prevents the player from passing through.
+        _col.isTrigger = false;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (!other.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Player"))
             return;
 
-        // If any friend hasn’t been spoken to yet...
-        foreach (var friend in friends)
+        foreach (DialogActor friend in friends)
         {
             if (friend == null || !friend.HasInteracted)
             {
-                // Block rightward movement
-                var pm = other.GetComponent<PlayerMovement>();
-                if (pm != null)
-                    pm.blockRightMovement = true;
+                PlayerMovement playerMovement =
+                    collision.gameObject.GetComponent<PlayerMovement>();
 
-                // Play the "NotYet" dialog
+                if (playerMovement != null)
+                    playerMovement.blockRightMovement = true;
+
                 SimpleDialogManager.Instance.StartDialogue(notYetSceneID);
                 return;
             }
         }
 
-        // All friends done: disable this trigger so the player can pass normally
+        // Everyone has been spoken to, so remove the barrier.
         _col.enabled = false;
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnCollisionStay(Collision collision)
     {
-        if (!other.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Player"))
             return;
 
-        // Leaving the check zone: re-enable rightward movement
-        var pm = other.GetComponent<PlayerMovement>();
-        if (pm != null)
-            pm.blockRightMovement = false;
+        PlayerMovement playerMovement =
+            collision.gameObject.GetComponent<PlayerMovement>();
+
+        if (playerMovement != null)
+            playerMovement.blockRightMovement = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (!collision.gameObject.CompareTag("Player"))
+            return;
+
+        PlayerMovement playerMovement =
+            collision.gameObject.GetComponent<PlayerMovement>();
+
+        if (playerMovement != null)
+            playerMovement.blockRightMovement = false;
     }
 }
