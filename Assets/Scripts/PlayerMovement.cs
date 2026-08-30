@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Audio; // for AudioMixerGroup
+using UnityEngine.Audio;
+
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -19,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
 
     [Header("Movement Constraints")]
-    [Tooltip("If enabled, the player can only move left/right relative to the camera (no forward/back).")]
+    [Tooltip("If enabled, the player can only move left/right relative to the camera.")]
     public bool leftRightOnly = false;
 
     [SerializeField] private GameObject model;
@@ -44,7 +45,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Scene Start")]
     [Tooltip("If checked, triggers WakeUp() automatically when the scene starts.")]
     [SerializeField] private bool playWakeUpOnSceneStart = true;
-    [Tooltip("Optional small delay before triggering WakeUp on scene start.")]
+
+    [Tooltip("Optional delay before triggering WakeUp.")]
     [SerializeField] private float wakeUpSceneStartDelay = 0f;
 
     private Rigidbody rb;
@@ -53,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded = true;
     private bool canMove = true;
     private bool _wasDialogActive = false;
+
     public bool hasJumped = false;
     public MoveState moveState = MoveState.Idle;
 
@@ -62,27 +65,33 @@ public class PlayerMovement : MonoBehaviour
         Walk,
         Jumping,
         Landing,
-        WakingUp,
+        WakingUp
     }
 
-    public Animator GetAnimator() { return animator; }
+    public Animator GetAnimator()
+    {
+        return animator;
+    }
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         mainCam = Camera.main;
 
         Collider col = GetComponent<Collider>();
-        var slideMat = new PhysicsMaterial("SlideMat")
+
+        PhysicsMaterial slideMat = new PhysicsMaterial("SlideMat")
         {
             staticFriction = 0f,
             dynamicFriction = 0f,
             frictionCombine = PhysicsMaterialCombine.Minimum
         };
+
         col.material = slideMat;
 
-        if (animEvents) animEvents.stringEvent += AnimStringEvent;
+        if (animEvents != null)
+            animEvents.stringEvent += AnimStringEvent;
 
         if (playWakeUpOnSceneStart)
         {
@@ -101,27 +110,44 @@ public class PlayerMovement : MonoBehaviour
         WakeUp();
     }
 
-    void Update()
+    private void Update()
     {
-        if (mainCam == null) mainCam = Camera.main;
+        if (mainCam == null)
+            mainCam = Camera.main;
 
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = Physics.CheckSphere(
+            groundCheck.position,
+            groundDistance,
+            groundMask
+        );
+
         animator.SetBool("grounded", isGrounded);
-        if (isGrounded) hasJumped = false;
 
-        var dialogMgr = SimpleDialogManager.Instance;
-        bool dialogActive = dialogMgr != null
-                            && dialogMgr.dialogPanel != null
-                            && dialogMgr.dialogPanel.activeSelf;
+        if (isGrounded)
+            hasJumped = false;
+
+        SimpleDialogManager dialogMgr = SimpleDialogManager.Instance;
+
+        bool dialogActive =
+            dialogMgr != null &&
+            dialogMgr.dialogPanel != null &&
+            dialogMgr.dialogPanel.activeSelf;
 
         if (dialogActive)
         {
             _wasDialogActive = true;
             canMove = false;
-            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+
+            rb.linearVelocity = new Vector3(
+                0f,
+                rb.linearVelocity.y,
+                0f
+            );
+
             animator.SetBool("moveInput", false);
             animator.SetBool("isRunning", false);
             animator.Play("Idle");
+
             return;
         }
 
@@ -129,27 +155,44 @@ public class PlayerMovement : MonoBehaviour
         {
             _wasDialogActive = false;
             canMove = true;
-            rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
-            if (isGrounded) moveState = MoveState.Idle;
+
+            rb.linearVelocity = new Vector3(
+                0f,
+                rb.linearVelocity.y,
+                0f
+            );
+
+            if (isGrounded)
+                moveState = MoveState.Idle;
+
             StopAllCoroutines();
+
             if (rotationReturnDuration > 0f)
-                StartCoroutine(RotateModelOverTime(rotationReturnDuration));
+                StartCoroutine(
+                    RotateModelOverTime(rotationReturnDuration)
+                );
             else
                 StartCoroutine(RotateModelAtSpeed());
+
             return;
         }
 
-        if (!canMove) return;
+        if (!canMove)
+            return;
 
-        // --- Input values ---
+        // Keyboard input
         float kbX = Input.GetAxisRaw("Horizontal");
         float kbZ = Input.GetAxisRaw("Vertical");
+
         bool jumpKb = Input.GetButtonDown("Jump");
         bool sprintKb = Input.GetKey(KeyCode.LeftShift);
         bool interactKb = Input.GetKeyDown(KeyCode.E);
         bool toggleQuestKb = Input.GetKeyDown(KeyCode.Q);
 
-        float gpX = 0f, gpZ = 0f;
+        // Gamepad input
+        float gpX = 0f;
+        float gpZ = 0f;
+
         bool jumpGp = false;
         bool sprintGp = false;
         bool interactGp = false;
@@ -159,62 +202,80 @@ public class PlayerMovement : MonoBehaviour
         if (Gamepad.current != null)
         {
             Vector2 stick = Gamepad.current.leftStick.ReadValue();
+
             gpX = stick.x;
             gpZ = stick.y;
-            jumpGp = Gamepad.current.buttonSouth.wasPressedThisFrame;
-            sprintGp = Gamepad.current.leftStickButton.isPressed;
-            interactGp = Gamepad.current.buttonEast.wasPressedThisFrame;
-            toggleQuestGp = Gamepad.current.buttonNorth.wasPressedThisFrame;
 
-            if (toggleQuestGp)
-            {
-                QuestManager.instance?.ToggleQuestPanel();
-            }
-        }
+            jumpGp =
+                Gamepad.current.buttonSouth.wasPressedThisFrame;
 
-        if (Keyboard.current != null && toggleQuestKb)
-        {
-            QuestManager.instance?.ToggleQuestPanel();
-        }
-#else
-        if (toggleQuestKb)
-        {
-            QuestManager.instance?.ToggleQuestPanel();
+            sprintGp =
+                Gamepad.current.leftStickButton.isPressed;
+
+            interactGp =
+                Gamepad.current.buttonEast.wasPressedThisFrame;
+
+            toggleQuestGp =
+                Gamepad.current.buttonNorth.wasPressedThisFrame;
         }
 #endif
 
-        // --- Combine Inputs ---
-        Vector2 rawMove = new Vector2(kbX + gpX, kbZ + gpZ);
-        if (rawMove.sqrMagnitude > 1f) rawMove.Normalize();
+        // Q or the north gamepad button toggles QuestInfoPanel.
+        if (toggleQuestKb || toggleQuestGp)
+        {
+            QuestManager.instance?.ToggleQuestPanel();
+        }
+
+        Vector2 rawMove = new Vector2(
+            kbX + gpX,
+            kbZ + gpZ
+        );
+
+        if (rawMove.sqrMagnitude > 1f)
+            rawMove.Normalize();
 
         float moveX = rawMove.x;
         float moveZ = rawMove.y;
 
-        // >>> Left/Right only constraint <<<
         if (leftRightOnly)
-        {
-            // kill forward/back component; keep only left/right (camera-right axis)
             moveZ = 0f;
-        }
 
-        bool hasInput = (moveX != 0f) || (moveZ != 0f);
+        bool hasInput = moveX != 0f || moveZ != 0f;
         bool jumpPressed = jumpKb || jumpGp;
-        bool sprintInput = (sprintKb || sprintGp) && !blockSprint;
+
+        bool sprintInput =
+            (sprintKb || sprintGp) &&
+            !blockSprint;
+
         bool interact = interactKb || interactGp;
 
-        if (speed > 0)
+        if (speed > 0f)
         {
             animator.SetBool("moveInput", hasInput);
 
-            Vector3 camF = new Vector3(mainCam.transform.forward.x, 0f, mainCam.transform.forward.z).normalized;
-            Vector3 camR = Vector3.Cross(Vector3.up, camF);
+            Vector3 camF = new Vector3(
+                mainCam.transform.forward.x,
+                0f,
+                mainCam.transform.forward.z
+            ).normalized;
 
-            Vector3 moveDir = (camF * moveZ + camR * moveX);
-            if (moveDir.sqrMagnitude > 0f) moveDir.Normalize();
+            Vector3 camR = Vector3.Cross(
+                Vector3.up,
+                camF
+            );
 
-            if (moveDir != Vector3.zero) direction = moveDir;
+            Vector3 moveDir =
+                camF * moveZ +
+                camR * moveX;
+
+            if (moveDir.sqrMagnitude > 0f)
+                moveDir.Normalize();
+
+            if (moveDir != Vector3.zero)
+                direction = moveDir;
 
             float currentSpeed = speed;
+
             if (hasInput && sprintInput)
             {
                 currentSpeed *= runMultiplier;
@@ -225,31 +286,78 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("isRunning", false);
             }
 
-            rb.linearVelocity = new Vector3(moveDir.x * currentSpeed, rb.linearVelocity.y, moveDir.z * currentSpeed);
+            // Prevent movement toward the right when blocked.
+            if (blockRightMovement && moveX > 0f)
+            {
+                moveDir = Vector3.zero;
+            }
 
-            if (moveState == MoveState.Idle && !blockJump && jumpPressed && isGrounded && !hasJumped)
+            rb.linearVelocity = new Vector3(
+                moveDir.x * currentSpeed,
+                rb.linearVelocity.y,
+                moveDir.z * currentSpeed
+            );
+
+            if (
+                moveState == MoveState.Idle &&
+                !blockJump &&
+                jumpPressed &&
+                isGrounded &&
+                !hasJumped
+            )
             {
                 animator.SetTrigger("jump");
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+                rb.linearVelocity = new Vector3(
+                    rb.linearVelocity.x,
+                    0f,
+                    rb.linearVelocity.z
+                );
+
+                rb.AddForce(
+                    Vector3.up * jumpForce,
+                    ForceMode.Impulse
+                );
+
                 hasJumped = true;
                 moveState = MoveState.Jumping;
             }
         }
 
         if (interact)
-        {
             animator.SetTrigger("interact");
-        }
 
-        Transform t = model != null ? model.transform : transform;
-        Quaternion desired = Quaternion.LookRotation(direction, Vector3.up);
-        if (t.rotation != desired)
-            t.rotation = Quaternion.RotateTowards(t.rotation, desired, 1080f * Time.deltaTime);
+        Transform modelTransform =
+            model != null
+                ? model.transform
+                : transform;
+
+        Quaternion desiredRotation =
+            Quaternion.LookRotation(
+                direction,
+                Vector3.up
+            );
+
+        if (modelTransform.rotation != desiredRotation)
+        {
+            modelTransform.rotation =
+                Quaternion.RotateTowards(
+                    modelTransform.rotation,
+                    desiredRotation,
+                    1080f * Time.deltaTime
+                );
+        }
     }
 
-    public void SetDirection(Vector3 dir) => direction = dir.normalized;
-    public void SetCanMove(bool b) => canMove = b;
+    public void SetDirection(Vector3 dir)
+    {
+        direction = dir.normalized;
+    }
+
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
+    }
 
     public void WakeUp()
     {
@@ -258,31 +366,54 @@ public class PlayerMovement : MonoBehaviour
         canMove = false;
     }
 
-    public void AnimStringEvent(string str)
+    public void AnimStringEvent(string eventName)
     {
-        switch (str)
+        switch (eventName)
         {
-            case "JumpLiftOff": JumpLiftOff(); break;
-            case "LandStart": LandStart(); break;
-            case "LandEnd": LandEnd(); break;
-            case "WakeUpEnd": WakeUpEnd(); break;
-            case "FootStep": MakeFootstep(); break;
+            case "JumpLiftOff":
+                JumpLiftOff();
+                break;
+
+            case "LandStart":
+                LandStart();
+                break;
+
+            case "LandEnd":
+                LandEnd();
+                break;
+
+            case "WakeUpEnd":
+                WakeUpEnd();
+                break;
+
+            case "FootStep":
+                MakeFootstep();
+                break;
         }
     }
 
     private void JumpLiftOff()
     {
-        var soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
-        if (soundPlayer)
+        GameObject soundPlayer =
+            ObjectPool.instance.objPool_GetObject(
+                "2DSoundPlayer"
+            );
+
+        if (soundPlayer != null)
         {
-            var sp = soundPlayer.GetComponent<SoundPlayer>();
+            SoundPlayer sp =
+                soundPlayer.GetComponent<SoundPlayer>();
+
             sp.transform.position = transform.position;
-            var info = new PlaySoundInfo(jumpSoundEffect)
-            {
-                pitch = Random.Range(0.7f, 1.3f),
-                volume = 0.5f,
-                mixer = soundsOutput
-            };
+
+            PlaySoundInfo info =
+                new PlaySoundInfo(jumpSoundEffect)
+                {
+                    pitch = Random.Range(0.7f, 1.3f),
+                    volume = 0.5f,
+                    mixer = soundsOutput
+                };
+
             sp.PlaySound(info);
         }
     }
@@ -290,17 +421,27 @@ public class PlayerMovement : MonoBehaviour
     private void LandStart()
     {
         moveState = MoveState.Landing;
-        var soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
-        if (soundPlayer)
+
+        GameObject soundPlayer =
+            ObjectPool.instance.objPool_GetObject(
+                "2DSoundPlayer"
+            );
+
+        if (soundPlayer != null)
         {
-            var sp = soundPlayer.GetComponent<SoundPlayer>();
+            SoundPlayer sp =
+                soundPlayer.GetComponent<SoundPlayer>();
+
             sp.transform.position = transform.position;
-            var info = new PlaySoundInfo(landSoundEffect)
-            {
-                pitch = Random.Range(0.7f, 1.3f),
-                volume = 0.5f,
-                mixer = soundsOutput
-            };
+
+            PlaySoundInfo info =
+                new PlaySoundInfo(landSoundEffect)
+                {
+                    pitch = Random.Range(0.7f, 1.3f),
+                    volume = 0.5f,
+                    mixer = soundsOutput
+                };
+
             sp.PlaySound(info);
         }
     }
@@ -314,54 +455,120 @@ public class PlayerMovement : MonoBehaviour
     {
         moveState = MoveState.Idle;
         canMove = true;
+
         Debug.Log("Wake up end");
     }
 
     private void MakeFootstep()
     {
-        int idx = Random.Range(0, walkSoundEffects.Length);
-        var clip = walkSoundEffects[idx];
-        var soundPlayer = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
-        if (soundPlayer)
+        if (walkSoundEffects == null ||
+            walkSoundEffects.Length == 0)
         {
-            var sp = soundPlayer.GetComponent<SoundPlayer>();
+            return;
+        }
+
+        int index =
+            Random.Range(0, walkSoundEffects.Length);
+
+        AudioClip clip = walkSoundEffects[index];
+
+        GameObject soundPlayer =
+            ObjectPool.instance.objPool_GetObject(
+                "2DSoundPlayer"
+            );
+
+        if (soundPlayer != null)
+        {
+            SoundPlayer sp =
+                soundPlayer.GetComponent<SoundPlayer>();
+
             sp.transform.position = transform.position;
-            var info = new PlaySoundInfo(clip)
-            {
-                pitch = Random.Range(0.7f, 1.3f),
-                volume = 0.5f,
-                mixer = soundsOutput
-            };
+
+            PlaySoundInfo info =
+                new PlaySoundInfo(clip)
+                {
+                    pitch = Random.Range(0.7f, 1.3f),
+                    volume = 0.5f,
+                    mixer = soundsOutput
+                };
+
             sp.PlaySound(info);
         }
     }
 
     private IEnumerator RotateModelOverTime(float duration)
     {
-        Transform t = model != null ? model.transform : transform;
-        Quaternion start = t.rotation;
-        Quaternion end = Quaternion.LookRotation(direction, Vector3.up);
+        Transform modelTransform =
+            model != null
+                ? model.transform
+                : transform;
+
+        Quaternion startRotation =
+            modelTransform.rotation;
+
+        Quaternion endRotation =
+            Quaternion.LookRotation(
+                direction,
+                Vector3.up
+            );
+
         float elapsed = 0f;
+
         while (elapsed < duration)
         {
-            float tNorm = elapsed / duration;
-            tNorm = tNorm * tNorm * (3f - 2f * tNorm);
-            t.rotation = Quaternion.Slerp(start, end, tNorm);
+            float normalizedTime =
+                elapsed / duration;
+
+            normalizedTime =
+                normalizedTime *
+                normalizedTime *
+                (3f - 2f * normalizedTime);
+
+            modelTransform.rotation =
+                Quaternion.Slerp(
+                    startRotation,
+                    endRotation,
+                    normalizedTime
+                );
+
             elapsed += Time.deltaTime;
             yield return null;
         }
-        t.rotation = end;
+
+        modelTransform.rotation = endRotation;
     }
 
     private IEnumerator RotateModelAtSpeed()
     {
-        Transform t = model != null ? model.transform : transform;
-        Quaternion end = Quaternion.LookRotation(direction, Vector3.up);
-        while (Quaternion.Angle(t.rotation, end) > 0.1f)
+        Transform modelTransform =
+            model != null
+                ? model.transform
+                : transform;
+
+        Quaternion endRotation =
+            Quaternion.LookRotation(
+                direction,
+                Vector3.up
+            );
+
+        while (
+            Quaternion.Angle(
+                modelTransform.rotation,
+                endRotation
+            ) > 0.1f
+        )
         {
-            t.rotation = Quaternion.RotateTowards(t.rotation, end, rotationReturnSpeed * Time.deltaTime);
+            modelTransform.rotation =
+                Quaternion.RotateTowards(
+                    modelTransform.rotation,
+                    endRotation,
+                    rotationReturnSpeed *
+                    Time.deltaTime
+                );
+
             yield return null;
         }
-        t.rotation = end;
+
+        modelTransform.rotation = endRotation;
     }
 }
