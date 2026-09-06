@@ -9,11 +9,15 @@ public class ControllsTutorial : MonoBehaviour
     [Header("Player")]
     [SerializeField] private PlayerMovement playerMovement;
 
+    [Header("Pause Menu")]
+    [SerializeField] private PauseMenu pauseMenu;
+
     [Header("Fade Settings")]
     [SerializeField] private float fadeDuration = 0.5f;
 
     private CanvasGroup tutorialCanvasGroup;
     private bool movementLocked;
+    private bool pauseMenuDisabled;
 
     private void Awake()
     {
@@ -38,6 +42,13 @@ public class ControllsTutorial : MonoBehaviour
 
             if (player != null)
                 playerMovement = player.GetComponent<PlayerMovement>();
+        }
+
+        if (pauseMenu == null)
+        {
+            pauseMenu = FindFirstObjectByType<PauseMenu>(
+                FindObjectsInactive.Include
+            );
         }
     }
 
@@ -65,6 +76,7 @@ public class ControllsTutorial : MonoBehaviour
         yield return null;
 
         SetPlayerMovement(false);
+        SetPauseMenuEnabled(false);
         tutorialCanvas.enabled = true;
         yield return FadeCanvas(0f, 1f);
 
@@ -74,6 +86,7 @@ public class ControllsTutorial : MonoBehaviour
         yield return FadeCanvas(1f, 0f);
         tutorialCanvas.enabled = false;
         SetPlayerMovement(true);
+        SetPauseMenuEnabled(true);
     }
 
     private void SetPlayerMovement(bool canMove)
@@ -85,10 +98,22 @@ public class ControllsTutorial : MonoBehaviour
         movementLocked = !canMove;
     }
 
+    private void SetPauseMenuEnabled(bool isEnabled)
+    {
+        if (pauseMenu == null)
+            return;
+
+        pauseMenu.enabled = isEnabled;
+        pauseMenuDisabled = !isEnabled;
+    }
+
     private void OnDisable()
     {
         if (movementLocked)
             SetPlayerMovement(true);
+
+        if (pauseMenuDisabled)
+            SetPauseMenuEnabled(true);
     }
 
     private IEnumerator FadeCanvas(float from, float to)

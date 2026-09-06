@@ -5,6 +5,7 @@ using TMPro;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class PauseMenu : MonoBehaviour
     public GameObject VideoSettingsPanel;
     public GameObject AudioSettingsPanel;
     public GameObject ControlsSettingsPanel;
+
+    [Header("Transition")]
+    public float fadeDuration = 0.5f;
 
     [Header("Default Selected Buttons")]
     public Button DefaultPauseMenuButton;
@@ -35,6 +39,8 @@ public class PauseMenu : MonoBehaviour
     public static bool isPaused { get; private set; } = false;
 
     private Controls inputControls;
+    private CanvasGroup pauseCanvasGroup;
+    private bool isTransitioning;
 
     // --- Video settings state (same approach as MainMenu) ---
     private readonly List<Vector2Int> _resOptions = new List<Vector2Int>();
@@ -65,6 +71,12 @@ public class PauseMenu : MonoBehaviour
 
     private void Start()
     {
+        pauseCanvasGroup = PauseMenuCanvas.GetComponent<CanvasGroup>();
+
+        if (pauseCanvasGroup == null)
+            pauseCanvasGroup = PauseMenuCanvas.AddComponent<CanvasGroup>();
+
+        pauseCanvasGroup.alpha = 0f;
         PauseMenuCanvas.SetActive(false);
         SettingsPanel.SetActive(false);
 
@@ -105,6 +117,9 @@ public class PauseMenu : MonoBehaviour
 
     private void TogglePause()
     {
+        if (isTransitioning)
+            return;
+
         if (!isPaused)
             PauseGame();
         else
@@ -135,7 +150,11 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        if (isPaused || isTransitioning)
+            return;
+
         PauseMenuCanvas.SetActive(true);
+        pauseCanvasGroup.alpha = 0f;
         isPaused = true;
         Time.timeScale = 0f;
 
@@ -147,19 +166,61 @@ public class PauseMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(DefaultPauseMenuButton.gameObject);
         }
 
+        StartCoroutine(FadePauseCanvas(1f, false));
+
         Debug.Log("Game paused");
     }
 
     public void ContinueGame()
     {
-        PauseMenuCanvas.SetActive(false);
-        isPaused = false;
-        Time.timeScale = 1f;
+        if (!isPaused || isTransitioning)
+            return;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        StartCoroutine(FadePauseCanvas(0f, true));
+    }
 
-        Debug.Log("Game unpaused");
+    private IEnumerator FadePauseCanvas(
+        float targetAlpha,
+        bool resumeAfterFade
+    )
+    {
+        isTransitioning = true;
+
+        float startAlpha = pauseCanvasGroup.alpha;
+        float duration = Mathf.Max(0f, fadeDuration);
+
+        if (duration > 0f)
+        {
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.unscaledDeltaTime;
+                float progress = Mathf.Clamp01(elapsedTime / duration);
+                pauseCanvasGroup.alpha = Mathf.Lerp(
+                    startAlpha,
+                    targetAlpha,
+                    progress
+                );
+                yield return null;
+            }
+        }
+
+        pauseCanvasGroup.alpha = targetAlpha;
+
+        if (resumeAfterFade)
+        {
+            PauseMenuCanvas.SetActive(false);
+            isPaused = false;
+            Time.timeScale = 1f;
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
+            Debug.Log("Game unpaused");
+        }
+
+        isTransitioning = false;
     }
 
     // ---------------- Settings Navigation ----------------
