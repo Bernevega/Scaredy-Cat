@@ -2,10 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
-
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class PlayerMovement : MonoBehaviour
 {
@@ -189,46 +185,15 @@ public class PlayerMovement : MonoBehaviour
         bool interactKb = Input.GetKeyDown(KeyCode.E);
         bool toggleQuestKb = Input.GetKeyDown(KeyCode.Q);
 
-        // Gamepad input
-        float gpX = 0f;
-        float gpZ = 0f;
-
-        bool jumpGp = false;
-        bool sprintGp = false;
-        bool interactGp = false;
-        bool toggleQuestGp = false;
-
-#if ENABLE_INPUT_SYSTEM
-        if (Gamepad.current != null)
-        {
-            Vector2 stick = Gamepad.current.leftStick.ReadValue();
-
-            gpX = stick.x;
-            gpZ = stick.y;
-
-            jumpGp =
-                Gamepad.current.buttonSouth.wasPressedThisFrame;
-
-            sprintGp =
-                Gamepad.current.leftStickButton.isPressed;
-
-            interactGp =
-                Gamepad.current.buttonEast.wasPressedThisFrame;
-
-            toggleQuestGp =
-                Gamepad.current.buttonNorth.wasPressedThisFrame;
-        }
-#endif
-
-        // Q or the north gamepad button toggles QuestInfoPanel.
-        if (toggleQuestKb || toggleQuestGp)
+        // Q toggles QuestInfoPanel.
+        if (toggleQuestKb)
         {
             QuestManager.instance?.ToggleQuestPanel();
         }
 
         Vector2 rawMove = new Vector2(
-            kbX + gpX,
-            kbZ + gpZ
+            kbX,
+            kbZ
         );
 
         if (rawMove.sqrMagnitude > 1f)
@@ -241,13 +206,13 @@ public class PlayerMovement : MonoBehaviour
             moveZ = 0f;
 
         bool hasInput = moveX != 0f || moveZ != 0f;
-        bool jumpPressed = jumpKb || jumpGp;
+        bool jumpPressed = jumpKb;
 
         bool sprintInput =
-            (sprintKb || sprintGp) &&
+            sprintKb &&
             !blockSprint;
 
-        bool interact = interactKb || interactGp;
+        bool interact = interactKb;
 
         if (speed > 0f)
         {
