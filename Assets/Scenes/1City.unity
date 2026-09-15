@@ -11928,7 +11928,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 735614595}
-  - component: {fileID: 735614597}
   - component: {fileID: 735614598}
   - component: {fileID: 735614599}
   - component: {fileID: 735614600}
@@ -11956,18 +11955,6 @@ Transform:
   - {fileID: 1341137131}
   m_Father: {fileID: 355919537}
   m_LocalEulerAnglesHint: {x: 0, y: 60.244, z: 0}
---- !u!114 &735614597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735614594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d86309cf40e1e64b98b63f8bcf3762e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &735614598
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -78505,11 +78492,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &2841948231565989552 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 163717615221667756, guid: 31149b058a8aebe43ba1d2b2f434198d, type: 3}
-  m_PrefabInstance: {fileID: 4484259422855931232}
-  m_PrefabAsset: {fileID: 0}
 --- !u!33 &2842781770135144844
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -104818,14 +104800,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 658442813}
     m_Modifications:
-    - target: {fileID: 163717615221667756, guid: 31149b058a8aebe43ba1d2b2f434198d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1450935743644323775, guid: 31149b058a8aebe43ba1d2b2f434198d, type: 3}
-      propertyPath: questUI
-      value: 
-      objectReference: {fileID: 2841948231565989552}
     - target: {fileID: 1450935743644323775, guid: 31149b058a8aebe43ba1d2b2f434198d, type: 3}
       propertyPath: 'startingQuests.Array.data[0]'
       value: 

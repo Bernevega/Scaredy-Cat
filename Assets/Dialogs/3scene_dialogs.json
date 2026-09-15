@@ -21,6 +21,11 @@
         "speaker": "Kitty",
         "text": "I can do this!",
         "next": null
+      },
+      "kitty5": {
+        "speaker": "Kitty",
+        "text": "Hmmm, maybe I should look around?",
+        "next": null
       }
     }
   },
@@ -297,7 +302,7 @@
       },
       "caw2": {
         "speaker": "The Crow",
-        "text": "How... unexpected... you don't seem old enough to be here.",
+        "text": "How... unexpected... You don't seem old enough to be here.",
         "next": "caw3"
       },
       "caw3": {
@@ -363,11 +368,31 @@
       "kitty5": {
         "speaker": "Kitty",
         "text": "...",
+        "next": "caw11"
+      },
+      "caw11": {
+        "speaker": "The Crow",
+        "text": "Hmmmmm...",
+        "next": "caw12"
+      },
+      "caw12": {
+        "speaker": "The Crow",
+        "text": "I just remember that it was very foggy and dark there...",
         "next": "kitty6"
       },
       "kitty6": {
         "speaker": "Kitty",
-        "text": "Hm, should I take a look in the labyrinth?...",
+        "text": "Foggy and dark?... Oh no..........",
+        "next": "kitty7"
+      },
+      "kitty7": {
+        "speaker": "Kitty",
+        "text": "Wait! I think I remember seeing something like that nearby...",
+        "next": "kitty8"
+      },
+      "kitty8": {
+        "speaker": "Kitty",
+        "text": "Wasn't it right below? Maybe I should go check it out!",
         "next": null
       }
     }
