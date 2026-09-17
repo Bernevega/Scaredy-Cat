@@ -23,11 +23,10 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
 
     // internals
     private Vector3 _velocity = Vector3.zero;
-    private Vector3 _introVelocity = Vector3.zero;
     private Vector3 _originalOffset;
     private bool _isInIntro = true;
     private float _blendOutTimer = 0f;
-    private float _blendDuration = 1f; // how long we fade out of intro mode
+    private float _blendDuration = 3f; // longer blend to reduce final camera correction
 
     private PlayerMovement _playerMovement;
 
@@ -62,6 +61,7 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
     private IEnumerator EndIntroAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+
         _isInIntro = false;
         _blendOutTimer = 0f;
 
@@ -88,10 +88,11 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
         if (_isInIntro)
         {
             effectiveSmoothTime = introSmoothTime;
+
             transform.position = Vector3.SmoothDamp(
                 transform.position,
                 baseTargetPos,
-                ref _introVelocity,
+                ref _velocity,
                 effectiveSmoothTime,
                 Mathf.Infinity,
                 deltaTime
@@ -102,28 +103,25 @@ public class CameraFollow : MonoBehaviour, ICameraBehaviour
             _blendOutTimer += deltaTime;
             float t = Mathf.Clamp01(_blendOutTimer / _blendDuration);
 
-            // blend smooth time and velocity from intro to normal
-            effectiveSmoothTime = Mathf.Lerp(introSmoothTime, smoothTime, t);
-
-            // blended velocity
-            Vector3 blendedVelocity = Vector3.Lerp(_introVelocity, _velocity, t);
+            effectiveSmoothTime = Mathf.Lerp(
+                introSmoothTime,
+                smoothTime,
+                t
+            );
 
             transform.position = Vector3.SmoothDamp(
                 transform.position,
                 baseTargetPos,
-                ref blendedVelocity,
+                ref _velocity,
                 effectiveSmoothTime,
                 Mathf.Infinity,
                 deltaTime
             );
-
-            // preserve blend result
-            _velocity = blendedVelocity;
         }
         else
         {
-            // Normal mode
             effectiveSmoothTime = smoothTime;
+
             transform.position = Vector3.SmoothDamp(
                 transform.position,
                 baseTargetPos,

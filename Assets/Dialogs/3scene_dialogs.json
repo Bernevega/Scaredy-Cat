@@ -388,11 +388,6 @@
       "kitty7": {
         "speaker": "Kitty",
         "text": "Wait! I think I remember seeing something like that nearby...",
-        "next": "kitty8"
-      },
-      "kitty8": {
-        "speaker": "Kitty",
-        "text": "Wasn't it right below? Maybe I should go check it out!",
         "next": null
       }
     }
@@ -453,7 +448,7 @@
       },
       "caw6": {
         "speaker": "The Crow",
-        "text": "Caw!",
+        "text": "I think I left it on top of the giant tree that has lots of flowers near it...",
         "next": null
       }
     }
@@ -472,46 +467,6 @@
         "next": "caw3"
       },
       "caw3": {
-        "speaker": "The Crow",
-        "text": "Caw!",
-        "next": null
-      }
-    }
-  },
-  "CrowFinal": {
-    "start": "caw1",
-    "nodes": {
-      "caw1": {
-        "speaker": "The Crow",
-        "text": "Have you found my other monocle?",
-        "next": "caw2"
-      },
-      "caw2": {
-        "speaker": "The Crow",
-        "text": "...",
-        "next": "caw4"
-      },
-      "caw4": {
-        "speaker": "The Crow",
-        "text": "Thanks! The flower should be right there!",
-        "next": "caw5"
-      },
-      "caw5": {
-        "speaker": "The Crow",
-        "text": "Caw!",
-        "next": null
-      }
-    }
-  },
-  "CrowThank": {
-    "start": "caw1",
-    "nodes": {
-      "caw1": {
-        "speaker": "The Crow",
-        "text": "Thanks for helping me find my monocles!",
-        "next": "caw2"
-      },
-      "caw2": {
         "speaker": "The Crow",
         "text": "Caw!",
         "next": null
@@ -564,6 +519,11 @@
       "caw1": {
         "speaker": "Kitty",
         "text": "I've got the monocle! Yippie!",
+        "next": "caw2"
+      },
+      "caw2": {
+        "speaker": "Kitty",
+        "text": "Now I just gotta get back to Mr. Crow...",
         "next": null
       }
     }

@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
+[RequireComponent(typeof(Collider))]
 public class Labyrinth : MonoBehaviour
 {
     [Header("References")]
@@ -11,8 +13,8 @@ public class Labyrinth : MonoBehaviour
     public Transform spawnPoint;
     public Transform spawnPoint2;
     public Image fadeImage;
-    public Volume volume; 
-    [SerializeField] private Light directionalLight; // Assign your main sun/directional light here
+    public Volume volume;
+    [SerializeField] private Light directionalLight;
 
     [Header("Settings")]
     public float fadeDuration = 1f;
@@ -25,11 +27,13 @@ public class Labyrinth : MonoBehaviour
     public float jumpDisableRadius = 1.2f;
 
     [Header("Light Settings")]
-    [Tooltip("How fast the light intensity transitions (units per second)")]
-    public float lightLerpSpeed = 1.5f;
+    [Tooltip("How long the light transition takes in seconds")]
+    public float lightTransitionDuration = 2f;
+
     [Tooltip("Target light intensity while inside the zone")]
     public float insideLightIntensity = 0.2f;
-    [Tooltip("Target light intensity when outside the zone")]
+
+    [Tooltip("Automatically stores the scene's original light intensity")]
     public float outsideLightIntensity = 1f;
 
     [Header("Respawn")]
@@ -46,24 +50,52 @@ public class Labyrinth : MonoBehaviour
     private Collider zoneCollider;
     private PlayerMovement trackedPM;
 
-    // ---- Blackout/respawn state guard ----
+    private readonly HashSet<Collider> playerCollidersInside =
+        new HashSet<Collider>();
+
     public bool reviving { get; private set; } = false;
 
     void Start()
     {
         zoneCollider = GetComponent<Collider>();
 
-        if (volume != null && volume.profile.TryGet(out Vignette v))
+        if (volume != null &&
+            volume.profile != null &&
+            volume.profile.TryGet(out Vignette v))
         {
             vignetteEffect = v;
+
+            // Keep vignette enabled all the time.
+            // Only intensity changes.
+            vignetteEffect.active = true;
+            vignetteEffect.intensity.overrideState = true;
             vignetteEffect.intensity.value = 0f;
-            vignetteEffect.active = false;
         }
 
-        monoclePickup.eventOnInteract += OnMonocleInteract;
+        if (monoclePickup != null)
+        {
+            monoclePickup.eventOnInteract += OnMonocleInteract;
+        }
 
+        // Remember the current scene lighting.
+        // Do NOT change the light intensity here.
         if (directionalLight != null)
-            directionalLight.intensity = outsideLightIntensity;
+        {
+            outsideLightIntensity = directionalLight.intensity;
+
+            // Make sure entering the labyrinth can only make it darker.
+            insideLightIntensity = Mathf.Min(
+                insideLightIntensity,
+                outsideLightIntensity
+            );
+        }
+
+        if (fadeImage != null)
+        {
+            Color c = fadeImage.color;
+            c.a = 0f;
+            fadeImage.color = c;
+        }
     }
 
     private void OnDestroy()
@@ -74,7 +106,10 @@ public class Labyrinth : MonoBehaviour
         }
     }
 
-    void OnMonocleInteract(Interactor interactor, Interactable interactable, InteractActionType action)
+    void OnMonocleInteract(
+        Interactor interactor,
+        Interactable interactable,
+        InteractActionType action)
     {
         if (action == InteractActionType.Interact)
         {
@@ -84,7 +119,10 @@ public class Labyrinth : MonoBehaviour
 
     void Update()
     {
-        if (trackedPM != null)
+        if (reviving)
+            return;
+
+        if (trackedPM != null && zoneCollider != null)
         {
             Vector3 playerPos = trackedPM.transform.position;
             Vector3 closest = zoneCollider.ClosestPoint(playerPos);
@@ -104,48 +142,89 @@ public class Labyrinth : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
-        if (reviving) return; // Ignore while black/respawning
+        if (reviving)
+            return;
+
+        PlayerMovement pm =
+            other.GetComponentInParent<PlayerMovement>();
+
+        if (pm == null || !pm.CompareTag("Player"))
+            return;
+
+        playerCollidersInside.Add(other);
+
+        // Prevent multiple player colliders from triggering everything.
+        if (isPlayerInside)
+            return;
 
         isPlayerInside = true;
 
-        if (other.TryGetComponent<PlayerMovement>(out var pm))
+        trackedPM = pm;
+        pm.blockJump = true;
+
+        if (vignetteFadeOutCoroutine != null)
         {
-            pm.blockJump = true;
-            trackedPM = pm;
+            StopCoroutine(vignetteFadeOutCoroutine);
+            vignetteFadeOutCoroutine = null;
         }
 
-        if (vignetteFadeOutCoroutine != null) StopCoroutine(vignetteFadeOutCoroutine);
-        if (timerCoroutine != null) StopCoroutine(timerCoroutine);
+        if (timerCoroutine != null)
+        {
+            StopCoroutine(timerCoroutine);
+            timerCoroutine = null;
+        }
 
+        // Start from no vignette.
         if (vignetteEffect != null)
         {
             vignetteEffect.intensity.value = 0f;
-            vignetteEffect.active = true;
         }
 
+        // Smoothly make the scene darker.
         StartLightLerp(insideLightIntensity);
 
-        timerCoroutine = StartCoroutine(TriggerTimer(other.gameObject));
+        timerCoroutine =
+            StartCoroutine(TriggerTimer(pm.gameObject));
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
-        if (reviving) return; // Don’t touch fades while black
+        if (reviving)
+            return;
+
+        PlayerMovement pm =
+            other.GetComponentInParent<PlayerMovement>();
+
+        if (pm == null || pm != trackedPM)
+            return;
+
+        playerCollidersInside.Remove(other);
+
+        // Another player collider is still inside.
+        if (playerCollidersInside.Count > 0)
+            return;
 
         isPlayerInside = false;
 
         if (timerCoroutine != null)
         {
             StopCoroutine(timerCoroutine);
-            StartCoroutine(FadeOut());
             timerCoroutine = null;
-
-            if (vignetteEffect != null)
-                vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
         }
 
+        if (vignetteFadeOutCoroutine != null)
+        {
+            StopCoroutine(vignetteFadeOutCoroutine);
+            vignetteFadeOutCoroutine = null;
+        }
+
+        if (vignetteEffect != null)
+        {
+            vignetteFadeOutCoroutine =
+                StartCoroutine(FadeOutVignetteSmoothly());
+        }
+
+        // Return smoothly to original scene brightness.
         StartLightLerp(outsideLightIntensity);
     }
 
@@ -153,175 +232,318 @@ public class Labyrinth : MonoBehaviour
     {
         float elapsed = 0f;
 
+        float startIntensity = 0f;
+
+        if (vignetteEffect != null)
+        {
+            startIntensity =
+                vignetteEffect.intensity.value;
+        }
+
         while (elapsed < triggerTime)
         {
-            if (!isPlayerInside) yield break;
+            if (!isPlayerInside)
+            {
+                timerCoroutine = null;
+                yield break;
+            }
 
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / triggerTime);
+
+            float t =
+                Mathf.Clamp01(elapsed / triggerTime);
+
             if (vignetteEffect != null)
-                vignetteEffect.intensity.value = Mathf.Lerp(0f, maxVignetteIntensity, t);
+            {
+                vignetteEffect.intensity.value =
+                    Mathf.Lerp(
+                        startIntensity,
+                        maxVignetteIntensity,
+                        t
+                    );
+            }
+
             yield return null;
         }
 
-        // ---- Begin blackout/respawn section ----
+        timerCoroutine = null;
+
         reviving = true;
 
-        // Prevent re-triggering while black
+        playerCollidersInside.Clear();
+
         bool restoreCollider = false;
-        if (zoneCollider != null && zoneCollider.enabled)
+
+        if (zoneCollider != null &&
+            zoneCollider.enabled)
         {
             zoneCollider.enabled = false;
             restoreCollider = true;
         }
 
-        // Full fade to black
         yield return StartCoroutine(FadeIn());
 
-        // Teleport while black
         if (spawnPoint != null)
         {
-            var rb = player.GetComponent<Rigidbody>();
-            if (rb != null)
-                rb.MovePosition(spawnPoint.position);
-            else
-                player.transform.position = spawnPoint.position;
+            Rigidbody rb =
+                player.GetComponent<Rigidbody>();
 
-            // Make sure jump isn’t stuck blocked after teleport
-            var pm = player.GetComponent<PlayerMovement>();
-            if (pm != null) pm.blockJump = false;
+            if (rb != null)
+            {
+                rb.MovePosition(spawnPoint.position);
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+            else
+            {
+                player.transform.position =
+                    spawnPoint.position;
+            }
+
+            PlayerMovement pm =
+                player.GetComponent<PlayerMovement>();
+
+            if (pm != null)
+            {
+                pm.blockJump = false;
+            }
         }
         else
         {
-            Debug.LogWarning("Spawn point not assigned!");
+            Debug.LogWarning(
+                "[Labyrinth] Spawn point not assigned!"
+            );
         }
 
-        // Reset vignette after teleport
+        // Reset vignette without disabling the component.
         if (vignetteEffect != null)
         {
             vignetteEffect.intensity.value = 0f;
-            vignetteEffect.active = false;
         }
 
-        // Hold black
         if (respawnHoldBlackSeconds > 0f)
-            yield return new WaitForSeconds(respawnHoldBlackSeconds);
+        {
+            yield return new WaitForSeconds(
+                respawnHoldBlackSeconds
+            );
+        }
 
-        // Fade back from black (ALWAYS)
         yield return StartCoroutine(FadeOut());
 
-        // Restore collider after we’re visible again
-        if (restoreCollider && zoneCollider != null)
+        if (restoreCollider &&
+            zoneCollider != null)
+        {
             zoneCollider.enabled = true;
+        }
 
-        // Reset state
         isPlayerInside = false;
         reviving = false;
 
-        // Softly restore outside lighting
         StartLightLerp(outsideLightIntensity);
     }
 
     IEnumerator FadeOutVignetteSmoothly()
     {
-        if (vignetteEffect == null) yield break;
+        if (vignetteEffect == null)
+            yield break;
 
         while (vignetteEffect.intensity.value > 0f)
         {
-            vignetteEffect.intensity.value -= Time.deltaTime * vignetteFadeOutSpeed;
+            vignetteEffect.intensity.value =
+                Mathf.MoveTowards(
+                    vignetteEffect.intensity.value,
+                    0f,
+                    vignetteFadeOutSpeed * Time.deltaTime
+                );
+
             yield return null;
         }
 
         vignetteEffect.intensity.value = 0f;
-        vignetteEffect.active = false;
+        vignetteFadeOutCoroutine = null;
     }
 
     IEnumerator FadeIn()
     {
-        if (fadeImage == null) yield break;
-        float t = 0f;
+        if (fadeImage == null)
+            yield break;
+
         Color c = fadeImage.color;
+        float startAlpha = c.a;
+
+        if (fadeDuration <= 0f)
+        {
+            c.a = 1f;
+            fadeImage.color = c;
+            yield break;
+        }
+
+        float t = 0f;
+
         while (t < fadeDuration)
         {
             t += Time.deltaTime;
-            c.a = Mathf.Lerp(0, 1, t / fadeDuration);
+
+            float normalized =
+                Mathf.Clamp01(t / fadeDuration);
+
+            c.a = Mathf.Lerp(
+                startAlpha,
+                1f,
+                normalized
+            );
+
             fadeImage.color = c;
+
             yield return null;
         }
-        // Ensure exact black
+
         c.a = 1f;
         fadeImage.color = c;
     }
 
     IEnumerator FadeOut()
     {
-        if (fadeImage == null) yield break;
-        float t = 0f;
+        if (fadeImage == null)
+            yield break;
+
         Color c = fadeImage.color;
+        float startAlpha = c.a;
+
+        if (fadeDuration <= 0f)
+        {
+            c.a = 0f;
+            fadeImage.color = c;
+            yield break;
+        }
+
+        float t = 0f;
+
         while (t < fadeDuration)
         {
             t += Time.deltaTime;
-            c.a = Mathf.Lerp(1, 0, t / fadeDuration);
+
+            float normalized =
+                Mathf.Clamp01(t / fadeDuration);
+
+            c.a = Mathf.Lerp(
+                startAlpha,
+                0f,
+                normalized
+            );
+
             fadeImage.color = c;
+
             yield return null;
         }
-        // Ensure exact clear
+
         c.a = 0f;
         fadeImage.color = c;
     }
 
     public void PauseFadeTimer()
     {
-        // New: don’t allow pausing while we’re black/respawning
-        if (reviving) return;
+        if (reviving)
+            return;
 
         if (timerCoroutine != null)
         {
             StopCoroutine(timerCoroutine);
             timerCoroutine = null;
         }
+
         if (vignetteFadeOutCoroutine != null)
+        {
             StopCoroutine(vignetteFadeOutCoroutine);
+            vignetteFadeOutCoroutine = null;
+        }
 
         if (vignetteEffect != null)
-            vignetteFadeOutCoroutine = StartCoroutine(FadeOutVignetteSmoothly());
+        {
+            vignetteFadeOutCoroutine =
+                StartCoroutine(
+                    FadeOutVignetteSmoothly()
+                );
+        }
     }
 
     public void ResumeFadeTimer(GameObject player)
     {
-        // New: ignore resumes while black/respawning
-        if (reviving) return;
+        if (reviving)
+            return;
 
-        if (isPlayerInside && timerCoroutine == null)
+        if (!isPlayerInside)
+            return;
+
+        // Stop the fade-out before making the vignette darker again.
+        if (vignetteFadeOutCoroutine != null)
         {
-            if (vignetteEffect != null)
-            {
-                vignetteEffect.intensity.value = 0f;
-                vignetteEffect.active = true;
-            }
-            timerCoroutine = StartCoroutine(TriggerTimer(player));
+            StopCoroutine(vignetteFadeOutCoroutine);
+            vignetteFadeOutCoroutine = null;
+        }
+
+        if (timerCoroutine == null)
+        {
+            timerCoroutine =
+                StartCoroutine(
+                    TriggerTimer(player)
+                );
         }
     }
 
-    // ---- Light helpers ----
+    // ---------------- LIGHT ----------------
+
     void StartLightLerp(float target)
     {
-        if (directionalLight == null) return;
+        if (directionalLight == null)
+            return;
 
         if (lightCoroutine != null)
+        {
             StopCoroutine(lightCoroutine);
+            lightCoroutine = null;
+        }
 
-        lightCoroutine = StartCoroutine(LerpLight(target));
+        lightCoroutine =
+            StartCoroutine(LerpLight(target));
     }
 
     IEnumerator LerpLight(float target)
     {
-        while (!Mathf.Approximately(directionalLight.intensity, target))
+        float startIntensity =
+            directionalLight.intensity;
+
+        if (lightTransitionDuration <= 0f)
         {
-            float current = directionalLight.intensity;
-            float next = Mathf.MoveTowards(current, target, lightLerpSpeed * Time.deltaTime);
-            directionalLight.intensity = next;
+            directionalLight.intensity = target;
+            lightCoroutine = null;
+            yield break;
+        }
+
+        float elapsed = 0f;
+
+        while (elapsed < lightTransitionDuration)
+        {
+            elapsed += Time.deltaTime;
+
+            float t = Mathf.Clamp01(
+                elapsed / lightTransitionDuration
+            );
+
+            // Smooth start and smooth finish.
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            directionalLight.intensity =
+                Mathf.Lerp(
+                    startIntensity,
+                    target,
+                    t
+                );
+
             yield return null;
         }
+
+        directionalLight.intensity = target;
+        lightCoroutine = null;
     }
 }

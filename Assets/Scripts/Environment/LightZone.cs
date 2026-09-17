@@ -1,5 +1,5 @@
-// LightPart.cs
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 public class LightZone : MonoBehaviour
@@ -7,15 +7,31 @@ public class LightZone : MonoBehaviour
     [Tooltip("Assign the Labyrinth GameObject with the Labyrinth script here.")]
     public Labyrinth labyrinth;
 
+    private readonly HashSet<Collider> playerColliders =
+        new HashSet<Collider>();
+
     void Reset()
     {
-        var col = GetComponent<Collider>();
+        Collider col = GetComponent<Collider>();
         col.isTrigger = true;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && labyrinth != null && !labyrinth.reviving)
+        PlayerMovement pm =
+            other.GetComponentInParent<PlayerMovement>();
+
+        if (pm == null || !pm.CompareTag("Player"))
+            return;
+
+        // Already tracking this collider
+        if (!playerColliders.Add(other))
+            return;
+
+        // Only pause when the FIRST player collider enters
+        if (playerColliders.Count == 1 &&
+            labyrinth != null &&
+            !labyrinth.reviving)
         {
             labyrinth.PauseFadeTimer();
         }
@@ -23,9 +39,20 @@ public class LightZone : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && labyrinth != null)
+        PlayerMovement pm =
+            other.GetComponentInParent<PlayerMovement>();
+
+        if (pm == null || !pm.CompareTag("Player"))
+            return;
+
+        if (!playerColliders.Remove(other))
+            return;
+
+        // Only resume once ALL player colliders have left
+        if (playerColliders.Count == 0 &&
+            labyrinth != null)
         {
-            labyrinth.ResumeFadeTimer(other.gameObject);
+            labyrinth.ResumeFadeTimer(pm.gameObject);
         }
     }
 }
