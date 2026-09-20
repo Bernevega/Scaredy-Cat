@@ -23,10 +23,6 @@ public class PickupItemOnInteractScript : MonoBehaviour
     [Tooltip("Scene to load after faint and fade (must be added to Build Settings)")]
     public string sceneToLoad;
 
-    [Header("Optional On Pickup")]
-    [Tooltip("GameObject to activate when the item is picked up")]
-    public GameObject objectToShowOnPickup;
-
     [Header("Optional Freeze/Disable Movement")]
     [Tooltip("Should player movement be disabled and frozen during faint?")]
     public bool disablePlayerMovementOnFaint = false;
@@ -116,9 +112,6 @@ public class PickupItemOnInteractScript : MonoBehaviour
 
         if (interactable != null)
             interactable.enabled = false;
-
-        if (objectToShowOnPickup != null)
-            objectToShowOnPickup.SetActive(true);
 
         if (hideInteractionUIOnPickup && interactionCanvas != null)
             StartUIFade(0f, interactionFadeDuration);

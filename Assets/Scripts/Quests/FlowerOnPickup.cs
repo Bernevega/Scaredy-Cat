@@ -5,6 +5,7 @@ public class FlowerOnPickup : MonoBehaviour
     [SerializeField] Interactable interactable;
     [SerializeField] GameObject ghostPaperObject;
     [SerializeField] GameObject logBlocker;
+    [SerializeField] GameObject objectToDisable;
 
     private void Awake()
     {
@@ -16,10 +17,15 @@ public class FlowerOnPickup : MonoBehaviour
         if (type == InteractActionType.Interact)
         {
             SimpleDialogManager.Instance.StartDialogue("FlowerPickup");
+
             if (ghostPaperObject)
                 ghostPaperObject.SetActive(true);
+
             if (logBlocker)
                 logBlocker.SetActive(false);
+
+            if (objectToDisable)
+                objectToDisable.SetActive(false);
         }
     }
 }

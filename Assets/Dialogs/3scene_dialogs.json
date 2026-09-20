@@ -29,16 +29,6 @@
       }
     }
   },
-  "LogBroken": {
-    "start": "kitty1",
-    "nodes": {
-      "kitty1": {
-        "speaker": "Kitty",
-        "text": "The log is broken, I can't go back!",
-        "next": null
-      }
-    }
-  },
   "KittyOnTree": {
     "start": "kitty1",
     "nodes": {
@@ -483,7 +473,7 @@
       },
       "kitty2": {
         "speaker": "Kitty",
-        "text": "Oh no!!! When did it get so dark? I need to get home!",
+        "text": "Oh no!!! It's getting darker... I need to get home!",
         "next": "kitty3"
       },
       "kitty3": {
@@ -563,7 +553,52 @@
       },
       "caw2festival": {
         "speaker": "Kitty",
-        "text": "The log is broken... I should go to the festival and ask around for other directions to the city!",
+        "text": "Since the log is broken... Maybe I should go to the festival and ask around for other directions to the city?",
+        "next": "caw3festival"
+      },
+      "caw3festival": {
+        "speaker": "Kitty",
+        "text": "I can do this!!!",
+        "next": null
+      }
+    }
+  },
+  "LogBroken": {
+    "start": "kitty1",
+    "nodes": {
+      "kitty1": {
+        "speaker": "Kitty",
+        "text": "Oh no................",
+        "next": "kitty2"
+      },
+      "kitty2": {
+        "speaker": "Kitty",
+        "text": "The log is broken... How can I return home now?.....",
+        "next": "kitty3"
+      },
+      "kitty3": {
+        "speaker": "Kitty",
+        "text": "*sniff*",
+        "next": "kitty4"
+      },
+      "kitty4": {
+        "speaker": "Kitty",
+        "text": "I just want to hug Mom...",
+        "next": "kitty5"
+      },
+      "kitty5": {
+        "speaker": "Kitty",
+        "text": "*sniff*",
+        "next": "kitty6"
+      },
+      "kitty6": {
+        "speaker": "Kitty",
+        "text": "...",
+        "next": "kitty7"
+      },
+      "kitty7": {
+        "speaker": "Kitty",
+        "text": "Wait, what's that lying on the ground?",
         "next": null
       }
     }
