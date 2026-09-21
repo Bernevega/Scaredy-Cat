@@ -1,355 +1,1567 @@
-using JetBrains.Annotations;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
 public class DanceMinigame : MonoBehaviour
 {
-    [SerializeField] Interactable interactable;
-    [SerializeField] DialogueOnInteract assyla;
-    [SerializeField] GameObject panelObject;
-    [SerializeField] GameObject canvasObject;
-    [SerializeField] DanceKey[] keyPool;
-    [SerializeField] GameObject[] lives;
-    [SerializeField] GameObject hatObject;
-    [SerializeField] AudioSource musicAudio;
-    [SerializeField] AudioClip clickClip;
-    [SerializeField] AudioClip danceMusic;
-    [SerializeField] AudioClip normalMusic;
-    [SerializeField] AudioMixerGroup mix;
+    [Header("References")]
 
-    private float keyTimer = 2f;
-    private int losses = 0;
-    private int keysLeft = 25;
+    [SerializeField] private Interactable interactable;
+    [SerializeField] private DialogueOnInteract assyla;
+
+    [SerializeField] private GameObject panelObject;
+    [SerializeField] private GameObject canvasObject;
+
+    [SerializeField] private DanceKey[] keyPool;
+    [SerializeField] private GameObject[] lives;
+
+    [SerializeField] private GameObject hatObject;
+
+
+    [Header("Audio")]
+
+    [SerializeField] private AudioSource musicAudio;
+    [SerializeField] private AudioClip clickClip;
+    [SerializeField] private AudioClip danceMusic;
+    [SerializeField] private AudioClip normalMusic;
+    [SerializeField] private AudioMixerGroup mix;
+
+
+    [Header("Tutorial")]
+
+    [SerializeField] private DanceTutorial danceTutorial;
+
+
+    [Header("Minigame Appearance")]
+
+    [Tooltip("How long the entire dance minigame takes to fade in.")]
+    public float minigameFadeDuration = 0.5f;
+
+
+    [Header("Minigame Settings")]
+
+    [Tooltip("How many keys the player must complete.")]
     public int startingKeys = 20;
-    private int activeKeys = 0;
 
-    bool gameActive = false;
+    [Tooltip("How fast the shrinking Current Area moves. Bigger = faster.")]
+    public float currentAreaShrinkSpeed = 50f;
+
+
+    [Header("Key Spawn Speed")]
+
+    [Tooltip("Seconds between keys at the beginning.")]
+    public float startingKeySpawnInterval = 1.5f;
+
+    [Tooltip("Fastest possible interval between keys.")]
+    public float minimumKeySpawnInterval = 0.6f;
+
+    [Tooltip("How much faster spawning becomes after each spawned key.")]
+    public float spawnSpeedIncrease = 0.05f;
+
+
+    [Header("Key Appearance")]
+
+    [Tooltip("How long each individual key takes to fade in.")]
+    public float keyAppearDuration = 0.2f;
+
+
+    [Header("Key Placement")]
+
+    [Tooltip("Minimum distance between active keys.")]
+    public float minimumKeyDistance = 250f;
+
+    [Tooltip("How many positions are checked before waiting for more space.")]
+    public int positionSearchAttempts = 50;
+
+
+    [Header("Screen Border")]
+
+    [Range(0.1f, 0.5f)]
+    public float horizontalSpawnArea = 0.35f;
+
+    [Range(0.1f, 0.5f)]
+    public float verticalSpawnArea = 0.30f;
+
+
+    [Header("Screen Shake")]
+
+    [Tooltip("How long the minigame UI shakes when a life is lost.")]
+    public float shakeDuration = 0.2f;
+
+    [Tooltip("How strong the shake is.")]
+    public float shakeStrength = 15f;
+
+
+    private CanvasGroup minigameCanvasGroup;
+
+    private RectTransform panelRectTransform;
+    private Vector2 panelOriginalPosition;
+
+    private Coroutine shakeCoroutine;
+
+
+    private float keyTimer;
+    private float currentKeySpawnInterval;
+
+
+    private int losses;
+    private int keysLeft;
+    private int activeKeys;
+
+
+    private bool gameActive;
+    private bool minigameReady;
+    private bool waitingForTutorial;
+
+
+    private void Awake()
+    {
+        if (panelObject != null)
+        {
+            // CanvasGroup for fading the whole minigame.
+            minigameCanvasGroup =
+                panelObject.GetComponent<CanvasGroup>();
+
+
+            if (minigameCanvasGroup == null)
+            {
+                minigameCanvasGroup =
+                    panelObject.AddComponent<CanvasGroup>();
+            }
+
+
+            minigameCanvasGroup.alpha =
+                0f;
+
+
+            // RectTransform for screen shake.
+            panelRectTransform =
+                panelObject.GetComponent<RectTransform>();
+
+
+            if (panelRectTransform != null)
+            {
+                panelOriginalPosition =
+                    panelRectTransform.anchoredPosition;
+            }
+
+
+            panelObject.SetActive(false);
+        }
+    }
+
 
     private void Start()
     {
-        SimpleDialogManager dm = SimpleDialogManager.Instance;
-        if (dm)
+        SimpleDialogManager dm =
+            SimpleDialogManager.Instance;
+
+
+        if (dm != null)
         {
-            dm.eventDialogueChanged += OnDialogueAdvance;
+            dm.eventDialogueChanged +=
+                OnDialogueAdvance;
         }
     }
+
 
     private void OnDestroy()
     {
-        SimpleDialogManager dm = SimpleDialogManager.Instance;
-        if (dm)
+        SimpleDialogManager dm =
+            SimpleDialogManager.Instance;
+
+
+        if (dm != null)
         {
-            dm.eventDialogueChanged -= OnDialogueAdvance;
+            dm.eventDialogueChanged -=
+                OnDialogueAdvance;
         }
     }
 
-    private void OnDialogueAdvance(string sceneID, string currentKey)
+
+    private void OnDialogueAdvance(
+        string sceneID,
+        string currentKey)
     {
-        // Only start minigame when its dialogue finishes.
-        if ((sceneID == "AssylaDance" && currentKey == null) ||
-            (sceneID == "AssylaRestart" && currentKey == null))
+        if ((sceneID == "AssylaDance" &&
+             currentKey == null) ||
+            (sceneID == "AssylaRestart" &&
+             currentKey == null))
         {
-            StartMinigame();
+            RequestStartMinigame();
+        }
+    }
+
+
+    private void RequestStartMinigame()
+    {
+        if (gameActive)
+            return;
+
+
+        if (waitingForTutorial)
+            return;
+
+
+        // =====================================
+        // FIRST ATTEMPT -> TUTORIAL
+        // =====================================
+
+        if (danceTutorial != null &&
+            !danceTutorial.HasShownTutorial)
+        {
+            waitingForTutorial = true;
+
+
+            // Disable Assyla interaction immediately.
+            if (interactable != null)
+            {
+                interactable.enabled =
+                    false;
+            }
+
+
+            if (assyla != null)
+            {
+                assyla.SetExternallyHidden(
+                    true
+                );
+            }
+
+
+            danceTutorial.ShowTutorial(
+                OnDanceTutorialFinished
+            );
+
+
+            return;
         }
 
-        // Music returns to normal ONLY inside EndMinigame(win/lose).
+
+        // Retry -> skip tutorial.
+        StartMinigame();
     }
+
+
+    private void OnDanceTutorialFinished()
+    {
+        waitingForTutorial =
+            false;
+
+
+        /*
+         * Called the moment F is pressed.
+         * Tutorial fades OUT while
+         * minigame fades IN.
+         */
+        StartMinigame();
+    }
+
 
     private void StartMinigame()
     {
-        panelObject.SetActive(true);
-        interactable.enabled = false;
-        gameActive = true;
-        PlayerManager.instance.player.GetComponent<PlayerMovement>().enabled = false;
-        QuestManager.instance.SetUIEnabled(false);
+        if (gameActive)
+            return;
 
-        // Hide interaction prompt while the minigame is active
+
+        gameActive =
+            true;
+
+
+        minigameReady =
+            false;
+
+
+        // =====================================
+        // PLAYER
+        // =====================================
+
+        if (PlayerManager.instance != null &&
+            PlayerManager.instance.player != null)
+        {
+            PlayerMovement movement =
+                PlayerManager.instance.player
+                    .GetComponent<PlayerMovement>();
+
+
+            if (movement != null)
+            {
+                movement.enabled =
+                    false;
+            }
+        }
+
+
+        // =====================================
+        // ASSYLA
+        // =====================================
+
+        if (interactable != null)
+        {
+            interactable.enabled =
+                false;
+        }
+
+
         if (assyla != null)
-            assyla.SetExternallyHidden(true);
-
-        losses = 0;
-        keysLeft = startingKeys;
-        activeKeys = 0;
-
-        for (int i = 0; i < keyPool.Length; i++)
         {
+            assyla.SetExternallyHidden(
+                true
+            );
+        }
+
+
+        // =====================================
+        // QUEST UI
+        // =====================================
+
+        if (QuestManager.instance != null)
+        {
+            QuestManager.instance
+                .SetUIEnabled(false);
+        }
+
+
+        // =====================================
+        // RESET GAME
+        // =====================================
+
+        losses =
+            0;
+
+
+        keysLeft =
+            startingKeys;
+
+
+        activeKeys =
+            0;
+
+
+        currentKeySpawnInterval =
+            startingKeySpawnInterval;
+
+
+        keyTimer =
+            currentKeySpawnInterval;
+
+
+        // Reset panel position in case shake
+        // was interrupted previously.
+        if (panelRectTransform != null)
+        {
+            panelRectTransform.anchoredPosition =
+                panelOriginalPosition;
+        }
+
+
+        // =====================================
+        // RESET KEYS
+        // =====================================
+
+        for (int i = 0;
+             i < keyPool.Length;
+             i++)
+        {
+            if (keyPool[i] == null)
+                continue;
+
+
+            keyPool[i].shrinkRate =
+                currentAreaShrinkSpeed;
+
+
             keyPool[i].OnReset();
-            keyPool[i].gameObject.SetActive(false);
+
+
+            CanvasGroup keyCanvas =
+                keyPool[i]
+                    .GetComponent<CanvasGroup>();
+
+
+            if (keyCanvas == null)
+            {
+                keyCanvas =
+                    keyPool[i]
+                        .gameObject
+                        .AddComponent<CanvasGroup>();
+            }
+
+
+            keyCanvas.alpha =
+                1f;
+
+
+            keyPool[i]
+                .gameObject
+                .SetActive(false);
         }
 
-        for (int i = 0; i < lives.Length; i++)
+
+        // =====================================
+        // RESET LIVES
+        // =====================================
+
+        for (int i = 0;
+             i < lives.Length;
+             i++)
         {
-            if (i < lives.Length - losses)
-                lives[i].SetActive(true);
-            else
-                lives[i].SetActive(false);
+            if (lives[i] != null)
+            {
+                lives[i]
+                    .SetActive(true);
+            }
         }
 
-        // Switch to minigame track ONLY now; avoid restarting if already set/playing.
-        if (musicAudio != null && danceMusic != null)
-            SafePlay(musicAudio, danceMusic, restartIfSame: false);
+
+        // =====================================
+        // MUSIC
+        // =====================================
+
+        if (musicAudio != null &&
+            danceMusic != null)
+        {
+            SafePlay(
+                musicAudio,
+                danceMusic,
+                false
+            );
+        }
+
+
+        // =====================================
+        // SHOW + FADE MINIGAME IN
+        // =====================================
+
+        if (panelObject != null)
+        {
+            panelObject.SetActive(
+                true
+            );
+
+
+            StartCoroutine(
+                FadeInMinigame()
+            );
+        }
+        else
+        {
+            minigameReady =
+                true;
+        }
     }
 
-    private void EndMinigame(bool win)
+
+    private IEnumerator FadeInMinigame()
     {
-        Debug.Log("DANCE MINIGAME RESTART");
-        panelObject.SetActive(false);
-        interactable.enabled = true;
-        gameActive = false;
-        PlayerManager.instance.player.GetComponent<PlayerMovement>().enabled = true;
-        QuestManager.instance.SetUIEnabled(true);
+        if (minigameCanvasGroup == null)
+        {
+            minigameReady =
+                true;
 
-        // Restore interaction prompt visibility rules
+
+            yield break;
+        }
+
+
+        minigameCanvasGroup.alpha =
+            0f;
+
+
+        float duration =
+            Mathf.Max(
+                0f,
+                minigameFadeDuration
+            );
+
+
+        if (duration <= 0f)
+        {
+            minigameCanvasGroup.alpha =
+                1f;
+
+
+            minigameReady =
+                true;
+
+
+            yield break;
+        }
+
+
+        float timer =
+            0f;
+
+
+        while (timer < duration)
+        {
+            timer +=
+                Time.unscaledDeltaTime;
+
+
+            float progress =
+                Mathf.Clamp01(
+                    timer /
+                    duration
+                );
+
+
+            minigameCanvasGroup.alpha =
+                progress;
+
+
+            yield return null;
+        }
+
+
+        minigameCanvasGroup.alpha =
+            1f;
+
+
+        minigameReady =
+            true;
+
+
+        keyTimer =
+            currentKeySpawnInterval;
+    }
+
+
+    private void EndMinigame(
+        bool win)
+    {
+        gameActive =
+            false;
+
+
+        minigameReady =
+            false;
+
+
+        // Stop shake if one is currently happening.
+        if (shakeCoroutine != null)
+        {
+            StopCoroutine(
+                shakeCoroutine
+            );
+
+
+            shakeCoroutine =
+                null;
+        }
+
+
+        // Restore panel position.
+        if (panelRectTransform != null)
+        {
+            panelRectTransform.anchoredPosition =
+                panelOriginalPosition;
+        }
+
+
+        if (panelObject != null)
+        {
+            panelObject.SetActive(
+                false
+            );
+        }
+
+
+        if (minigameCanvasGroup != null)
+        {
+            minigameCanvasGroup.alpha =
+                0f;
+        }
+
+
+        // =====================================
+        // RESTORE PLAYER
+        // =====================================
+
+        if (PlayerManager.instance != null &&
+            PlayerManager.instance.player != null)
+        {
+            PlayerMovement movement =
+                PlayerManager.instance.player
+                    .GetComponent<PlayerMovement>();
+
+
+            if (movement != null)
+            {
+                movement.enabled =
+                    true;
+            }
+        }
+
+
+        // =====================================
+        // QUEST UI
+        // =====================================
+
+        if (QuestManager.instance != null)
+        {
+            QuestManager.instance
+                .SetUIEnabled(true);
+        }
+
+
+        // =====================================
+        // ASSYLA
+        // =====================================
+
+        if (interactable != null)
+        {
+            interactable.enabled =
+                true;
+        }
+
+
         if (assyla != null)
-            assyla.SetExternallyHidden(false);
+        {
+            assyla.SetExternallyHidden(
+                false
+            );
+        }
 
-        // >>> Return to normal music HERE (after minigame ends), regardless of win/lose
-        if (musicAudio != null && normalMusic != null)
-            SafePlay(musicAudio, normalMusic, restartIfSame: false);
 
-        SimpleDialogManager dm = SimpleDialogManager.Instance;
+        // =====================================
+        // MUSIC
+        // =====================================
+
+        if (musicAudio != null &&
+            normalMusic != null)
+        {
+            SafePlay(
+                musicAudio,
+                normalMusic,
+                false
+            );
+        }
+
+
+        SimpleDialogManager dm =
+            SimpleDialogManager.Instance;
+
+
+        // =====================================
+        // WIN
+        // =====================================
 
         if (win)
         {
-            // Tell the dialog system to use Assyla's hatless portrait from now on
             if (dm != null)
-                dm.SetAssylaHatless(true);
+            {
+                dm.SetAssylaHatless(
+                    true
+                );
 
-            dm.StartDialogue("AssylaGive");
-            assyla.sceneId.value = "AssylaThank";
 
-            // Hide the actual hat in-world
+                dm.StartDialogue(
+                    "AssylaGive"
+                );
+            }
+
+
+            if (assyla != null)
+            {
+                assyla.sceneId.value =
+                    "AssylaThank";
+            }
+
+
             if (hatObject != null)
-                hatObject.SetActive(false);
+            {
+                hatObject.SetActive(
+                    false
+                );
+            }
         }
+
+        // =====================================
+        // LOSE
+        // =====================================
+
         else
         {
-            dm.StartDialogue("AssylaBetterLuck");
-            assyla.sceneId.value = "AssylaRestart";
+            if (dm != null)
+            {
+                dm.StartDialogue(
+                    "AssylaBetterLuck"
+                );
+            }
+
+
+            if (assyla != null)
+            {
+                assyla.sceneId.value =
+                    "AssylaRestart";
+            }
         }
     }
+
 
     private void FixedUpdate()
     {
-        if (!gameActive) return;
-
-        if (keyTimer > 0)
+        if (!gameActive ||
+            !minigameReady)
         {
-            keyTimer -= Time.deltaTime;
-            if (keyTimer <= 0)
-            {
+            return;
+        }
+
+
+        // =====================================
+        // SPAWNING
+        // =====================================
+
+        keyTimer -=
+            Time.deltaTime;
+
+
+        if (keyTimer <= 0f)
+        {
+            bool spawned =
                 SpawnKey();
-            }
-        }
-        else
-        {
-            SpawnKey();
-        }
 
-        for (int i = 0; i < keyPool.Length; i++)
-        {
-            if (keyPool[i].gameObject.activeInHierarchy)
+
+            if (spawned)
             {
-                keyPool[i].OnUpdate(Time.deltaTime);
+                currentKeySpawnInterval -=
+                    spawnSpeedIncrease;
 
-                if (keyPool[i].InFailZone())
-                {
-                    keyPool[i].gameObject.SetActive(false);
-                    FailKey();
-                    activeKeys--;
-                }
+
+                currentKeySpawnInterval =
+                    Mathf.Max(
+                        currentKeySpawnInterval,
+                        minimumKeySpawnInterval
+                    );
             }
-        }
-    }
 
-    private void Update()
-    {
-        if (!gameActive) return;
 
-        KeyCode pressedKey = KeyCode.None;
-        for (int i = 0; i < DanceKey.randomKeyList.Length; i++)
-        {
-            if (Input.GetKeyDown(DanceKey.randomKeyList[i]))
-            {
-                pressedKey = DanceKey.randomKeyList[i];
-                break;
-            }
+            keyTimer =
+                currentKeySpawnInterval;
         }
 
-        DanceKey latestKey = null;
-        if (pressedKey != KeyCode.None)
+
+        // =====================================
+        // UPDATE ACTIVE KEYS
+        // =====================================
+
+        for (int i = 0;
+             i < keyPool.Length;
+             i++)
         {
-            float keyScale = 9999999f;
-            bool success = false;
-            for (int i = 0; i < keyPool.Length; i++)
+            if (keyPool[i] == null)
+                continue;
+
+
+            if (!keyPool[i]
+                .gameObject
+                .activeInHierarchy)
             {
-                if (keyPool[i].gameObject.activeInHierarchy == true &&
-                    keyPool[i].GetScale() < keyScale)
-                {
-                    latestKey = keyPool[i];
-                    keyScale = keyPool[i].GetScale();
-                }
-
-                if (keyPool[i].gameObject.activeInHierarchy == false ||
-                    keyPool[i].reqKey != pressedKey)
-                {
-                    continue;
-                }
-
-                if (keyPool[i].InSuccessZone())
-                {
-                    keyPool[i].gameObject.SetActive(false);
-                    success = true;
-                    break;
-                }
+                continue;
             }
 
-            if (success)
+
+            keyPool[i].shrinkRate =
+                currentAreaShrinkSpeed;
+
+
+            keyPool[i].OnUpdate(
+                Time.deltaTime
+            );
+
+
+            if (keyPool[i]
+                .InFailZone())
             {
-                WinKey();
-            }
-            else
-            {
-                if (latestKey)
-                {
-                    latestKey.gameObject.SetActive(false);
-                    activeKeys--;
-                }
+                keyPool[i]
+                    .gameObject
+                    .SetActive(false);
+
+
+                activeKeys--;
+
+
                 FailKey();
             }
         }
     }
 
+
+    private void Update()
+    {
+        if (!gameActive ||
+            !minigameReady)
+        {
+            return;
+        }
+
+
+        /*
+         * WASD is completely ignored
+         * if there is no visible dance key.
+         */
+        if (!HasVisibleActiveKey())
+        {
+            return;
+        }
+
+
+        KeyCode pressedKey =
+            KeyCode.None;
+
+
+        // =====================================
+        // DETECT WASD
+        // =====================================
+
+        for (int i = 0;
+             i < DanceKey.randomKeyList.Length;
+             i++)
+        {
+            if (Input.GetKeyDown(
+                DanceKey.randomKeyList[i]
+            ))
+            {
+                pressedKey =
+                    DanceKey.randomKeyList[i];
+
+
+                break;
+            }
+        }
+
+
+        if (pressedKey ==
+            KeyCode.None)
+        {
+            return;
+        }
+
+
+        DanceKey latestKey =
+            null;
+
+
+        float keyScale =
+            float.MaxValue;
+
+
+        bool success =
+            false;
+
+
+        // =====================================
+        // CHECK KEYS
+        // =====================================
+
+        for (int i = 0;
+             i < keyPool.Length;
+             i++)
+        {
+            DanceKey key =
+                keyPool[i];
+
+
+            if (!IsKeyVisible(key))
+            {
+                continue;
+            }
+
+
+            if (key.GetScale() <
+                keyScale)
+            {
+                latestKey =
+                    key;
+
+
+                keyScale =
+                    key.GetScale();
+            }
+
+
+            if (key.reqKey !=
+                pressedKey)
+            {
+                continue;
+            }
+
+
+            if (key.InSuccessZone())
+            {
+                key.gameObject
+                    .SetActive(false);
+
+
+                success =
+                    true;
+
+
+                break;
+            }
+        }
+
+
+        // =====================================
+        // RESULT
+        // =====================================
+
+        if (success)
+        {
+            WinKey();
+        }
+        else
+        {
+            if (latestKey != null)
+            {
+                latestKey
+                    .gameObject
+                    .SetActive(false);
+
+
+                activeKeys--;
+            }
+
+
+            FailKey();
+        }
+    }
+
+
+    private bool HasVisibleActiveKey()
+    {
+        for (int i = 0;
+             i < keyPool.Length;
+             i++)
+        {
+            if (IsKeyVisible(
+                keyPool[i]
+            ))
+            {
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+
+    private bool IsKeyVisible(
+        DanceKey key)
+    {
+        if (key == null)
+            return false;
+
+
+        if (!key.gameObject
+            .activeInHierarchy)
+        {
+            return false;
+        }
+
+
+        CanvasGroup canvasGroup =
+            key.GetComponent<CanvasGroup>();
+
+
+        if (canvasGroup == null)
+        {
+            return true;
+        }
+
+
+        return canvasGroup.alpha >
+               0.05f;
+    }
+
+
     private void FailKey()
     {
         losses++;
 
-        GameObject spObject = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
-        if (spObject != null)
+
+        // =====================================
+        // SCREEN SHAKE
+        // =====================================
+
+        if (shakeCoroutine != null)
         {
-            SoundPlayer splr = spObject.GetComponent<SoundPlayer>();
+            StopCoroutine(
+                shakeCoroutine
+            );
 
-            PlaySoundInfo soundInfo = new PlaySoundInfo();
-            soundInfo.clip = clickClip;
-            soundInfo.volume = 1f;
-            soundInfo.pitch = 0.5f;
-            soundInfo.mixer = mix;
 
-            splr.PlaySound(soundInfo);
+            shakeCoroutine =
+                null;
+
+
+            if (panelRectTransform != null)
+            {
+                panelRectTransform.anchoredPosition =
+                    panelOriginalPosition;
+            }
         }
 
-        for (int i = 0; i < lives.Length; i++)
+
+        shakeCoroutine =
+            StartCoroutine(
+                ShakeScreen()
+            );
+
+
+        // =====================================
+        // FAIL SOUND
+        // =====================================
+
+        if (ObjectPool.instance != null)
         {
-            if (i < lives.Length - losses)
-                lives[i].SetActive(true);
-            else
-                lives[i].SetActive(false);
+            GameObject spObject =
+                ObjectPool.instance
+                    .objPool_GetObject(
+                        "2DSoundPlayer"
+                    );
+
+
+            if (spObject != null)
+            {
+                SoundPlayer splr =
+                    spObject
+                        .GetComponent<SoundPlayer>();
+
+
+                if (splr != null)
+                {
+                    PlaySoundInfo soundInfo =
+                        new PlaySoundInfo();
+
+
+                    soundInfo.clip =
+                        clickClip;
+
+
+                    soundInfo.volume =
+                        1f;
+
+
+                    soundInfo.pitch =
+                        0.5f;
+
+
+                    soundInfo.mixer =
+                        mix;
+
+
+                    splr.PlaySound(
+                        soundInfo
+                    );
+                }
+            }
         }
 
-        if (losses >= lives.Length)
+
+        // =====================================
+        // LIVES
+        // =====================================
+
+        for (int i = 0;
+             i < lives.Length;
+             i++)
         {
-            EndMinigame(false);
+            if (lives[i] == null)
+                continue;
+
+
+            lives[i].SetActive(
+                i <
+                lives.Length -
+                losses
+            );
         }
-        else if (activeKeys == 0 && keysLeft == 0)
+
+
+        if (losses >=
+            lives.Length)
         {
-            EndMinigame(true);
+            EndMinigame(
+                false
+            );
+        }
+        else if (activeKeys == 0 &&
+                 keysLeft == 0)
+        {
+            EndMinigame(
+                true
+            );
         }
     }
+
+
+    private IEnumerator ShakeScreen()
+    {
+        if (panelRectTransform == null)
+        {
+            shakeCoroutine =
+                null;
+
+
+            yield break;
+        }
+
+
+        float timer =
+            0f;
+
+
+        while (timer <
+               shakeDuration)
+        {
+            timer +=
+                Time.unscaledDeltaTime;
+
+
+            float x =
+                Random.Range(
+                    -shakeStrength,
+                    shakeStrength
+                );
+
+
+            float y =
+                Random.Range(
+                    -shakeStrength,
+                    shakeStrength
+                );
+
+
+            panelRectTransform.anchoredPosition =
+                panelOriginalPosition +
+                new Vector2(
+                    x,
+                    y
+                );
+
+
+            yield return null;
+        }
+
+
+        panelRectTransform.anchoredPosition =
+            panelOriginalPosition;
+
+
+        shakeCoroutine =
+            null;
+    }
+
 
     public void WinKey()
     {
         activeKeys--;
 
-        GameObject spObject = ObjectPool.instance.objPool_GetObject("2DSoundPlayer");
-        if (spObject != null)
+
+        // =====================================
+        // SUCCESS SOUND
+        // =====================================
+
+        if (ObjectPool.instance != null)
         {
-            SoundPlayer splr = spObject.GetComponent<SoundPlayer>();
+            GameObject spObject =
+                ObjectPool.instance
+                    .objPool_GetObject(
+                        "2DSoundPlayer"
+                    );
 
-            PlaySoundInfo soundInfo = new PlaySoundInfo();
-            soundInfo.clip = clickClip;
-            soundInfo.volume = 1f;
-            soundInfo.pitch = 1f;
-            soundInfo.mixer = mix;
 
-            splr.PlaySound(soundInfo);
+            if (spObject != null)
+            {
+                SoundPlayer splr =
+                    spObject
+                        .GetComponent<SoundPlayer>();
+
+
+                if (splr != null)
+                {
+                    PlaySoundInfo soundInfo =
+                        new PlaySoundInfo();
+
+
+                    soundInfo.clip =
+                        clickClip;
+
+
+                    soundInfo.volume =
+                        1f;
+
+
+                    soundInfo.pitch =
+                        1f;
+
+
+                    soundInfo.mixer =
+                        mix;
+
+
+                    splr.PlaySound(
+                        soundInfo
+                    );
+                }
+            }
         }
 
-        if (activeKeys == 0 && keysLeft == 0)
+
+        if (activeKeys == 0 &&
+            keysLeft == 0)
         {
-            EndMinigame(true);
+            EndMinigame(
+                true
+            );
         }
     }
 
-    private void SpawnKey()
+
+    private bool SpawnKey()
     {
-        if (keysLeft <= 0) return;
-
-        for (int i = 0; i < keyPool.Length; i++)
+        if (keysLeft <= 0)
         {
-            if (!keyPool[i].gameObject.activeInHierarchy)
+            return false;
+        }
+
+
+        // =====================================
+        // FIND UNUSED KEY
+        // =====================================
+
+        DanceKey newKey =
+            null;
+
+
+        for (int i = 0;
+             i < keyPool.Length;
+             i++)
+        {
+            if (keyPool[i] == null)
+                continue;
+
+
+            if (!keyPool[i]
+                .gameObject
+                .activeInHierarchy)
             {
-                keyPool[i].gameObject.SetActive(true);
-                keyPool[i].OnReset();
-                float halfScreenX = Screen.width * 0.4f;
-                float halfScreenY = Screen.height * 0.35f;
-                float randX = 0;
-                float randY = 0;
+                newKey =
+                    keyPool[i];
 
-                for (int x = 0; x < 5; x++)
-                {
-                    bool validPos = true;
-                    randX = Random.Range(-halfScreenX, halfScreenX);
-                    randY = Random.Range(-halfScreenY, halfScreenY);
 
-                    for (int key = 0; key < keyPool.Length; key++)
-                    {
-                        if (keyPool[i] == keyPool[key] ||
-                            keyPool[i].gameObject.activeInHierarchy == false)
-                        {
-                            continue;
-                        }
-
-                        if ((keyPool[i].transform.position - new Vector3(randX, randY, 0)).sqrMagnitude <
-                            ((halfScreenY * 0.2f) * (halfScreenY * 0.2f)))
-                        {
-                            validPos = false;
-                        }
-                    }
-
-                    if (validPos)
-                    {
-                        break;
-                    }
-                }
-
-                keyPool[i].transform.position = canvasObject.transform.position + new Vector3(randX, randY, 0);
-                activeKeys++;
-                keysLeft -= 1;
                 break;
             }
         }
 
-        keyTimer = 0.7f + 1f * Mathf.Min(Mathf.Max(keysLeft - 5, 0) / 20f, 1);
+
+        if (newKey == null)
+        {
+            return false;
+        }
+
+
+        RectTransform newRect =
+            newKey.GetComponent<RectTransform>();
+
+
+        if (newRect == null)
+        {
+            Debug.LogWarning(
+                "DanceKey needs a RectTransform."
+            );
+
+
+            return false;
+        }
+
+
+        RectTransform parentRect =
+            newRect.parent
+                as RectTransform;
+
+
+        if (parentRect == null)
+        {
+            Debug.LogWarning(
+                "DanceKey needs a RectTransform parent."
+            );
+
+
+            return false;
+        }
+
+
+        // =====================================
+        // SPAWN AREA
+        // =====================================
+
+        float halfScreenX =
+            parentRect.rect.width *
+            horizontalSpawnArea;
+
+
+        float halfScreenY =
+            parentRect.rect.height *
+            verticalSpawnArea;
+
+
+        Vector2 chosenPosition =
+            Vector2.zero;
+
+
+        bool foundPosition =
+            false;
+
+
+        // =====================================
+        // FIND FREE POSITION
+        // =====================================
+
+        for (int attempt = 0;
+             attempt <
+             positionSearchAttempts;
+             attempt++)
+        {
+            Vector2 candidatePosition =
+                new Vector2(
+                    Random.Range(
+                        -halfScreenX,
+                        halfScreenX
+                    ),
+                    Random.Range(
+                        -halfScreenY,
+                        halfScreenY
+                    )
+                );
+
+
+            bool positionIsFree =
+                true;
+
+
+            for (int i = 0;
+                 i < keyPool.Length;
+                 i++)
+            {
+                DanceKey otherKey =
+                    keyPool[i];
+
+
+                if (otherKey == null ||
+                    otherKey == newKey)
+                {
+                    continue;
+                }
+
+
+                if (!otherKey
+                    .gameObject
+                    .activeInHierarchy)
+                {
+                    continue;
+                }
+
+
+                RectTransform otherRect =
+                    otherKey
+                        .GetComponent<RectTransform>();
+
+
+                if (otherRect == null)
+                    continue;
+
+
+                float distance =
+                    Vector2.Distance(
+                        candidatePosition,
+                        otherRect
+                            .anchoredPosition
+                    );
+
+
+                if (distance <
+                    minimumKeyDistance)
+                {
+                    positionIsFree =
+                        false;
+
+
+                    break;
+                }
+            }
+
+
+            if (positionIsFree)
+            {
+                chosenPosition =
+                    candidatePosition;
+
+
+                foundPosition =
+                    true;
+
+
+                break;
+            }
+        }
+
+
+        // No room -> wait.
+        if (!foundPosition)
+        {
+            return false;
+        }
+
+
+        // =====================================
+        // SPAWN
+        // =====================================
+
+        newRect.anchoredPosition =
+            chosenPosition;
+
+
+        newKey.gameObject
+            .SetActive(true);
+
+
+        newKey.shrinkRate =
+            currentAreaShrinkSpeed;
+
+
+        newKey.OnReset();
+
+
+        StartCoroutine(
+            FadeInKey(newKey)
+        );
+
+
+        activeKeys++;
+
+
+        keysLeft--;
+
+
+        return true;
     }
 
-    // ---- helper to avoid restarting the same track unnecessarily ----
-    private static void SafePlay(AudioSource src, AudioClip clip, bool restartIfSame)
+
+    private IEnumerator FadeInKey(
+        DanceKey key)
     {
-        if (src == null || clip == null) return;
+        CanvasGroup canvasGroup =
+            key.GetComponent<CanvasGroup>();
+
+
+        if (canvasGroup == null)
+        {
+            canvasGroup =
+                key.gameObject
+                    .AddComponent<CanvasGroup>();
+        }
+
+
+        canvasGroup.alpha =
+            0f;
+
+
+        if (keyAppearDuration <= 0f)
+        {
+            canvasGroup.alpha =
+                1f;
+
+
+            yield break;
+        }
+
+
+        float timer =
+            0f;
+
+
+        while (timer <
+               keyAppearDuration)
+        {
+            if (key == null ||
+                !key.gameObject
+                    .activeInHierarchy)
+            {
+                yield break;
+            }
+
+
+            timer +=
+                Time.deltaTime;
+
+
+            canvasGroup.alpha =
+                Mathf.Clamp01(
+                    timer /
+                    keyAppearDuration
+                );
+
+
+            yield return null;
+        }
+
+
+        if (key != null &&
+            key.gameObject
+                .activeInHierarchy)
+        {
+            canvasGroup.alpha =
+                1f;
+        }
+    }
+
+
+    private static void SafePlay(
+        AudioSource src,
+        AudioClip clip,
+        bool restartIfSame)
+    {
+        if (src == null ||
+            clip == null)
+        {
+            return;
+        }
+
 
         if (src.clip == clip)
         {
-            if (src.isPlaying && !restartIfSame) return;
+            if (src.isPlaying &&
+                !restartIfSame)
+            {
+                return;
+            }
 
-            if (!src.isPlaying && !restartIfSame)
+
+            if (!src.isPlaying &&
+                !restartIfSame)
             {
                 src.UnPause();
-                if (!src.isPlaying) src.Play();
+
+
+                if (!src.isPlaying)
+                {
+                    src.Play();
+                }
+
+
                 return;
             }
         }
 
-        src.clip = clip;
+
+        src.clip =
+            clip;
+
+
         src.Play();
     }
 }
