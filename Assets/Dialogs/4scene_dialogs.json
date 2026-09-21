@@ -116,6 +116,47 @@
     }
   },
 
+  "GhostStart": {
+    "start": "boo1",
+    "nodes": {
+      "boo1": {
+        "speaker": "Kitty",
+        "text": "Woooow!!!...",
+        "next": "boo2"
+      },
+      "boo2": {
+        "speaker": "Kitty",
+        "text": "There are so many people here!",
+        "next": "boo3"
+      },
+      "boo3": {
+        "speaker": "Kitty",
+        "text": "I've never actually been here before... What even is this place?",
+        "next": "boo4"
+      },
+      "boo4": {
+        "speaker": "Kitty",
+        "text": "...",
+        "next": "boo5"
+      },        
+      "boo5": {
+        "speaker": "Kitty",
+        "text": "Anyways!!",
+        "next": "boo6"
+      },    
+      "boo6": {
+        "speaker": "Kitty",
+        "text": "I should probably ask around.",
+        "next": "boo7"
+      },   
+      "boo7": {
+        "speaker": "Kitty",
+        "text": "Maybe someone knows another way back to Kitty Town...",
+        "next": null
+      }    
+    }
+  },
+
 "MouseBraceletGive": {
   "start": "boo1",
   "nodes": {
