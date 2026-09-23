@@ -5,7 +5,6 @@ using UnityEngine.Audio;
 public class DanceMinigame : MonoBehaviour
 {
     [Header("References")]
-
     [SerializeField] private Interactable interactable;
     [SerializeField] private DialogueOnInteract assyla;
 
@@ -19,7 +18,6 @@ public class DanceMinigame : MonoBehaviour
 
 
     [Header("Audio")]
-
     [SerializeField] private AudioSource musicAudio;
     [SerializeField] private AudioClip clickClip;
     [SerializeField] private AudioClip danceMusic;
@@ -28,18 +26,15 @@ public class DanceMinigame : MonoBehaviour
 
 
     [Header("Tutorial")]
-
     [SerializeField] private DanceTutorial danceTutorial;
 
 
     [Header("Minigame Appearance")]
-
-    [Tooltip("How long the entire dance minigame takes to fade in.")]
+    [Tooltip("How long the minigame takes to fade in when there is NO tutorial.")]
     public float minigameFadeDuration = 0.5f;
 
 
     [Header("Minigame Settings")]
-
     [Tooltip("How many keys the player must complete.")]
     public int startingKeys = 20;
 
@@ -48,7 +43,6 @@ public class DanceMinigame : MonoBehaviour
 
 
     [Header("Key Spawn Speed")]
-
     [Tooltip("Seconds between keys at the beginning.")]
     public float startingKeySpawnInterval = 1.5f;
 
@@ -60,13 +54,11 @@ public class DanceMinigame : MonoBehaviour
 
 
     [Header("Key Appearance")]
-
     [Tooltip("How long each individual key takes to fade in.")]
     public float keyAppearDuration = 0.2f;
 
 
     [Header("Key Placement")]
-
     [Tooltip("Minimum distance between active keys.")]
     public float minimumKeyDistance = 250f;
 
@@ -75,7 +67,6 @@ public class DanceMinigame : MonoBehaviour
 
 
     [Header("Screen Border")]
-
     [Range(0.1f, 0.5f)]
     public float horizontalSpawnArea = 0.35f;
 
@@ -84,7 +75,6 @@ public class DanceMinigame : MonoBehaviour
 
 
     [Header("Screen Shake")]
-
     [Tooltip("How long the minigame UI shakes when a life is lost.")]
     public float shakeDuration = 0.2f;
 
@@ -93,11 +83,14 @@ public class DanceMinigame : MonoBehaviour
 
 
     private CanvasGroup minigameCanvasGroup;
+    private CanvasGroup[] keyCanvasGroups;
 
     private RectTransform panelRectTransform;
     private Vector2 panelOriginalPosition;
 
     private Coroutine shakeCoroutine;
+    private Coroutine fadeCoroutine;
+    private Coroutine prewarmCoroutine;
 
 
     private float keyTimer;
@@ -113,15 +106,24 @@ public class DanceMinigame : MonoBehaviour
     private bool minigameReady;
     private bool waitingForTutorial;
 
+    // True once all of the expensive/reset work has
+    // already been done for the upcoming attempt.
+    private bool minigamePrepared;
+
+
+    private PlayerMovement cachedPlayerMovement;
+
 
     private void Awake()
     {
+        // =====================================
+        // MINIGAME PANEL
+        // =====================================
+
         if (panelObject != null)
         {
-            // CanvasGroup for fading the whole minigame.
             minigameCanvasGroup =
                 panelObject.GetComponent<CanvasGroup>();
-
 
             if (minigameCanvasGroup == null)
             {
@@ -129,15 +131,11 @@ public class DanceMinigame : MonoBehaviour
                     panelObject.AddComponent<CanvasGroup>();
             }
 
-
-            minigameCanvasGroup.alpha =
-                0f;
+            minigameCanvasGroup.alpha = 0f;
 
 
-            // RectTransform for screen shake.
             panelRectTransform =
                 panelObject.GetComponent<RectTransform>();
-
 
             if (panelRectTransform != null)
             {
@@ -148,20 +146,91 @@ public class DanceMinigame : MonoBehaviour
 
             panelObject.SetActive(false);
         }
+
+
+        // =====================================
+        // CACHE KEY CANVAS GROUPS
+        // =====================================
+        //
+        // We do this here instead of when the tutorial
+        // closes, so Unity does not need to GetComponent /
+        // AddComponent for every key during the transition.
+        // =====================================
+
+        if (keyPool != null)
+        {
+            keyCanvasGroups =
+                new CanvasGroup[keyPool.Length];
+
+            for (int i = 0; i < keyPool.Length; i++)
+            {
+                if (keyPool[i] == null)
+                    continue;
+
+                CanvasGroup canvasGroup =
+                    keyPool[i].GetComponent<CanvasGroup>();
+
+                if (canvasGroup == null)
+                {
+                    canvasGroup =
+                        keyPool[i]
+                            .gameObject
+                            .AddComponent<CanvasGroup>();
+                }
+
+                keyCanvasGroups[i] =
+                    canvasGroup;
+
+                canvasGroup.alpha =
+                    1f;
+
+                keyPool[i]
+                    .gameObject
+                    .SetActive(false);
+            }
+        }
     }
 
 
     private void Start()
     {
+        // =====================================
+        // DIALOGUE
+        // =====================================
+
         SimpleDialogManager dm =
             SimpleDialogManager.Instance;
-
 
         if (dm != null)
         {
             dm.eventDialogueChanged +=
                 OnDialogueAdvance;
         }
+
+
+        // =====================================
+        // CACHE PLAYER MOVEMENT
+        // =====================================
+
+        CachePlayerMovement();
+
+
+        // =====================================
+        // PRELOAD AUDIO
+        // =====================================
+        //
+        // Helps prevent the first dance-music switch
+        // from causing a little hitch.
+        // =====================================
+
+        if (danceMusic != null)
+            danceMusic.LoadAudioData();
+
+        if (normalMusic != null)
+            normalMusic.LoadAudioData();
+
+        if (clickClip != null)
+            clickClip.LoadAudioData();
     }
 
 
@@ -170,12 +239,28 @@ public class DanceMinigame : MonoBehaviour
         SimpleDialogManager dm =
             SimpleDialogManager.Instance;
 
-
         if (dm != null)
         {
             dm.eventDialogueChanged -=
                 OnDialogueAdvance;
         }
+    }
+
+
+    private void CachePlayerMovement()
+    {
+        if (cachedPlayerMovement != null)
+            return;
+
+        if (PlayerManager.instance == null ||
+            PlayerManager.instance.player == null)
+        {
+            return;
+        }
+
+        cachedPlayerMovement =
+            PlayerManager.instance.player
+                .GetComponent<PlayerMovement>();
     }
 
 
@@ -198,7 +283,6 @@ public class DanceMinigame : MonoBehaviour
         if (gameActive)
             return;
 
-
         if (waitingForTutorial)
             return;
 
@@ -210,7 +294,8 @@ public class DanceMinigame : MonoBehaviour
         if (danceTutorial != null &&
             !danceTutorial.HasShownTutorial)
         {
-            waitingForTutorial = true;
+            waitingForTutorial =
+                true;
 
 
             // Disable Assyla interaction immediately.
@@ -229,17 +314,84 @@ public class DanceMinigame : MonoBehaviour
             }
 
 
+            // Show the tutorial FIRST.
             danceTutorial.ShowTutorial(
                 OnDanceTutorialFinished
             );
+
+
+            // Prepare the minigame while the player
+            // is looking at the tutorial.
+            //
+            // This removes the hitch between tutorial
+            // and minigame.
+            if (prewarmCoroutine != null)
+            {
+                StopCoroutine(
+                    prewarmCoroutine
+                );
+            }
+
+            prewarmCoroutine =
+                StartCoroutine(
+                    PrewarmMinigameDuringTutorial()
+                );
 
 
             return;
         }
 
 
-        // Retry -> skip tutorial.
-        StartMinigame();
+        // =====================================
+        // RETRY -> NO TUTORIAL
+        // =====================================
+
+        StartMinigame(false);
+    }
+
+
+    private IEnumerator PrewarmMinigameDuringTutorial()
+    {
+        // Give the tutorial one frame to appear first.
+        yield return null;
+
+
+        PrepareMinigame();
+
+
+        // =====================================
+        // KEEP MINIGAME UNDER THE TUTORIAL
+        // =====================================
+        //
+        // The minigame is already rendered behind
+        // the tutorial.
+        //
+        // When the tutorial fades away, there is
+        // therefore NOTHING blank in between.
+        // =====================================
+
+        if (panelObject != null)
+        {
+            panelObject.SetActive(
+                true
+            );
+
+
+            if (minigameCanvasGroup != null)
+            {
+                minigameCanvasGroup.alpha =
+                    1f;
+            }
+
+
+            // Force Unity to build the UI layout NOW,
+            // while the tutorial is still visible.
+            Canvas.ForceUpdateCanvases();
+        }
+
+
+        prewarmCoroutine =
+            null;
     }
 
 
@@ -250,18 +402,132 @@ public class DanceMinigame : MonoBehaviour
 
 
         /*
-         * Called the moment F is pressed.
-         * Tutorial fades OUT while
-         * minigame fades IN.
+         * Minigame has already been prepared
+         * underneath the tutorial.
+         *
+         * Therefore all we need to do here is
+         * activate gameplay.
          */
-        StartMinigame();
+        StartMinigame(true);
     }
 
 
-    private void StartMinigame()
+    private void PrepareMinigame()
+    {
+        if (minigamePrepared)
+            return;
+
+
+        // =====================================
+        // RESET GAME
+        // =====================================
+
+        losses =
+            0;
+
+
+        keysLeft =
+            startingKeys;
+
+
+        activeKeys =
+            0;
+
+
+        currentKeySpawnInterval =
+            startingKeySpawnInterval;
+
+
+        keyTimer =
+            currentKeySpawnInterval;
+
+
+        // =====================================
+        // RESET PANEL
+        // =====================================
+
+        if (panelRectTransform != null)
+        {
+            panelRectTransform.anchoredPosition =
+                panelOriginalPosition;
+        }
+
+
+        // =====================================
+        // RESET KEYS
+        // =====================================
+
+        if (keyPool != null)
+        {
+            for (int i = 0;
+                 i < keyPool.Length;
+                 i++)
+            {
+                if (keyPool[i] == null)
+                    continue;
+
+
+                keyPool[i].shrinkRate =
+                    currentAreaShrinkSpeed;
+
+
+                keyPool[i].OnReset();
+
+
+                if (keyCanvasGroups != null &&
+                    i < keyCanvasGroups.Length &&
+                    keyCanvasGroups[i] != null)
+                {
+                    keyCanvasGroups[i].alpha =
+                        1f;
+                }
+
+
+                keyPool[i]
+                    .gameObject
+                    .SetActive(false);
+            }
+        }
+
+
+        // =====================================
+        // RESET LIVES
+        // =====================================
+
+        if (lives != null)
+        {
+            for (int i = 0;
+                 i < lives.Length;
+                 i++)
+            {
+                if (lives[i] != null)
+                {
+                    lives[i]
+                        .SetActive(true);
+                }
+            }
+        }
+
+
+        minigamePrepared =
+            true;
+    }
+
+
+    private void StartMinigame(
+        bool comingFromTutorial)
     {
         if (gameActive)
             return;
+
+
+        // If the tutorial was closed extremely quickly
+        // before prewarming finished, make sure everything
+        // is prepared now.
+        if (!minigamePrepared)
+        {
+            PrepareMinigame();
+        }
 
 
         gameActive =
@@ -276,19 +542,13 @@ public class DanceMinigame : MonoBehaviour
         // PLAYER
         // =====================================
 
-        if (PlayerManager.instance != null &&
-            PlayerManager.instance.player != null)
+        CachePlayerMovement();
+
+
+        if (cachedPlayerMovement != null)
         {
-            PlayerMovement movement =
-                PlayerManager.instance.player
-                    .GetComponent<PlayerMovement>();
-
-
-            if (movement != null)
-            {
-                movement.enabled =
-                    false;
-            }
+            cachedPlayerMovement.enabled =
+                false;
         }
 
 
@@ -323,98 +583,6 @@ public class DanceMinigame : MonoBehaviour
 
 
         // =====================================
-        // RESET GAME
-        // =====================================
-
-        losses =
-            0;
-
-
-        keysLeft =
-            startingKeys;
-
-
-        activeKeys =
-            0;
-
-
-        currentKeySpawnInterval =
-            startingKeySpawnInterval;
-
-
-        keyTimer =
-            currentKeySpawnInterval;
-
-
-        // Reset panel position in case shake
-        // was interrupted previously.
-        if (panelRectTransform != null)
-        {
-            panelRectTransform.anchoredPosition =
-                panelOriginalPosition;
-        }
-
-
-        // =====================================
-        // RESET KEYS
-        // =====================================
-
-        for (int i = 0;
-             i < keyPool.Length;
-             i++)
-        {
-            if (keyPool[i] == null)
-                continue;
-
-
-            keyPool[i].shrinkRate =
-                currentAreaShrinkSpeed;
-
-
-            keyPool[i].OnReset();
-
-
-            CanvasGroup keyCanvas =
-                keyPool[i]
-                    .GetComponent<CanvasGroup>();
-
-
-            if (keyCanvas == null)
-            {
-                keyCanvas =
-                    keyPool[i]
-                        .gameObject
-                        .AddComponent<CanvasGroup>();
-            }
-
-
-            keyCanvas.alpha =
-                1f;
-
-
-            keyPool[i]
-                .gameObject
-                .SetActive(false);
-        }
-
-
-        // =====================================
-        // RESET LIVES
-        // =====================================
-
-        for (int i = 0;
-             i < lives.Length;
-             i++)
-        {
-            if (lives[i] != null)
-            {
-                lives[i]
-                    .SetActive(true);
-            }
-        }
-
-
-        // =====================================
         // MUSIC
         // =====================================
 
@@ -430,7 +598,7 @@ public class DanceMinigame : MonoBehaviour
 
 
         // =====================================
-        // SHOW + FADE MINIGAME IN
+        // SHOW MINIGAME
         // =====================================
 
         if (panelObject != null)
@@ -440,14 +608,62 @@ public class DanceMinigame : MonoBehaviour
             );
 
 
-            StartCoroutine(
-                FadeInMinigame()
-            );
+            if (comingFromTutorial)
+            {
+                /*
+                 * IMPORTANT:
+                 *
+                 * The minigame was already visible
+                 * BEHIND the tutorial.
+                 *
+                 * Do NOT reset alpha to 0 here.
+                 *
+                 * Doing so would create exactly the
+                 * blank lag / flash we are trying
+                 * to remove.
+                 */
+
+                if (minigameCanvasGroup != null)
+                {
+                    minigameCanvasGroup.alpha =
+                        1f;
+                }
+
+
+                minigameReady =
+                    true;
+
+
+                keyTimer =
+                    currentKeySpawnInterval;
+            }
+            else
+            {
+                // Retry / no tutorial:
+                // use normal smooth fade-in.
+
+                if (fadeCoroutine != null)
+                {
+                    StopCoroutine(
+                        fadeCoroutine
+                    );
+                }
+
+
+                fadeCoroutine =
+                    StartCoroutine(
+                        FadeInMinigame()
+                    );
+            }
         }
         else
         {
             minigameReady =
                 true;
+
+
+            keyTimer =
+                currentKeySpawnInterval;
         }
     }
 
@@ -458,6 +674,14 @@ public class DanceMinigame : MonoBehaviour
         {
             minigameReady =
                 true;
+
+
+            keyTimer =
+                currentKeySpawnInterval;
+
+
+            fadeCoroutine =
+                null;
 
 
             yield break;
@@ -483,6 +707,14 @@ public class DanceMinigame : MonoBehaviour
 
             minigameReady =
                 true;
+
+
+            keyTimer =
+                currentKeySpawnInterval;
+
+
+            fadeCoroutine =
+                null;
 
 
             yield break;
@@ -524,6 +756,10 @@ public class DanceMinigame : MonoBehaviour
 
         keyTimer =
             currentKeySpawnInterval;
+
+
+        fadeCoroutine =
+            null;
     }
 
 
@@ -538,7 +774,30 @@ public class DanceMinigame : MonoBehaviour
             false;
 
 
-        // Stop shake if one is currently happening.
+        minigamePrepared =
+            false;
+
+
+        // =====================================
+        // STOP FADE
+        // =====================================
+
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(
+                fadeCoroutine
+            );
+
+
+            fadeCoroutine =
+                null;
+        }
+
+
+        // =====================================
+        // STOP SHAKE
+        // =====================================
+
         if (shakeCoroutine != null)
         {
             StopCoroutine(
@@ -551,13 +810,20 @@ public class DanceMinigame : MonoBehaviour
         }
 
 
-        // Restore panel position.
+        // =====================================
+        // RESTORE PANEL POSITION
+        // =====================================
+
         if (panelRectTransform != null)
         {
             panelRectTransform.anchoredPosition =
                 panelOriginalPosition;
         }
 
+
+        // =====================================
+        // HIDE MINIGAME
+        // =====================================
 
         if (panelObject != null)
         {
@@ -578,19 +844,13 @@ public class DanceMinigame : MonoBehaviour
         // RESTORE PLAYER
         // =====================================
 
-        if (PlayerManager.instance != null &&
-            PlayerManager.instance.player != null)
+        CachePlayerMovement();
+
+
+        if (cachedPlayerMovement != null)
         {
-            PlayerMovement movement =
-                PlayerManager.instance.player
-                    .GetComponent<PlayerMovement>();
-
-
-            if (movement != null)
-            {
-                movement.enabled =
-                    true;
-            }
+            cachedPlayerMovement.enabled =
+                true;
         }
 
 
@@ -676,6 +936,7 @@ public class DanceMinigame : MonoBehaviour
                 );
             }
         }
+
 
         // =====================================
         // LOSE
@@ -1557,10 +1818,8 @@ public class DanceMinigame : MonoBehaviour
             }
         }
 
-
         src.clip =
             clip;
-
 
         src.Play();
     }
