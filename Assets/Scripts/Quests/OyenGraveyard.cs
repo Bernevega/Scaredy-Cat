@@ -14,7 +14,7 @@ public class OyenGraveyard : MonoBehaviour
     [SerializeField] Transform[] waypoints;
     [SerializeField] GraveyardCutscene graveyardCutscene;
     int step = 0;
-    float moveSpeed = 0.85f;
+    float moveSpeed = 1f;
 
     private enum State
     {

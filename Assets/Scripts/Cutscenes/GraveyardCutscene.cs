@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class GraveyardCutscene : MonoBehaviour
@@ -9,7 +8,9 @@ public class GraveyardCutscene : MonoBehaviour
 
     [SerializeField] AutoRotate oyen;
     [SerializeField] Animator oyenAnimator;
+
     PlayerMovement player;
+    Animator kittyAnimator;
 
     [SerializeField] Transform[] cameraWaypoints;
     [SerializeField] Transform[] oyenWaypoints;
@@ -62,15 +63,30 @@ public class GraveyardCutscene : MonoBehaviour
     public void StartCutscene()
     {
         triggerCollider.enabled = false;
-        mainCam.GetComponent<CameraController>().SetCamBehaviour(null);
+
+        mainCam
+            .GetComponent<CameraController>()
+            .SetCamBehaviour(null);
+
         cutState = CutsceneState.FirstCameraPan;
         camState = CameraState.Moving;
 
-        player = PlayerManager.instance.player.GetComponent<PlayerMovement>();
+        player = PlayerManager.instance.player
+            .GetComponent<PlayerMovement>();
+
+        kittyAnimator = player.GetAnimator();
+
         Rigidbody playerRb = player.GetComponent<Rigidbody>();
-        playerRb.linearVelocity = new Vector3(0, playerRb.linearVelocity.y, 0);
+
+        playerRb.linearVelocity = new Vector3(
+            0,
+            playerRb.linearVelocity.y,
+            0
+        );
 
         player.speed = 0f;
+
+        SetKittyWalking(false);
 
         cutsceneActivated = true;
         cutsceneTransition.gameObject.SetActive(true);
@@ -78,52 +94,105 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void Update()
     {
-
         switch (cutState)
         {
             case CutsceneState.FirstCameraPan:
                 FirstCameraPanState();
                 break;
+
             case CutsceneState.KittyOyenWalk1:
-                KittyOyenWalk1State(); 
+                KittyOyenWalk1State();
                 break;
+
             case CutsceneState.KittyPlaceFlower:
                 KittyPlaceFlowerState();
                 break;
+
             case CutsceneState.KittyPlaceFlower2:
                 KittyPlaceFlower2State();
                 break;
+
             case CutsceneState.KittyOyenWalkOff:
                 KittyOyenWalkOffState();
                 break;
+
             case CutsceneState.SecondCameraPan:
                 SecondCameraPanState();
                 break;
         }
     }
 
+    private void LateUpdate()
+    {
+        if (!cutsceneActivated || kittyAnimator == null)
+        {
+            return;
+        }
+
+        // Make sure another player script cannot turn the walking
+        // animation back on while Kitty is supposed to be stationary.
+        bool kittyShouldBeStopped =
+            cutState == CutsceneState.Idle ||
+            cutState == CutsceneState.FirstCameraPan ||
+            cutState == CutsceneState.SecondCameraPan ||
+            (cutState == CutsceneState.KittyOyenWalk1 &&
+             kittyStep >= 2) ||
+            (cutState == CutsceneState.KittyOyenWalkOff &&
+             kittyStep >= kittyWaypoints.Length);
+
+        if (kittyShouldBeStopped)
+        {
+            SetKittyWalking(false);
+        }
+    }
+
+    private void SetKittyWalking(bool walking)
+    {
+        if (kittyAnimator != null)
+        {
+            kittyAnimator.SetBool("moveInput", walking);
+        }
+    }
+
     private void FirstCameraPanState()
     {
-        if (mainCam.transform.position != cameraWaypoints[cameraStep].position)
+        if (mainCam.transform.position !=
+            cameraWaypoints[cameraStep].position)
         {
             mainCam.transform.position =
-                Vector3.MoveTowards(mainCam.transform.position, cameraWaypoints[cameraStep].position, 2f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    mainCam.transform.position,
+                    cameraWaypoints[cameraStep].position,
+                    2f * Time.deltaTime
+                );
         }
         else
         {
             camState = CameraState.Idle;
             cutState = CutsceneState.KittyOyenWalk1;
 
-            Rigidbody playerRb = player.GetComponent<Rigidbody>();
+            Rigidbody playerRb =
+                player.GetComponent<Rigidbody>();
+
             playerRb.isKinematic = true;
 
             if (kittyStep + 1 < kittyWaypoints.Length)
             {
-                player.SetDirection((kittyWaypoints[kittyStep + 1].position - player.transform.position).normalized);
+                player.SetDirection(
+                    (
+                        kittyWaypoints[kittyStep + 1].position -
+                        player.transform.position
+                    ).normalized
+                );
             }
+
             if (oyenStep + 1 < oyenWaypoints.Length)
             {
-                oyen.targetDirection = (oyenWaypoints[oyenStep + 1].position - oyen.transform.position).normalized;
+                oyen.targetDirection =
+                    (
+                        oyenWaypoints[oyenStep + 1].position -
+                        oyen.transform.position
+                    ).normalized;
             }
 
             cameraStep++;
@@ -134,11 +203,11 @@ public class GraveyardCutscene : MonoBehaviour
     {
         if (kittyStep < 2)
         {
-            player.GetAnimator().SetBool("moveInput", true);
+            SetKittyWalking(true);
         }
         else
         {
-            player.GetAnimator().SetBool("moveInput", false);
+            SetKittyWalking(false);
         }
 
         if (oyenStep < 2)
@@ -150,42 +219,69 @@ public class GraveyardCutscene : MonoBehaviour
             oyenAnimator.SetBool("Walking", false);
         }
 
-        if (kittyStep < 2 && player.transform.position != kittyWaypoints[kittyStep].position)
+        if (kittyStep < 2 &&
+            player.transform.position !=
+            kittyWaypoints[kittyStep].position)
         {
             player.transform.position =
-                Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    player.transform.position,
+                    kittyWaypoints[kittyStep].position,
+                    2f * Time.deltaTime
+                );
         }
         else if (kittyStep < 2)
         {
             if (kittyStep == 1)
             {
-                player.SetDirection(kittyWaypoints[kittyStep].forward);
+                player.SetDirection(
+                    kittyWaypoints[kittyStep].forward
+                );
             }
             else if (kittyStep + 1 < kittyWaypoints.Length)
             {
-                player.SetDirection((kittyWaypoints[kittyStep + 1].position - kittyWaypoints[kittyStep].position).normalized);
+                player.SetDirection(
+                    (
+                        kittyWaypoints[kittyStep + 1].position -
+                        kittyWaypoints[kittyStep].position
+                    ).normalized
+                );
             }
-            
+
             kittyStep++;
 
-        
+            if (kittyStep >= 2)
+            {
+                SetKittyWalking(false);
+            }
         }
 
-        // Oyen Movement
-        if (oyenStep < 3 && oyen.transform.position != oyenWaypoints[oyenStep].position)
+        // Oyen movement
+        if (oyenStep < 3 &&
+            oyen.transform.position !=
+            oyenWaypoints[oyenStep].position)
         {
             oyen.transform.position =
-                Vector3.MoveTowards(oyen.transform.position, oyenWaypoints[oyenStep].position, 1f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    oyen.transform.position,
+                    oyenWaypoints[oyenStep].position,
+                    1f * Time.deltaTime
+                );
         }
         else if (oyenStep < 3)
         {
             if (oyenStep == 2)
             {
-                oyen.targetDirection = oyenWaypoints[oyenStep].forward;
+                oyen.targetDirection =
+                    oyenWaypoints[oyenStep].forward;
             }
             else if (oyenStep + 1 < oyenWaypoints.Length)
             {
-                oyen.targetDirection = (oyenWaypoints[oyenStep + 1].position - oyenWaypoints[oyenStep].position).normalized;
+                oyen.targetDirection =
+                    (
+                        oyenWaypoints[oyenStep + 1].position -
+                        oyenWaypoints[oyenStep].position
+                    ).normalized;
             }
 
             oyenStep++;
@@ -193,41 +289,73 @@ public class GraveyardCutscene : MonoBehaviour
 
         if (oyenStep == 3 && kittyStep == 2)
         {
+            SetKittyWalking(false);
+            oyenAnimator.SetBool("Walking", false);
+
             cutState = CutsceneState.Idle;
-            Invoke("KittyOyenWalkWait", 1f);
-            
+            Invoke(nameof(KittyOyenWalkWait), 1f);
         }
     }
 
     private void KittyOyenWalkWait()
     {
-        SimpleDialogManager.Instance.StartDialogue("GoodbyeDialogue");
+        SetKittyWalking(false);
+
+        SimpleDialogManager.Instance.StartDialogue(
+            "GoodbyeDialogue"
+        );
+
         cutState = CutsceneState.Idle;
     }
 
     private void TransitionToKittyPlaceFlower()
     {
         cutState = CutsceneState.KittyPlaceFlower;
+
         if (kittyStep - 1 > 0)
         {
-            player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep - 1].position).normalized);
+            player.SetDirection(
+                (
+                    kittyWaypoints[kittyStep].position -
+                    kittyWaypoints[kittyStep - 1].position
+                ).normalized
+            );
         }
     }
 
     private void KittyPlaceFlowerState()
     {
-        if (player.transform.position != kittyWaypoints[kittyStep].position)
+        if (player.transform.position !=
+            kittyWaypoints[kittyStep].position)
         {
-            player.GetAnimator().SetBool("moveInput", true);
+            SetKittyWalking(true);
+
             player.transform.position =
-                Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    player.transform.position,
+                    kittyWaypoints[kittyStep].position,
+                    2f * Time.deltaTime
+                );
         }
         else
         {
-            player.GetAnimator().SetBool("moveInput", false);
-            player.SetDirection(kittyWaypoints[kittyStep].forward);
+            player.transform.position =
+                kittyWaypoints[kittyStep].position;
+
+            player.SetDirection(
+                kittyWaypoints[kittyStep].forward
+            );
+
+            // Set this after SetDirection so it cannot be
+            // reactivated by the direction change.
+            SetKittyWalking(false);
+
             cutState = CutsceneState.Idle;
-            Invoke("KittyFlowerPlace2StateTransition", 1f);
+
+            Invoke(
+                nameof(KittyFlowerPlace2StateTransition),
+                1f
+            );
 
             kittyStep++;
         }
@@ -236,20 +364,36 @@ public class GraveyardCutscene : MonoBehaviour
     private void KittyFlowerPlace2StateTransition()
     {
         cutState = CutsceneState.KittyPlaceFlower2;
+
         if (kittyStep - 1 > 0)
         {
-            player.SetDirection((kittyWaypoints[kittyStep].position - kittyWaypoints[kittyStep - 1].position).normalized);
+            player.SetDirection(
+                (
+                    kittyWaypoints[kittyStep].position -
+                    kittyWaypoints[kittyStep - 1].position
+                ).normalized
+            );
 
-            GameObject flowerObject = FindFlowerRecursive(player.transform, "FlowerOnHead");
+            GameObject flowerObject =
+                FindFlowerRecursive(
+                    player.transform,
+                    "FlowerOnHead"
+                );
+
             if (flowerObject != null)
             {
                 flowerObject.transform.parent = null;
-                flowerObject.transform.position = flowerPos.transform.position;
+
+                flowerObject.transform.position =
+                    flowerPos.transform.position;
             }
         }
     }
 
-    private GameObject FindFlowerRecursive(Transform obj, string childName)
+    private GameObject FindFlowerRecursive(
+        Transform obj,
+        string childName
+    )
     {
         foreach (Transform child in obj)
         {
@@ -258,7 +402,9 @@ public class GraveyardCutscene : MonoBehaviour
                 return child.gameObject;
             }
 
-            GameObject result = FindFlowerRecursive(child, childName);
+            GameObject result =
+                FindFlowerRecursive(child, childName);
+
             if (result != null)
             {
                 return result;
@@ -270,18 +416,33 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void KittyPlaceFlower2State()
     {
-        if (player.transform.position != kittyWaypoints[kittyStep].position)
+        if (player.transform.position !=
+            kittyWaypoints[kittyStep].position)
         {
-            player.GetAnimator().SetBool("moveInput", true);
+            SetKittyWalking(true);
+
             player.transform.position =
-                Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    player.transform.position,
+                    kittyWaypoints[kittyStep].position,
+                    2f * Time.deltaTime
+                );
         }
         else
         {
-            player.GetAnimator().SetBool("moveInput", false);
-            player.SetDirection(kittyWaypoints[kittyStep].forward);
+            player.transform.position =
+                kittyWaypoints[kittyStep].position;
+
+            player.SetDirection(
+                kittyWaypoints[kittyStep].forward
+            );
+
+            // Apply the stop after changing direction.
+            SetKittyWalking(false);
+
             cutState = CutsceneState.Idle;
-            Invoke("SayTitleDrop", 1f);
+
+            Invoke(nameof(SayTitleDrop), 1f);
 
             kittyStep++;
         }
@@ -291,11 +452,11 @@ public class GraveyardCutscene : MonoBehaviour
     {
         if (kittyStep < kittyWaypoints.Length)
         {
-            player.GetAnimator().SetBool("moveInput", true);
+            SetKittyWalking(true);
         }
         else
         {
-            player.GetAnimator().SetBool("moveInput", false);
+            SetKittyWalking(false);
         }
 
         if (oyenStep < oyenWaypoints.Length)
@@ -307,72 +468,125 @@ public class GraveyardCutscene : MonoBehaviour
             oyenAnimator.SetBool("Walking", false);
         }
 
-        if (kittyStep < kittyWaypoints.Length && player.transform.position != kittyWaypoints[kittyStep].position)
+        if (kittyStep < kittyWaypoints.Length &&
+            player.transform.position !=
+            kittyWaypoints[kittyStep].position)
         {
             player.transform.position =
-                Vector3.MoveTowards(player.transform.position, kittyWaypoints[kittyStep].position, 2f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    player.transform.position,
+                    kittyWaypoints[kittyStep].position,
+                    2f * Time.deltaTime
+                );
         }
         else if (kittyStep < kittyWaypoints.Length)
         {
             if (kittyStep + 1 < kittyWaypoints.Length)
-                player.SetDirection((kittyWaypoints[kittyStep + 1].position - kittyWaypoints[kittyStep].position).normalized);
-            
+            {
+                player.SetDirection(
+                    (
+                        kittyWaypoints[kittyStep + 1].position -
+                        kittyWaypoints[kittyStep].position
+                    ).normalized
+                );
+            }
+
             kittyStep++;
 
             if (kittyStep == kittyWaypoints.Length)
-                player.SetDirection(kittyWaypoints[^1].forward);
+            {
+                player.SetDirection(
+                    kittyWaypoints[^1].forward
+                );
+
+                SetKittyWalking(false);
+            }
         }
 
-        // Oyen Movement
-        if (oyenStep < oyenWaypoints.Length && oyen.transform.position != oyenWaypoints[oyenStep].position)
+        // Oyen movement
+        if (oyenStep < oyenWaypoints.Length &&
+            oyen.transform.position !=
+            oyenWaypoints[oyenStep].position)
         {
             oyen.transform.position =
-                Vector3.MoveTowards(oyen.transform.position, oyenWaypoints[oyenStep].position, 1f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    oyen.transform.position,
+                    oyenWaypoints[oyenStep].position,
+                    1f * Time.deltaTime
+                );
         }
         else if (oyenStep < oyenWaypoints.Length)
         {
             if (oyenStep + 1 < oyenWaypoints.Length)
             {
-                oyen.targetDirection = (oyenWaypoints[oyenStep + 1].position - oyenWaypoints[oyenStep].position).normalized;
+                oyen.targetDirection =
+                    (
+                        oyenWaypoints[oyenStep + 1].position -
+                        oyenWaypoints[oyenStep].position
+                    ).normalized;
             }
 
             oyenStep++;
 
             if (oyenStep == oyenWaypoints.Length)
             {
-                oyen.targetDirection = oyenWaypoints[^1].forward;
+                oyen.targetDirection =
+                    oyenWaypoints[^1].forward;
+
+                oyenAnimator.SetBool("Walking", false);
             }
         }
-        
+
         if (kittyStep == kittyWaypoints.Length &&
             oyenStep == oyenWaypoints.Length)
         {
+            SetKittyWalking(false);
+            oyenAnimator.SetBool("Walking", false);
+
             cutState = CutsceneState.SecondCameraPan;
         }
     }
 
     private void SecondCameraPanState()
     {
+        SetKittyWalking(false);
+
         bool positionReached = false;
         bool rotationReached = false;
-        if (mainCam.transform.position != cameraWaypoints[cameraStep].position)
+
+        if (mainCam.transform.position !=
+            cameraWaypoints[cameraStep].position)
         {
             mainCam.transform.position =
-                Vector3.MoveTowards(mainCam.transform.position, cameraWaypoints[cameraStep].position, 0.2f * Time.deltaTime);
+                Vector3.MoveTowards(
+                    mainCam.transform.position,
+                    cameraWaypoints[cameraStep].position,
+                    0.2f * Time.deltaTime
+                );
         }
         else
         {
             positionReached = true;
         }
 
-        if (mainCam.transform.rotation != cameraWaypoints[cameraStep].rotation)
+        if (mainCam.transform.rotation !=
+            cameraWaypoints[cameraStep].rotation)
         {
             mainCam.transform.rotation =
                 Quaternion.Lerp(
                     cameraWaypoints[cameraStep - 1].rotation,
                     cameraWaypoints[cameraStep].rotation,
-                    1 - ((cameraWaypoints[cameraStep].position - mainCam.transform.position).sqrMagnitude /
-                    (cameraWaypoints[cameraStep].position - cameraWaypoints[cameraStep - 1].position).sqrMagnitude)
+                    1 -
+                    (
+                        (
+                            cameraWaypoints[cameraStep].position -
+                            mainCam.transform.position
+                        ).sqrMagnitude /
+                        (
+                            cameraWaypoints[cameraStep].position -
+                            cameraWaypoints[cameraStep - 1].position
+                        ).sqrMagnitude
+                    )
                 );
         }
         else
@@ -380,19 +594,25 @@ public class GraveyardCutscene : MonoBehaviour
             rotationReached = true;
         }
 
-        if (rotationReached &&
-            positionReached)
+        if (rotationReached && positionReached)
         {
-            cutState |= CutsceneState.Idle;
+            cutState = CutsceneState.Idle;
         }
     }
 
     private void SayTitleDrop()
     {
-        SimpleDialogManager.Instance.StartDialogue("FinalTitleDrop");
+        SetKittyWalking(false);
+
+        SimpleDialogManager.Instance.StartDialogue(
+            "FinalTitleDrop"
+        );
     }
 
-    private void OnDialogueAdvance(string sceneID, string currentKey)
+    private void OnDialogueAdvance(
+        string sceneID,
+        string currentKey
+    )
     {
         if (sceneID == "GoodbyeDialogue")
         {
@@ -405,19 +625,37 @@ public class GraveyardCutscene : MonoBehaviour
         {
             if (currentKey == null)
             {
-                player.SetDirection((kittyWaypoints[kittyStep].position - player.transform.position).normalized);
-                oyen.targetDirection = (oyenWaypoints[oyenStep].position - oyen.transform.position).normalized;
-                cutState = CutsceneState.KittyOyenWalkOff;
+                player.SetDirection(
+                    (
+                        kittyWaypoints[kittyStep].position -
+                        player.transform.position
+                    ).normalized
+                );
+
+                oyen.targetDirection =
+                    (
+                        oyenWaypoints[oyenStep].position -
+                        oyen.transform.position
+                    ).normalized;
+
+                cutState =
+                    CutsceneState.KittyOyenWalkOff;
             }
         }
     }
 
-    private float Waypoint_GetSqrMagnitude(Vector3 origin, Vector3 target)
+    private float Waypoint_GetSqrMagnitude(
+        Vector3 origin,
+        Vector3 target
+    )
     {
         return (target - origin).sqrMagnitude;
     }
 
-    private Vector3 Waypoint_GetDirectionTo(Vector3 origin, Vector3 target)
+    private Vector3 Waypoint_GetDirectionTo(
+        Vector3 origin,
+        Vector3 target
+    )
     {
         return (origin - target).normalized;
     }
@@ -428,24 +666,48 @@ public class GraveyardCutscene : MonoBehaviour
 
         for (int i = 0; i < kittyWaypoints.Length; i++)
         {
-            Gizmos.DrawSphere(kittyWaypoints[i].position, 0.075f);
-            Gizmos.DrawLine(kittyWaypoints[i].position, kittyWaypoints[i].position + kittyWaypoints[i].forward);
+            Gizmos.DrawSphere(
+                kittyWaypoints[i].position,
+                0.075f
+            );
+
+            Gizmos.DrawLine(
+                kittyWaypoints[i].position,
+                kittyWaypoints[i].position +
+                kittyWaypoints[i].forward
+            );
         }
 
         Gizmos.color = Color.red;
 
         for (int i = 0; i < oyenWaypoints.Length; i++)
         {
-            Gizmos.DrawSphere(oyenWaypoints[i].position, 0.075f);
-            Gizmos.DrawLine(oyenWaypoints[i].position, oyenWaypoints[i].position + oyenWaypoints[i].forward);
+            Gizmos.DrawSphere(
+                oyenWaypoints[i].position,
+                0.075f
+            );
+
+            Gizmos.DrawLine(
+                oyenWaypoints[i].position,
+                oyenWaypoints[i].position +
+                oyenWaypoints[i].forward
+            );
         }
 
         Gizmos.color = Color.cyan;
 
         for (int i = 0; i < cameraWaypoints.Length; i++)
         {
-            Gizmos.DrawSphere(cameraWaypoints[i].position, 0.075f);
-            Gizmos.DrawLine(cameraWaypoints[i].position, cameraWaypoints[i].position + cameraWaypoints[i].forward);
+            Gizmos.DrawSphere(
+                cameraWaypoints[i].position,
+                0.075f
+            );
+
+            Gizmos.DrawLine(
+                cameraWaypoints[i].position,
+                cameraWaypoints[i].position +
+                cameraWaypoints[i].forward
+            );
         }
     }
 }

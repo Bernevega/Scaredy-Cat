@@ -5,203 +5,277 @@ using System.Collections;
 public class DialogActor : MonoBehaviour
 {
     [Tooltip("Must match a top-level key in your JSON, e.g. \"HomeScene\", \"FriendsScene\"")]
-    public string sceneID;  // Dialogue sequence ID
+    public string sceneID;
 
-    [Tooltip("How close the Player has to be to trigger this NPC’s dialog (in world units).")]
+    [Tooltip("How close the Player has to be to trigger this NPC's dialog.")]
     public float triggerRadius = 3f;
 
-    [Tooltip("If true, this dialog fires automatically on Start (ignoring distance).")]
+    [Tooltip("If true, this dialog fires automatically on Start.")]
     public bool autoStartOnLoad = false;
 
-    [Tooltip("Delay (in seconds) before auto-starting the dialog when autoStartOnLoad is true.")]
+    [Tooltip("Delay before automatically starting the dialog.")]
     public float autoStartDelay = 0f;
 
-    [Tooltip("If true, RequireKeyPress must be pressed while in range to trigger.")]
+    [Tooltip("If true, the interaction key must be pressed while in range.")]
     public bool requireKeyPress = true;
 
-    [Tooltip("The Key to press when requireKeyPress is true.")]
+    [Tooltip("The key used to start the dialogue.")]
     public KeyCode interactionKey = KeyCode.F;
 
-    [Tooltip("Drag your 'Press F to interact' UI GameObject here (initially disabled)")]
+    [Tooltip("Drag the interaction prompt GameObject here.")]
     public GameObject interactionPrompt;
 
-    [Tooltip("If true, dialog can be triggered multiple times.")]
+    [Tooltip("If true, the dialogue can be triggered multiple times.")]
     public bool repeatable = false;
 
     [Header("Prompt Fade")]
-    [Tooltip("Seconds for the interaction prompt to fade in/out.")]
+    [Tooltip("Seconds for the interaction prompt to fade in and out.")]
     public float promptFadeDuration = 0.25f;
 
-    private bool _hasInteracted;  // Tracks if ANY dialog has been triggered at least once
-    public bool HasInteracted => _hasInteracted;  // External check
+    private bool _hasInteracted;
+    public bool HasInteracted => _hasInteracted;
 
-    private int _interactCount = 0; // How many times we’ve started dialog
+    private int _interactCount;
     private Transform _playerTransform;
 
-    // Fade internals
     private CanvasGroup _promptGroup;
     private Coroutine _fadeRoutine;
 
-    void Start()
+    // Prevents the fade coroutine from being restarted every frame.
+    private bool _promptShouldBeVisible;
+
+    private void Start()
     {
-        // Cache reference to player
-        var playerGO = GameObject.FindGameObjectWithTag("Player");
+        GameObject playerGO = GameObject.FindGameObjectWithTag("Player");
+
         if (playerGO != null)
+        {
             _playerTransform = playerGO.transform;
+        }
         else
+        {
             Debug.LogWarning($"[{name}] No GameObject tagged 'Player' found.");
-
-        // Ensure prompt + CanvasGroup
-        if (interactionPrompt != null)
-        {
-            _promptGroup = interactionPrompt.GetComponent<CanvasGroup>();
-            if (_promptGroup == null)
-                _promptGroup = interactionPrompt.AddComponent<CanvasGroup>();
-
-            // Start hidden
-            _promptGroup.alpha = 0f;
-            interactionPrompt.SetActive(false);
-        }
-        else
-        {
-            Debug.LogError($"[{name}] interactionPrompt not assigned.");
         }
 
-        // Auto-start dialog on load if configured
+        SetupPrompt();
+
         if (autoStartOnLoad && !_hasInteracted)
+        {
             StartCoroutine(AutoStartAfterDelay());
+        }
+    }
+
+    private void SetupPrompt()
+    {
+        if (interactionPrompt == null)
+        {
+            Debug.LogError($"[{name}] Interaction prompt is not assigned.");
+            return;
+        }
+
+        _promptGroup = interactionPrompt.GetComponent<CanvasGroup>();
+
+        if (_promptGroup == null)
+        {
+            _promptGroup = interactionPrompt.AddComponent<CanvasGroup>();
+        }
+
+        _promptGroup.alpha = 0f;
+        _promptGroup.interactable = false;
+        _promptGroup.blocksRaycasts = false;
+
+        _promptShouldBeVisible = false;
+
+        // Keep the prompt active so Unity initializes it when the scene loads.
+        interactionPrompt.SetActive(true);
+        Canvas.ForceUpdateCanvases();
     }
 
     private IEnumerator AutoStartAfterDelay()
     {
-        yield return new WaitForSeconds(autoStartDelay);
+        if (autoStartDelay > 0f)
+        {
+            yield return new WaitForSeconds(autoStartDelay);
+        }
 
-        // guard again (in case repeatable was toggled mid-delay)
         if (!_hasInteracted)
         {
             TriggerDialogue();
         }
     }
 
-    void Update()
+    private void Update()
     {
-        // Skip if missing player, if not repeatable and already interacted,
-        // or (IMPORTANT) if we haven't fired the auto-start yet.
-        if (_playerTransform == null ||
-            ((!repeatable) && _interactCount > 0) ||
-            (autoStartOnLoad && _interactCount == 0))  // <-- only block BEFORE the first auto-start fires
+        if (_playerTransform == null)
         {
-            HidePrompt();
+            SetPromptVisible(false);
             return;
         }
 
-        // Check distance for interaction
-        bool inRange = Vector3.Distance(transform.position, _playerTransform.position) <= triggerRadius;
+        if (!repeatable && _interactCount > 0)
+        {
+            SetPromptVisible(false);
+            return;
+        }
 
-        // Hide prompt while any dialogue is open
+        // Wait for the first automatic dialogue to start.
+        if (autoStartOnLoad && _interactCount == 0)
+        {
+            SetPromptVisible(false);
+            return;
+        }
+
         if (IsAnyDialogueOpen())
         {
-            HidePrompt();
+            SetPromptVisible(false);
             return;
         }
 
-        // Show/hide prompt based on range and key requirement
-        if (inRange && requireKeyPress)
-            ShowPrompt();
-        else
-            HidePrompt();
+        // Squared distance avoids calculating a square root every frame.
+        float squaredDistance =
+            (transform.position - _playerTransform.position).sqrMagnitude;
 
-        // Trigger dialog when in range and input conditions met
-        // Allowed if first time OR repeatable is true
-        if (inRange && (!requireKeyPress || Input.GetKeyDown(interactionKey)))
+        bool inRange =
+            squaredDistance <= triggerRadius * triggerRadius;
+
+        SetPromptVisible(inRange && requireKeyPress);
+
+        if (!inRange)
         {
-            if (_interactCount == 0 || repeatable)
-            {
-                TriggerDialogue();
-            }
+            return;
+        }
+
+        bool interactionRequested =
+            !requireKeyPress || Input.GetKeyDown(interactionKey);
+
+        if (interactionRequested &&
+            (_interactCount == 0 || repeatable))
+        {
+            TriggerDialogue();
         }
     }
 
     private bool IsAnyDialogueOpen()
     {
-        var dm = SimpleDialogManager.Instance;
-        return dm != null && dm.dialogPanel != null && dm.dialogPanel.activeSelf;
+        SimpleDialogManager dialogManager =
+            SimpleDialogManager.Instance;
+
+        return dialogManager != null &&
+               dialogManager.dialogPanel != null &&
+               dialogManager.dialogPanel.activeSelf;
     }
 
     private void TriggerDialogue()
     {
-        HidePrompt();
+        SetPromptVisible(false);
 
-        // Choose which sceneID to play:
-        //  - First interaction   => sceneID
-        //  - Second or later     => sceneID + "2"
-        string idToStart = (_interactCount == 0) ? sceneID : (sceneID + "2");
+        SimpleDialogManager dialogManager =
+            SimpleDialogManager.Instance;
 
-        SimpleDialogManager.Instance.StartDialogue(idToStart);
+        if (dialogManager == null)
+        {
+            Debug.LogError(
+                $"[{name}] SimpleDialogManager instance was not found."
+            );
 
-        // Mark and count
+            return;
+        }
+
+        string idToStart =
+            _interactCount == 0
+                ? sceneID
+                : sceneID + "2";
+
+        dialogManager.StartDialogue(idToStart);
+
         _hasInteracted = true;
         _interactCount++;
     }
 
-    // ---- Fade helpers ----
-    private void ShowPrompt()
+    private void SetPromptVisible(bool visible)
     {
-        if (interactionPrompt == null || _promptGroup == null) return;
-        StartFade(1f);
-    }
-
-    private void HidePrompt()
-    {
-        if (interactionPrompt == null || _promptGroup == null) return;
-        StartFade(0f);
-    }
-
-    private void StartFade(float target)
-    {
-        // Early out if already at target
-        if (_promptGroup != null && Mathf.Approximately(_promptGroup.alpha, target))
+        if (interactionPrompt == null || _promptGroup == null)
         {
-            if (Mathf.Approximately(target, 0f) && interactionPrompt.activeSelf)
-                interactionPrompt.SetActive(false);
-            else if (!Mathf.Approximately(target, 0f) && !interactionPrompt.activeSelf)
-                interactionPrompt.SetActive(true);
             return;
         }
 
-        if (_fadeRoutine != null) StopCoroutine(_fadeRoutine);
-        _fadeRoutine = StartCoroutine(FadePromptRoutine(target));
+        // Nothing changed, so do not restart the coroutine.
+        if (_promptShouldBeVisible == visible)
+        {
+            return;
+        }
+
+        _promptShouldBeVisible = visible;
+
+        if (_fadeRoutine != null)
+        {
+            StopCoroutine(_fadeRoutine);
+            _fadeRoutine = null;
+        }
+
+        if (promptFadeDuration <= 0f)
+        {
+            _promptGroup.alpha = visible ? 1f : 0f;
+            return;
+        }
+
+        _fadeRoutine = StartCoroutine(
+            FadePromptRoutine(visible)
+        );
     }
 
-    private IEnumerator FadePromptRoutine(float target)
+    private IEnumerator FadePromptRoutine(bool show)
     {
-        if (!interactionPrompt.activeSelf && target > 0f)
-            interactionPrompt.SetActive(true);
+        float targetAlpha = show ? 1f : 0f;
+        float startAlpha = _promptGroup.alpha;
+        float elapsedTime = 0f;
 
-        float start = _promptGroup.alpha;
-        float time = 0f;
-        float dur = Mathf.Max(0.01f, promptFadeDuration);
-
-        while (time < dur)
+        while (elapsedTime < promptFadeDuration)
         {
-            time += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(time / dur);
-            _promptGroup.alpha = Mathf.Lerp(start, target, t);
+            elapsedTime += Time.unscaledDeltaTime;
+
+            float progress = Mathf.Clamp01(
+                elapsedTime / promptFadeDuration
+            );
+
+            // Smooth fade instead of a completely linear fade.
+            progress = Mathf.SmoothStep(0f, 1f, progress);
+
+            _promptGroup.alpha = Mathf.Lerp(
+                startAlpha,
+                targetAlpha,
+                progress
+            );
+
             yield return null;
         }
 
-        _promptGroup.alpha = target;
-
-        if (Mathf.Approximately(target, 0f))
-            interactionPrompt.SetActive(false);
-
+        _promptGroup.alpha = targetAlpha;
         _fadeRoutine = null;
     }
 
-    void OnDrawGizmosSelected()
+    private void OnDisable()
     {
-        // Visualize trigger radius in editor
+        if (_fadeRoutine != null)
+        {
+            StopCoroutine(_fadeRoutine);
+            _fadeRoutine = null;
+        }
+
+        _promptShouldBeVisible = false;
+
+        if (_promptGroup != null)
+        {
+            _promptGroup.alpha = 0f;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, triggerRadius);
+        Gizmos.DrawWireSphere(
+            transform.position,
+            triggerRadius
+        );
     }
 }
