@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
 public class MainMenu : MonoBehaviour
@@ -18,18 +18,16 @@ public class MainMenu : MonoBehaviour
     public GameObject AudioSettingsPanel;
     public GameObject ControlsSettingsPanel;
 
+    [Header("Settings Panel Fade")]
+    [Tooltip("How long the Settings panel takes to appear/disappear.")]
+    public float settingsFadeDuration = 0.3f;
+
     [Header("Buttons")]
     public Button ContinueButton;
     public Button OpenVideoSettingsButton;
     public Button OpenAudioSettingsButton;
     public Button OpenControlsSettingsButton;
     public Button BackFromSettingsButton;
-
-    [Header("Default Selected Buttons")]
-    public Button DefaultMainMenuButton;
-    public Button DefaultVideoSettingsButton;
-    public Button DefaultAudioSettingsButton;
-    public Button DefaultControlsSettingsButton;
 
     [Header("Audio Settings UI")]
     [Tooltip("Slider range: 0..1")]
@@ -42,50 +40,52 @@ public class MainMenu : MonoBehaviour
     public TMP_Dropdown screenModeDropdown;
 
     private string saveFilePath;
-    private Controls inputControls;
     public MenuSetup setup;
     private bool gameStarted = false;
 
-    // --- Video settings state ---
+    private CanvasGroup settingsCanvasGroup;
+    private Coroutine settingsFadeCoroutine;
+
     private readonly List<Vector2Int> _resOptions = new List<Vector2Int>();
     private int _selectedWidth;
     private int _selectedHeight;
 
-    // PlayerPrefs keys
     private const string PP_WIDTH = "Video_Width";
     private const string PP_HEIGHT = "Video_Height";
-    private const string PP_MODE = "Video_Mode"; // 0=ExclusiveFS,1=Windowed,2=Borderless
-
-    // Optional PlayerPrefs marker some save systems set when a save exists
+    private const string PP_MODE = "Video_Mode";
     private const string PP_HAS_SAVE_MARKER = "HasSave";
 
     private void Awake()
     {
-        // Build the expected save path (adjust the file name if your SaveManager uses another one)
-        saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+        saveFilePath =
+            Path.Combine(
+                Application.persistentDataPath,
+                "savefile.json"
+            );
 
-        inputControls = new Controls();
-        inputControls.UI.Enable();
-        inputControls.Player.Disable();
+        if (SettingsPanel != null)
+        {
+            settingsCanvasGroup =
+                SettingsPanel.GetComponent<CanvasGroup>();
 
-        // Hide Continue by default to avoid showing it on first boot / fresh installs.
+            if (settingsCanvasGroup == null)
+                settingsCanvasGroup =
+                    SettingsPanel.AddComponent<CanvasGroup>();
+
+            settingsCanvasGroup.alpha = 0f;
+            settingsCanvasGroup.interactable = false;
+            settingsCanvasGroup.blocksRaycasts = false;
+        }
+
         if (ContinueButton != null)
             ContinueButton.gameObject.SetActive(false);
 
-        // Then check for real save data and show it if present.
         RefreshContinueButton();
     }
 
     private void OnEnable()
     {
-        // In case the object is re-enabled, keep the button state in sync.
         RefreshContinueButton();
-    }
-
-    private void OnDestroy()
-    {
-        if (inputControls != null)
-            inputControls.UI.Disable();
     }
 
     private void Start()
@@ -93,152 +93,240 @@ public class MainMenu : MonoBehaviour
         MenuPanel.SetActive(true);
         SettingsPanel.SetActive(false);
 
-        // Auto-wire dropdowns if missing in Inspector
-        if (!resolutionDropdown || !screenModeDropdown)
+        if (!resolutionDropdown ||
+            !screenModeDropdown)
         {
-            var drops = GetComponentsInChildren<TMP_Dropdown>(true);
+            var drops =
+                GetComponentsInChildren<TMP_Dropdown>(true);
+
             foreach (var d in drops)
             {
-                var n = d.name.ToLowerInvariant();
-                if (!resolutionDropdown && (n.Contains("resolution") || n.Contains("res")))
+                string n =
+                    d.name.ToLowerInvariant();
+
+                if (!resolutionDropdown &&
+                    (n.Contains("resolution") ||
+                     n.Contains("res")))
+                {
                     resolutionDropdown = d;
-                else if (!screenModeDropdown && (n.Contains("screen") || n.Contains("display") || n.Contains("mode")))
+                }
+                else if (!screenModeDropdown &&
+                         (n.Contains("screen") ||
+                          n.Contains("display") ||
+                          n.Contains("mode")))
+                {
                     screenModeDropdown = d;
+                }
             }
         }
 
         VerifyAndPopulateDropdowns();
-        if (resolutionDropdown) resolutionDropdown.onValueChanged.AddListener(SetResolution);
-        if (screenModeDropdown) screenModeDropdown.onValueChanged.AddListener(SetScreenMode);
+
+        if (resolutionDropdown)
+            resolutionDropdown.onValueChanged.AddListener(SetResolution);
+
+        if (screenModeDropdown)
+            screenModeDropdown.onValueChanged.AddListener(SetScreenMode);
 
         LoadVolumeSliders();
 
-        // Ensure Continue reflects current disk state on first frame, too.
         RefreshContinueButton();
 
-        if (DefaultMainMenuButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
+        ClearButtonSelection();
     }
 
-    private void Update()
+    private void ClearButtonSelection()
     {
-        if (Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame)
-        {
-            if (EventSystem.current.currentSelectedGameObject == null)
-                ReselectButtonForCurrentPanel();
-        }
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
     }
-
-    private void ReselectButtonForCurrentPanel()
-    {
-        if (MenuPanel.activeInHierarchy && DefaultMainMenuButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
-        else if (VideoSettingsPanel.activeInHierarchy && DefaultVideoSettingsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultVideoSettingsButton.gameObject);
-        else if (AudioSettingsPanel.activeInHierarchy && DefaultAudioSettingsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultAudioSettingsButton.gameObject);
-        else if (ControlsSettingsPanel.activeInHierarchy && DefaultControlsSettingsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
-    }
-
-    // ---------- Continue button visibility ----------
 
     private void RefreshContinueButton()
     {
-        if (ContinueButton == null) return;
+        if (ContinueButton == null)
+            return;
+
         bool hasSave = DetectSaveData();
+
         ContinueButton.gameObject.SetActive(hasSave);
-        // Optional log to verify on player builds (remove later if noisy).
-        Debug.Log($"[MainMenu] Save detected: {hasSave} | path: {saveFilePath}");
+
+        Debug.Log(
+            $"[MainMenu] Save detected: {hasSave} | path: {saveFilePath}"
+        );
     }
 
     private bool DetectSaveData()
     {
-        // 1) Direct, exact file
         try
         {
             if (File.Exists(saveFilePath))
                 return true;
         }
-        catch { /* ignore */ }
+        catch { }
 
-        // 2) Any common “save” file names in the persistent data folder
         try
         {
-            string dir = Application.persistentDataPath;
+            string dir =
+                Application.persistentDataPath;
+
             if (Directory.Exists(dir))
             {
-                // Any file with "save" in its name
-                if (Directory.GetFiles(dir, "*save*.*").Length > 0) return true;
-                // Common patterns
-                if (Directory.GetFiles(dir, "*.sav").Length > 0) return true;
-                if (Directory.GetFiles(dir, "*.save").Length > 0) return true;
-                if (Directory.GetFiles(dir, "*.json").Any(f => Path.GetFileName(f).ToLowerInvariant().Contains("save")))
+                if (Directory.GetFiles(
+                    dir,
+                    "*save*.*"
+                ).Length > 0)
+                    return true;
+
+                if (Directory.GetFiles(
+                    dir,
+                    "*.sav"
+                ).Length > 0)
+                    return true;
+
+                if (Directory.GetFiles(
+                    dir,
+                    "*.save"
+                ).Length > 0)
+                    return true;
+
+                if (Directory.GetFiles(
+                    dir,
+                    "*.json"
+                ).Any(
+                    f =>
+                        Path.GetFileName(f)
+                            .ToLowerInvariant()
+                            .Contains("save")
+                ))
                     return true;
             }
         }
-        catch { /* ignore */ }
+        catch { }
 
-        // 3) Optional PlayerPrefs marker (use this if your SaveManager sets it when saving)
-        if (PlayerPrefs.GetInt(PP_HAS_SAVE_MARKER, 0) == 1)
+        if (PlayerPrefs.GetInt(
+            PP_HAS_SAVE_MARKER,
+            0
+        ) == 1)
             return true;
 
-        // If none of the above hit, assume no save.
         return false;
     }
 
-    // ---------------- Main Menu Buttons ----------------
+    // ----------------------------------------------------
+    // GAME
+    // ----------------------------------------------------
 
     public void MainGameStart()
     {
-        if (!gameStarted)
+        ClearButtonSelection();
+
+        if (gameStarted)
+            return;
+
+        gameStarted = true;
+
+        if (setup != null)
+        {
+            setup.MovingToNewScene(
+                () =>
+                {
+                    SceneManager.LoadScene("1City");
+                }
+            );
+        }
+        else
         {
             SceneManager.LoadScene("1City");
-            gameStarted = true;
-            if (setup) setup.MovingToNewScene();
         }
     }
 
     public void LoadGame()
     {
-        if (gameStarted) return;
+        ClearButtonSelection();
 
-        // Extra guard: if no save detected, keep the button hidden.
+        if (gameStarted)
+            return;
+
         if (!DetectSaveData())
         {
-            Debug.LogWarning("MainMenu: Load requested but no save data detected. Hiding Continue.");
+            Debug.LogWarning(
+                "MainMenu: Load requested but no save data detected. Hiding Continue."
+            );
+
             RefreshContinueButton();
             return;
         }
 
-        bool success = SaveManager.Instance.LoadGame();
-        if (!success)
-        {
-            Debug.LogWarning("MainMenu: No save file found to load. Hiding Continue.");
-            // If load failed (e.g., corrupted/missing), hide the button.
-            RefreshContinueButton();
-        }
+        gameStarted = true;
+
+        Action loadGameAfterFade =
+            () =>
+            {
+                bool success =
+                    SaveManager.Instance.LoadGame();
+
+                if (!success)
+                {
+                    Debug.LogWarning(
+                        "MainMenu: No save file found to load. Hiding Continue."
+                    );
+
+                    gameStarted = false;
+                    RefreshContinueButton();
+
+                    if (setup != null)
+                        setup.FadeBackFromBlack();
+                }
+                else
+                {
+                    Debug.Log(
+                        "MainMenu: Loaded saved game."
+                    );
+                }
+            };
+
+        if (setup != null)
+            setup.MovingToNewScene(
+                loadGameAfterFade
+            );
         else
-        {
-            Debug.Log("MainMenu: Loaded saved game.");
-            gameStarted = true;
-            if (setup) setup.MovingToNewScene();
-        }
+            loadGameAfterFade();
     }
+
+    // ----------------------------------------------------
+    // SETTINGS
+    // ----------------------------------------------------
 
     public void OpenVideoSettings()
     {
-        MenuPanel.SetActive(false);
-        SettingsPanel.SetActive(true);
+    ClearButtonSelection();
 
+    // If Settings is already open, we're only switching tabs.
+    // Do NOT restart the settings fade or reload the video settings.
+    if (SettingsPanel.activeSelf)
+    {
         VideoSettingsPanel.SetActive(true);
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(false);
 
-        VerifyAndPopulateDropdowns();
+        ClearButtonSelection();
+        return;
+    }
 
-        if (DefaultVideoSettingsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultVideoSettingsButton.gameObject);
+    // We are opening Settings from the main menu.
+    if (setup != null)
+        setup.HideMainMenuVisualsForSettings();
+
+    MenuPanel.SetActive(false);
+    SettingsPanel.SetActive(true);
+
+    VideoSettingsPanel.SetActive(true);
+    AudioSettingsPanel.SetActive(false);
+    ControlsSettingsPanel.SetActive(false);
+
+    VerifyAndPopulateDropdowns();
+
+    StartSettingsFade(1f);
     }
 
     public void OpenAudioSettings()
@@ -247,8 +335,7 @@ public class MainMenu : MonoBehaviour
         AudioSettingsPanel.SetActive(true);
         ControlsSettingsPanel.SetActive(false);
 
-        if (DefaultAudioSettingsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultAudioSettingsButton.gameObject);
+        ClearButtonSelection();
     }
 
     public void OpenControlsSettings()
@@ -257,30 +344,174 @@ public class MainMenu : MonoBehaviour
         AudioSettingsPanel.SetActive(false);
         ControlsSettingsPanel.SetActive(true);
 
-        if (DefaultControlsSettingsButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultControlsSettingsButton.gameObject);
+        ClearButtonSelection();
     }
 
     public void ClosePanel()
     {
         Debug.Log("CLOSED PANEL");
-        SettingsPanel.SetActive(false);
-        MenuPanel.SetActive(true);
 
-        // Keep Continue button visibility fresh when returning
+        ClearButtonSelection();
+
+        if (settingsFadeCoroutine != null)
+            StopCoroutine(settingsFadeCoroutine);
+
+        settingsFadeCoroutine =
+            StartCoroutine(
+                FadeSettingsOut()
+            );
+    }
+
+    private void StartSettingsFade(
+        float targetAlpha)
+    {
+        if (settingsCanvasGroup == null)
+            return;
+
+        if (settingsFadeCoroutine != null)
+            StopCoroutine(settingsFadeCoroutine);
+
+        settingsFadeCoroutine =
+            StartCoroutine(
+                FadeSettingsCanvas(
+                    targetAlpha
+                )
+            );
+    }
+
+    private IEnumerator FadeSettingsCanvas(
+        float targetAlpha)
+    {
+        if (settingsCanvasGroup == null)
+            yield break;
+
+        settingsCanvasGroup.interactable = false;
+        settingsCanvasGroup.blocksRaycasts = false;
+
+        float startAlpha =
+            settingsCanvasGroup.alpha;
+
+        float elapsed = 0f;
+
+        if (settingsFadeDuration <= 0f)
+        {
+            settingsCanvasGroup.alpha =
+                targetAlpha;
+        }
+        else
+        {
+            while (elapsed <
+                   settingsFadeDuration)
+            {
+                elapsed +=
+                    Time.unscaledDeltaTime;
+
+                float t =
+                    Mathf.Clamp01(
+                        elapsed /
+                        settingsFadeDuration
+                    );
+
+                settingsCanvasGroup.alpha =
+                    Mathf.Lerp(
+                        startAlpha,
+                        targetAlpha,
+                        t
+                    );
+
+                yield return null;
+            }
+        }
+
+        settingsCanvasGroup.alpha =
+            targetAlpha;
+
+        if (targetAlpha >= 1f)
+        {
+            settingsCanvasGroup.interactable = true;
+            settingsCanvasGroup.blocksRaycasts = true;
+        }
+
+        settingsFadeCoroutine = null;
+    }
+
+    private IEnumerator FadeSettingsOut()
+    {
+        if (settingsCanvasGroup == null)
+        {
+            SettingsPanel.SetActive(false);
+
+            RefreshContinueButton();
+
+            if (setup != null)
+                setup.FadeMainMenuIn();
+
+            MenuPanel.SetActive(true);
+
+            yield break;
+        }
+
+        settingsCanvasGroup.interactable = false;
+        settingsCanvasGroup.blocksRaycasts = false;
+
+        float startAlpha =
+            settingsCanvasGroup.alpha;
+
+        float elapsed = 0f;
+
+        while (elapsed <
+               settingsFadeDuration)
+        {
+            elapsed +=
+                Time.unscaledDeltaTime;
+
+            float t =
+                Mathf.Clamp01(
+                    elapsed /
+                    settingsFadeDuration
+                );
+
+            settingsCanvasGroup.alpha =
+                Mathf.Lerp(
+                    startAlpha,
+                    0f,
+                    t
+                );
+
+            yield return null;
+        }
+
+        settingsCanvasGroup.alpha = 0f;
+
+        SettingsPanel.SetActive(false);
+
+        // Refresh Continue BEFORE fading menu back in
+        // so its visibility is correct.
         RefreshContinueButton();
 
-        if (DefaultMainMenuButton != null)
-            EventSystem.current.SetSelectedGameObject(DefaultMainMenuButton.gameObject);
+        // Start at alpha 0 while MenuPanel is still hidden.
+        // This prevents a one-frame flash.
+        if (setup != null)
+            setup.FadeMainMenuIn();
+
+        // Then reveal the parent.
+        MenuPanel.SetActive(true);
+
+        settingsFadeCoroutine = null;
     }
 
     public void QuitGame()
     {
+        ClearButtonSelection();
+
         Application.Quit();
+
         Debug.Log("Game exited");
     }
 
-    // ---------------- Audio UI Callbacks ----------------
+    // ----------------------------------------------------
+    // AUDIO
+    // ----------------------------------------------------
 
     public void SetGeneralVolume(float volume)
     {
@@ -302,37 +533,68 @@ public class MainMenu : MonoBehaviour
 
     private void LoadVolumeSliders()
     {
-        float master = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
-        float music = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float sfx = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
+        float master =
+            PlayerPrefs.GetFloat(
+                "MasterVolume",
+                0.75f
+            );
+
+        float music =
+            PlayerPrefs.GetFloat(
+                "MusicVolume",
+                0.75f
+            );
+
+        float sfx =
+            PlayerPrefs.GetFloat(
+                "SFXVolume",
+                0.75f
+            );
 
         if (generalVolumeSlider != null)
         {
             generalVolumeSlider.value = master;
-            if (AudioManager.Instance) AudioManager.Instance.SetMasterVolume(master);
+
+            if (AudioManager.Instance)
+                AudioManager.Instance.SetMasterVolume(master);
         }
+
         if (musicVolumeSlider != null)
         {
             musicVolumeSlider.value = music;
-            if (AudioManager.Instance) AudioManager.Instance.SetMusicVolume(music);
+
+            if (AudioManager.Instance)
+                AudioManager.Instance.SetMusicVolume(music);
         }
+
         if (sfxVolumeSlider != null)
         {
             sfxVolumeSlider.value = sfx;
-            if (AudioManager.Instance) AudioManager.Instance.SetSFXVolume(sfx);
+
+            if (AudioManager.Instance)
+                AudioManager.Instance.SetSFXVolume(sfx);
         }
     }
 
-    // ---------------- Video Settings Logic ----------------
+    // ----------------------------------------------------
+    // VIDEO SETTINGS
+    // ----------------------------------------------------
 
     private void VerifyAndPopulateDropdowns()
     {
-        if (!resolutionDropdown || !screenModeDropdown) return;
+        if (!resolutionDropdown ||
+            !screenModeDropdown)
+            return;
 
         bool resLooksDefault =
             resolutionDropdown.options.Count > 0 &&
             resolutionDropdown.options[0] != null &&
-            resolutionDropdown.options[0].text.StartsWith("Option", StringComparison.OrdinalIgnoreCase);
+            resolutionDropdown.options[0]
+                .text
+                .StartsWith(
+                    "Option",
+                    StringComparison.OrdinalIgnoreCase
+                );
 
         if (resLooksDefault)
             resolutionDropdown.ClearOptions();
@@ -343,9 +605,15 @@ public class MainMenu : MonoBehaviour
         bool modeLooksDefault =
             screenModeDropdown.options.Count > 0 &&
             screenModeDropdown.options[0] != null &&
-            screenModeDropdown.options[0].text.StartsWith("Option", StringComparison.OrdinalIgnoreCase);
+            screenModeDropdown.options[0]
+                .text
+                .StartsWith(
+                    "Option",
+                    StringComparison.OrdinalIgnoreCase
+                );
 
-        if (screenModeDropdown.options.Count == 0 || modeLooksDefault)
+        if (screenModeDropdown.options.Count == 0 ||
+            modeLooksDefault)
             SetupScreenModeOptions();
 
         LoadAndApplyVideoSettings();
@@ -353,80 +621,160 @@ public class MainMenu : MonoBehaviour
 
     private void SetupResolutionOptions()
     {
-        if (!resolutionDropdown) return;
+        if (!resolutionDropdown)
+            return;
 
         resolutionDropdown.ClearOptions();
         _resOptions.Clear();
 
-        _resOptions.Add(new Vector2Int(1280, 720));
-        _resOptions.Add(new Vector2Int(1600, 900));
-        _resOptions.Add(new Vector2Int(1920, 1080));
+        _resOptions.Add(
+            new Vector2Int(1280, 720)
+        );
 
-        List<string> options = _resOptions.Select(v => $"{v.x} x {v.y}").ToList();
+        _resOptions.Add(
+            new Vector2Int(1600, 900)
+        );
+
+        _resOptions.Add(
+            new Vector2Int(1920, 1080)
+        );
+
+        List<string> options =
+            _resOptions
+                .Select(
+                    v => $"{v.x} x {v.y}"
+                )
+                .ToList();
+
         resolutionDropdown.AddOptions(options);
 
-        int currentIndex = _resOptions.FindIndex(v => v.x == Screen.width && v.y == Screen.height);
-        if (currentIndex < 0) currentIndex = Mathf.Max(0, _resOptions.Count - 1);
+        int currentIndex =
+            _resOptions.FindIndex(
+                v =>
+                    v.x == Screen.width &&
+                    v.y == Screen.height
+            );
 
-        resolutionDropdown.value = currentIndex;
+        if (currentIndex < 0)
+            currentIndex =
+                Mathf.Max(
+                    0,
+                    _resOptions.Count - 1
+                );
+
+        resolutionDropdown.value =
+            currentIndex;
+
         resolutionDropdown.RefreshShownValue();
 
-        _selectedWidth = _resOptions[currentIndex].x;
-        _selectedHeight = _resOptions[currentIndex].y;
+        _selectedWidth =
+            _resOptions[currentIndex].x;
+
+        _selectedHeight =
+            _resOptions[currentIndex].y;
     }
 
     private void SetupScreenModeOptions()
     {
-        if (!screenModeDropdown) return;
+        if (!screenModeDropdown)
+            return;
 
         screenModeDropdown.ClearOptions();
-        screenModeDropdown.AddOptions(new List<string> { "Fullscreen", "Windowed", "Borderless" });
 
-        int idx = GetCurrentScreenModeIndex();
+        screenModeDropdown.AddOptions(
+            new List<string>
+            {
+                "Fullscreen",
+                "Windowed",
+                "Borderless"
+            }
+        );
+
+        int idx =
+            GetCurrentScreenModeIndex();
+
         screenModeDropdown.value = idx;
         screenModeDropdown.RefreshShownValue();
 
-        UpdateResolutionInteractable(GetScreenModeFromDropdown(idx));
+        UpdateResolutionInteractable(
+            GetScreenModeFromDropdown(idx)
+        );
     }
 
     public void SetResolution(int index)
     {
-        if (index < 0 || index >= _resOptions.Count) return;
+        if (index < 0 ||
+            index >= _resOptions.Count)
+            return;
 
-        _selectedWidth = _resOptions[index].x;
-        _selectedHeight = _resOptions[index].y;
+        _selectedWidth =
+            _resOptions[index].x;
 
-        FullScreenMode mode = GetScreenModeFromDropdown();
-        ApplyResolution(_selectedWidth, _selectedHeight, mode);
+        _selectedHeight =
+            _resOptions[index].y;
+
+        FullScreenMode mode =
+            GetScreenModeFromDropdown();
+
+        ApplyResolution(
+            _selectedWidth,
+            _selectedHeight,
+            mode
+        );
+
         SaveVideoSettings();
+
+        ClearButtonSelection();
     }
 
     public void SetScreenMode(int index)
     {
-        FullScreenMode mode = GetScreenModeFromDropdown(index);
+        FullScreenMode mode =
+            GetScreenModeFromDropdown(index);
 
-        if (_selectedWidth <= 0 || _selectedHeight <= 0)
+        if (_selectedWidth <= 0 ||
+            _selectedHeight <= 0)
         {
             _selectedWidth = Screen.width;
             _selectedHeight = Screen.height;
         }
 
-        ApplyResolution(_selectedWidth, _selectedHeight, mode);
+        ApplyResolution(
+            _selectedWidth,
+            _selectedHeight,
+            mode
+        );
+
         SaveVideoSettings();
+
+        ClearButtonSelection();
     }
 
-    private FullScreenMode GetScreenModeFromDropdown(int forcedIndex = -1)
+    private FullScreenMode GetScreenModeFromDropdown(
+        int forcedIndex = -1)
     {
-        int idx = forcedIndex >= 0
-            ? forcedIndex
-            : (screenModeDropdown ? screenModeDropdown.value : GetCurrentScreenModeIndex());
+        int idx =
+            forcedIndex >= 0
+                ? forcedIndex
+                : (
+                    screenModeDropdown
+                        ? screenModeDropdown.value
+                        : GetCurrentScreenModeIndex()
+                );
 
         switch (idx)
         {
-            case 0: return FullScreenMode.ExclusiveFullScreen;
-            case 1: return FullScreenMode.Windowed;
-            case 2: return FullScreenMode.FullScreenWindow;
-            default: return FullScreenMode.FullScreenWindow;
+            case 0:
+                return FullScreenMode.ExclusiveFullScreen;
+
+            case 1:
+                return FullScreenMode.Windowed;
+
+            case 2:
+                return FullScreenMode.FullScreenWindow;
+
+            default:
+                return FullScreenMode.FullScreenWindow;
         }
     }
 
@@ -434,43 +782,102 @@ public class MainMenu : MonoBehaviour
     {
         switch (Screen.fullScreenMode)
         {
-            case FullScreenMode.ExclusiveFullScreen: return 0;
-            case FullScreenMode.Windowed: return 1;
-            case FullScreenMode.FullScreenWindow: return 2;
-            default: return 2;
+            case FullScreenMode.ExclusiveFullScreen:
+                return 0;
+
+            case FullScreenMode.Windowed:
+                return 1;
+
+            case FullScreenMode.FullScreenWindow:
+                return 2;
+
+            default:
+                return 2;
         }
     }
 
     private void LoadAndApplyVideoSettings()
     {
-        int width = PlayerPrefs.GetInt(PP_WIDTH, Screen.width);
-        int height = PlayerPrefs.GetInt(PP_HEIGHT, Screen.height);
-        int modeIdx = PlayerPrefs.GetInt(PP_MODE, GetCurrentScreenModeIndex());
+        int width =
+            PlayerPrefs.GetInt(
+                PP_WIDTH,
+                Screen.width
+            );
+
+        int height =
+            PlayerPrefs.GetInt(
+                PP_HEIGHT,
+                Screen.height
+            );
+
+        int modeIdx =
+            PlayerPrefs.GetInt(
+                PP_MODE,
+                GetCurrentScreenModeIndex()
+            );
 
         _selectedWidth = width;
         _selectedHeight = height;
 
         if (resolutionDropdown)
         {
-            int found = _resOptions.FindIndex(v => v.x == width && v.y == height);
-            if (found >= 0) resolutionDropdown.value = found;
+            int found =
+                _resOptions.FindIndex(
+                    v =>
+                        v.x == width &&
+                        v.y == height
+                );
+
+            if (found >= 0)
+                resolutionDropdown.value =
+                    found;
+
             resolutionDropdown.RefreshShownValue();
         }
+
         if (screenModeDropdown)
         {
-            screenModeDropdown.value = Mathf.Clamp(modeIdx, 0, 2);
+            screenModeDropdown.value =
+                Mathf.Clamp(
+                    modeIdx,
+                    0,
+                    2
+                );
+
             screenModeDropdown.RefreshShownValue();
         }
 
-        var mode = GetScreenModeFromDropdown(modeIdx);
-        ApplyResolution(width, height, mode);
+        FullScreenMode mode =
+            GetScreenModeFromDropdown(
+                modeIdx
+            );
+
+        ApplyResolution(
+            width,
+            height,
+            mode
+        );
     }
 
     private void SaveVideoSettings()
     {
-        PlayerPrefs.SetInt(PP_WIDTH, _selectedWidth);
-        PlayerPrefs.SetInt(PP_HEIGHT, _selectedHeight);
-        PlayerPrefs.SetInt(PP_MODE, screenModeDropdown ? screenModeDropdown.value : GetCurrentScreenModeIndex());
+        PlayerPrefs.SetInt(
+            PP_WIDTH,
+            _selectedWidth
+        );
+
+        PlayerPrefs.SetInt(
+            PP_HEIGHT,
+            _selectedHeight
+        );
+
+        PlayerPrefs.SetInt(
+            PP_MODE,
+            screenModeDropdown
+                ? screenModeDropdown.value
+                : GetCurrentScreenModeIndex()
+        );
+
         PlayerPrefs.Save();
     }
 
@@ -479,22 +886,50 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    private void ApplyResolution(int w, int h, FullScreenMode mode)
+    private void ApplyResolution(
+        int w,
+        int h,
+        FullScreenMode mode)
     {
 #if UNITY_2021_2_OR_NEWER
-        var rr = Screen.currentResolution.refreshRateRatio;
-        Screen.SetResolution(w, h, mode, rr);
+        var rr =
+            Screen.currentResolution
+                .refreshRateRatio;
+
+        Screen.SetResolution(
+            w,
+            h,
+            mode,
+            rr
+        );
 #else
-        int rr = Screen.currentResolution.refreshRate;
-        Screen.SetResolution(w, h, mode, rr);
+        int rr =
+            Screen.currentResolution
+                .refreshRate;
+
+        Screen.SetResolution(
+            w,
+            h,
+            mode,
+            rr
+        );
 #endif
+
         UpdateResolutionInteractable(mode);
-        Debug.Log($"[Video] Requested {w}x{h} {mode}, now Screen={Screen.width}x{Screen.height} mode={Screen.fullScreenMode}");
+
+        Debug.Log(
+            $"[Video] Requested {w}x{h} {mode}, now Screen={Screen.width}x{Screen.height} mode={Screen.fullScreenMode}"
+        );
     }
 
-    private void UpdateResolutionInteractable(FullScreenMode mode)
+    private void UpdateResolutionInteractable(
+        FullScreenMode mode)
     {
         if (resolutionDropdown)
-            resolutionDropdown.interactable = (mode != FullScreenMode.FullScreenWindow);
+        {
+            resolutionDropdown.interactable =
+                mode !=
+                FullScreenMode.FullScreenWindow;
+        }
     }
 }
