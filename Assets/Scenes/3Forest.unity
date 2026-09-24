@@ -533,7 +533,7 @@ Transform:
   m_GameObject: {fileID: 15200940}
   serializedVersion: 2
   m_LocalRotation: {x: 0.007937798, y: -0.17572893, z: -0.04442104, w: 0.98340386}
-  m_LocalPosition: {x: -0.84521484, y: 93.5384, z: 11.628906}
+  m_LocalPosition: {x: -4.043934, y: 97.95499, z: 10.46714}
   m_LocalScale: {x: 5.136462, y: 4.8930836, z: 5.4735785}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3423,7 +3423,7 @@ Transform:
   m_GameObject: {fileID: 135976529}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.99864805, z: -0, w: 0.05198219}
-  m_LocalPosition: {x: 4.755, y: 1.385, z: 2.143}
+  m_LocalPosition: {x: 4.758, y: 1.385, z: 2.111}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6978,6 +6978,10 @@ MonoBehaviour:
   onlyPlayer: 1
   fadeOutDurationOverride: 1
   fallbackWaitSeconds: 0
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
+  mainMenuSceneName: MainMenu
 --- !u!136 &257678158
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -22895,7 +22899,7 @@ Transform:
   m_GameObject: {fileID: 901262941}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.17590812, z: -0, w: 0.9844066}
-  m_LocalPosition: {x: -11.201294, y: 26.883415, z: -15.238281}
+  m_LocalPosition: {x: -14.4, y: 31.3, z: -16.4}
   m_LocalScale: {x: 4.4257245, y: 4.215391, z: 4.715841}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -23875,7 +23879,7 @@ Transform:
   m_GameObject: {fileID: 960842706}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.17590812, z: -0, w: 0.9844066}
-  m_LocalPosition: {x: 23.299194, y: 53.46834, z: -20.583496}
+  m_LocalPosition: {x: 20.100475, y: 57.88492, z: -21.745262}
   m_LocalScale: {x: 5.175454, y: 4.9294896, z: 5.537634}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39049,6 +39053,10 @@ MonoBehaviour:
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
+  fadeAudio: 1
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
   disablePlayerMovementOnFaint: 0
   movementScriptTypeName: PlayerMovement
   interactionCanvas: {fileID: 0}
@@ -39098,9 +39106,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: {fileID: 744873863}
-  ghostPaperObject: {fileID: 0}
+  flowerObject: {fileID: 0}
+  additionalObjectToShow: {fileID: 0}
   logBlocker: {fileID: 1123717905}
   objectToDisable: {fileID: 0}
+  dialogueTreeName: KittyCrowResque_
+  finalNodeName: kitty13final
 --- !u!1 &1519776953
 GameObject:
   m_ObjectHideFlags: 0
@@ -59542,6 +59553,10 @@ MonoBehaviour:
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
+  fadeAudio: 1
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
   disablePlayerMovementOnFaint: 0
   movementScriptTypeName: PlayerMovement
   interactionCanvas: {fileID: 2005010346}
@@ -60456,7 +60471,7 @@ Transform:
   m_GameObject: {fileID: 7034463713340950510}
   serializedVersion: 2
   m_LocalRotation: {x: 0.014124482, y: -0.17534015, z: -0.009744327, w: 0.9843584}
-  m_LocalPosition: {x: 7.7, y: 113.9, z: 41.6}
+  m_LocalPosition: {x: 21.4, y: 124.9, z: 58.1}
   m_LocalScale: {x: 5.136462, y: 4.8930836, z: 5.4735785}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -60945,7 +60960,7 @@ Transform:
   m_GameObject: {fileID: 1573313464197089167}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.17590812, z: -0, w: 0.9844066}
-  m_LocalPosition: {x: 78.5, y: 21.3, z: 7.2}
+  m_LocalPosition: {x: 103, y: 21.3, z: 16}
   m_LocalScale: {x: 6.7822495, y: 6.459922, z: 7.226841}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -63644,7 +63659,7 @@ Transform:
   m_GameObject: {fileID: 1437945841460311598}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.17590812, z: -0, w: 0.9844066}
-  m_LocalPosition: {x: 31.8, y: 73.8, z: 9.4}
+  m_LocalPosition: {x: 45.5, y: 84.8, z: 25.9}
   m_LocalScale: {x: 5.175454, y: 4.9294896, z: 5.537634}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -77560,6 +77575,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &7516478693841211953
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -80537,7 +80556,7 @@ Transform:
   m_GameObject: {fileID: 2900000272952590223}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.17590812, z: -0, w: 0.9844066}
-  m_LocalPosition: {x: -2.7, y: 47.2, z: 14.7}
+  m_LocalPosition: {x: 11, y: 58.2, z: 31.2}
   m_LocalScale: {x: 4.4257245, y: 4.215391, z: 4.715841}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -80990,6 +81009,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!1 &8758437984631055660
 GameObject:
   m_ObjectHideFlags: 0

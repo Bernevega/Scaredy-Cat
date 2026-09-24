@@ -800,6 +800,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 27.306, y: 294.911, z: 82.54}
+--- !u!1001 &367397087
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -42.63661
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.29479
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5845974552560689706, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_Name
+      value: SkyManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
 --- !u!1 &394516407
 GameObject:
   m_ObjectHideFlags: 0
@@ -1469,6 +1526,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 6
   useSurfaceNormal: 0
+  bounceSound: {fileID: 8300000, guid: f8024d4db75783840a689e658eb6c523, type: 3}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!54 &927735739
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2454,6 +2515,13 @@ MonoBehaviour:
   visualTarget: {fileID: 1203994068}
   shakeMagnitude: 1
   shakeSpeed: 30
+  crackingSound: {fileID: 8300000, guid: 3758bb81afd3fa74b984322422a695b2, type: 3}
+  breakingSound: {fileID: 8300000, guid: 7d70f476b9f2c4941911c69b47f65977, type: 3}
+  crackingVolume: 1
+  crackingPitchRange: {x: 0.95, y: 1.05}
+  breakingVolume: 1
+  breakingPitchRange: {x: 0.95, y: 1.05}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!65 &1450381963
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3043,6 +3111,13 @@ MonoBehaviour:
   visualTarget: {fileID: 1630971344}
   shakeMagnitude: 1
   shakeSpeed: 30
+  crackingSound: {fileID: 8300000, guid: 3758bb81afd3fa74b984322422a695b2, type: 3}
+  breakingSound: {fileID: 8300000, guid: 7d70f476b9f2c4941911c69b47f65977, type: 3}
+  crackingVolume: 1
+  crackingPitchRange: {x: 0.95, y: 1.05}
+  breakingVolume: 1
+  breakingPitchRange: {x: 0.95, y: 1.05}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!65 &1584379124
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3668,6 +3743,10 @@ MonoBehaviour:
   onlyPlayer: 1
   fadeOutDurationOverride: -1
   fallbackWaitSeconds: 0
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
+  mainMenuSceneName: MainMenu
 --- !u!65 &1866969275
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4351,6 +4430,13 @@ MonoBehaviour:
   visualTarget: {fileID: 780661974}
   shakeMagnitude: 0.05
   shakeSpeed: 30
+  crackingSound: {fileID: 8300000, guid: 3758bb81afd3fa74b984322422a695b2, type: 3}
+  breakingSound: {fileID: 8300000, guid: 7d70f476b9f2c4941911c69b47f65977, type: 3}
+  crackingVolume: 1
+  crackingPitchRange: {x: 0.95, y: 1.05}
+  breakingVolume: 1
+  breakingPitchRange: {x: 0.95, y: 1.05}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!65 &2044827024
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4428,6 +4514,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 6
   useSurfaceNormal: 0
+  bounceSound: {fileID: 8300000, guid: f8024d4db75783840a689e658eb6c523, type: 3}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!54 &2068067368
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4576,6 +4666,13 @@ MonoBehaviour:
   visualTarget: {fileID: 1226547531}
   shakeMagnitude: 1
   shakeSpeed: 30
+  crackingSound: {fileID: 8300000, guid: 3758bb81afd3fa74b984322422a695b2, type: 3}
+  breakingSound: {fileID: 8300000, guid: 7d70f476b9f2c4941911c69b47f65977, type: 3}
+  crackingVolume: 1
+  crackingPitchRange: {x: 0.95, y: 1.05}
+  breakingVolume: 1
+  breakingPitchRange: {x: 0.95, y: 1.05}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!65 &2104610047
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4715,3 +4812,4 @@ SceneRoots:
   - {fileID: 1196235479}
   - {fileID: 2032580071}
   - {fileID: 1881333908}
+  - {fileID: 367397087}

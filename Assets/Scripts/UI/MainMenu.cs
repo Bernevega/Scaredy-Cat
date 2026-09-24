@@ -35,6 +35,17 @@ public class MainMenu : MonoBehaviour
     public Slider musicVolumeSlider;
     public Slider sfxVolumeSlider;
 
+    [Header("Scene Audio Fade")]
+    [Tooltip("How long the audio takes to fade in when the scene loads.")]
+    public float audioFadeInDuration = 1f;
+
+    [Tooltip("How long the audio takes to fade out when pressing New Game, Continue, or Quit.")]
+    public float audioFadeOutDuration = 0.75f;
+
+    [Range(0f, 1f)]
+    [Tooltip("Normal AudioListener volume after fading in.")]
+    public float targetAudioVolume = 1f;
+
     [Header("Video Settings UI")]
     public TMP_Dropdown resolutionDropdown;
     public TMP_Dropdown screenModeDropdown;
@@ -45,6 +56,12 @@ public class MainMenu : MonoBehaviour
 
     private CanvasGroup settingsCanvasGroup;
     private Coroutine settingsFadeCoroutine;
+    private Coroutine audioFadeCoroutine;
+    private bool quitStarted = false;
+    private bool saveLoadFailedThisSession = false;
+
+    private static float pendingSceneFadeInDuration = 1f;
+    private static float pendingSceneTargetVolume = 1f;
 
     private readonly List<Vector2Int> _resOptions = new List<Vector2Int>();
     private int _selectedWidth;
@@ -53,7 +70,6 @@ public class MainMenu : MonoBehaviour
     private const string PP_WIDTH = "Video_Width";
     private const string PP_HEIGHT = "Video_Height";
     private const string PP_MODE = "Video_Mode";
-    private const string PP_HAS_SAVE_MARKER = "HasSave";
 
     private void Awake()
     {
@@ -76,6 +92,9 @@ public class MainMenu : MonoBehaviour
             settingsCanvasGroup.interactable = false;
             settingsCanvasGroup.blocksRaycasts = false;
         }
+
+        // Start this scene silent so the menu audio can fade in.
+        AudioListener.volume = 0f;
 
         if (ContinueButton != null)
             ContinueButton.gameObject.SetActive(false);
@@ -133,6 +152,8 @@ public class MainMenu : MonoBehaviour
         RefreshContinueButton();
 
         ClearButtonSelection();
+
+        StartAudioFadeIn();
     }
 
     private void ClearButtonSelection()
@@ -157,59 +178,56 @@ public class MainMenu : MonoBehaviour
 
     private bool DetectSaveData()
     {
-        try
-        {
-            if (File.Exists(saveFilePath))
-                return true;
-        }
-        catch { }
+        // If loading this save already failed during this menu session,
+        // do not keep showing Continue again.
+        if (saveLoadFailedThisSession)
+            return false;
 
         try
         {
-            string dir =
-                Application.persistentDataPath;
-
-            if (Directory.Exists(dir))
+            // Only the REAL save file counts.
+            // Do not search for other files containing "save" in their names
+            // and do not rely on a PlayerPrefs marker, because both can become
+            // stale and make Continue appear when there is no actual save.
+            if (string.IsNullOrEmpty(saveFilePath) ||
+                !File.Exists(saveFilePath))
             {
-                if (Directory.GetFiles(
-                    dir,
-                    "*save*.*"
-                ).Length > 0)
-                    return true;
-
-                if (Directory.GetFiles(
-                    dir,
-                    "*.sav"
-                ).Length > 0)
-                    return true;
-
-                if (Directory.GetFiles(
-                    dir,
-                    "*.save"
-                ).Length > 0)
-                    return true;
-
-                if (Directory.GetFiles(
-                    dir,
-                    "*.json"
-                ).Any(
-                    f =>
-                        Path.GetFileName(f)
-                            .ToLowerInvariant()
-                            .Contains("save")
-                ))
-                    return true;
+                return false;
             }
+
+            FileInfo saveInfo =
+                new FileInfo(saveFilePath);
+
+            // An empty file is not a usable save.
+            if (saveInfo.Length <= 0)
+                return false;
+
+            string saveText =
+                File.ReadAllText(saveFilePath);
+
+            if (string.IsNullOrWhiteSpace(saveText))
+                return false;
+
+            // savefile.json should contain a JSON object or array.
+            // This is only a lightweight sanity check; LoadGame() remains
+            // the final authority on whether the data can actually be loaded.
+            string trimmed =
+                saveText.Trim();
+
+            bool looksLikeJson =
+                (trimmed.StartsWith("{") && trimmed.EndsWith("}")) ||
+                (trimmed.StartsWith("[") && trimmed.EndsWith("]"));
+
+            return looksLikeJson;
         }
-        catch { }
+        catch (Exception e)
+        {
+            Debug.LogWarning(
+                $"[MainMenu] Could not check save file: {e.Message}"
+            );
 
-        if (PlayerPrefs.GetInt(
-            PP_HAS_SAVE_MARKER,
-            0
-        ) == 1)
-            return true;
-
-        return false;
+            return false;
+        }
     }
 
     // ----------------------------------------------------
@@ -225,19 +243,15 @@ public class MainMenu : MonoBehaviour
 
         gameStarted = true;
 
-        if (setup != null)
-        {
-            setup.MovingToNewScene(
+        StartCoroutine(
+            FadeOutAndRunMenuTransition(
                 () =>
                 {
+                    PrepareFadeInForNextScene();
                     SceneManager.LoadScene("1City");
                 }
-            );
-        }
-        else
-        {
-            SceneManager.LoadScene("1City");
-        }
+            )
+        );
     }
 
     public void LoadGame()
@@ -250,47 +264,96 @@ public class MainMenu : MonoBehaviour
         if (!DetectSaveData())
         {
             Debug.LogWarning(
-                "MainMenu: Load requested but no save data detected. Hiding Continue."
+                "MainMenu: Load requested but no valid save file was detected. Hiding Continue."
             );
 
             RefreshContinueButton();
             return;
         }
 
+        if (SaveManager.Instance == null)
+        {
+            Debug.LogError(
+                "MainMenu: Cannot continue because SaveManager.Instance is null."
+            );
+
+            return;
+        }
+
         gameStarted = true;
 
-        Action loadGameAfterFade =
-            () =>
-            {
-                bool success =
-                    SaveManager.Instance.LoadGame();
-
-                if (!success)
+        StartCoroutine(
+            FadeOutAndRunMenuTransition(
+                () =>
                 {
-                    Debug.LogWarning(
-                        "MainMenu: No save file found to load. Hiding Continue."
-                    );
+                    PrepareFadeInForNextScene();
 
-                    gameStarted = false;
-                    RefreshContinueButton();
+                    bool success =
+                        SaveManager.Instance.LoadGame();
 
-                    if (setup != null)
-                        setup.FadeBackFromBlack();
+                    if (!success)
+                    {
+                        CancelPendingSceneFadeIn();
+
+                        Debug.LogWarning(
+                            "MainMenu: The save file could not be loaded. Hiding Continue for this menu session."
+                        );
+
+                        gameStarted = false;
+                        saveLoadFailedThisSession = true;
+
+                        if (ContinueButton != null)
+                            ContinueButton.gameObject.SetActive(false);
+
+                        if (setup != null)
+                            setup.FadeBackFromBlack();
+
+                        StartAudioFadeIn();
+                    }
+                    else
+                    {
+                        Debug.Log(
+                            "MainMenu: Loaded saved game."
+                        );
+                    }
                 }
-                else
-                {
-                    Debug.Log(
-                        "MainMenu: Loaded saved game."
-                    );
-                }
-            };
+            )
+        );
+    }
+
+    private IEnumerator FadeOutAndRunMenuTransition(
+        Action actionAfterFade
+    )
+    {
+        // Start the existing visual transition and the audio fade
+        // at the same time.
+        bool visualFadeFinished =
+            setup == null;
 
         if (setup != null)
+        {
             setup.MovingToNewScene(
-                loadGameAfterFade
+                () =>
+                {
+                    visualFadeFinished = true;
+                }
             );
-        else
-            loadGameAfterFade();
+        }
+
+        StopCurrentAudioFade();
+
+        yield return StartCoroutine(
+            FadeAudioVolume(
+                AudioListener.volume,
+                0f,
+                audioFadeOutDuration
+            )
+        );
+
+        while (!visualFadeFinished)
+            yield return null;
+
+        actionAfterFade?.Invoke();
     }
 
     // ----------------------------------------------------
@@ -504,9 +567,176 @@ public class MainMenu : MonoBehaviour
     {
         ClearButtonSelection();
 
+        if (quitStarted)
+            return;
+
+        quitStarted = true;
+
+        StartCoroutine(
+            FadeAudioAndQuit()
+        );
+    }
+
+    private IEnumerator FadeAudioAndQuit()
+    {
+        StopCurrentAudioFade();
+
+        yield return StartCoroutine(
+            FadeAudioVolume(
+                AudioListener.volume,
+                0f,
+                audioFadeOutDuration
+            )
+        );
+
         Application.Quit();
 
-        Debug.Log("Game exited");
+#if UNITY_EDITOR
+        Debug.Log(
+            "Game exited. Application.Quit() does not stop Play Mode in the Unity Editor."
+        );
+
+        // Keep testing usable in the Editor.
+        quitStarted = false;
+        StartAudioFadeIn();
+#endif
+    }
+
+    // ----------------------------------------------------
+    // SCENE AUDIO FADE
+    // ----------------------------------------------------
+
+    private void StartAudioFadeIn()
+    {
+        StopCurrentAudioFade();
+
+        audioFadeCoroutine =
+            StartCoroutine(
+                FadeAudioInRoutine()
+            );
+    }
+
+    private IEnumerator FadeAudioInRoutine()
+    {
+        yield return StartCoroutine(
+            FadeAudioVolume(
+                AudioListener.volume,
+                targetAudioVolume,
+                audioFadeInDuration
+            )
+        );
+
+        audioFadeCoroutine = null;
+    }
+
+    private void StopCurrentAudioFade()
+    {
+        if (audioFadeCoroutine != null)
+        {
+            StopCoroutine(audioFadeCoroutine);
+            audioFadeCoroutine = null;
+        }
+    }
+
+    private IEnumerator FadeAudioVolume(
+        float startVolume,
+        float endVolume,
+        float duration
+    )
+    {
+        duration =
+            Mathf.Max(
+                0f,
+                duration
+            );
+
+        if (duration <= 0f)
+        {
+            AudioListener.volume =
+                endVolume;
+
+            yield break;
+        }
+
+        float elapsed = 0f;
+
+        AudioListener.volume =
+            startVolume;
+
+        while (elapsed < duration)
+        {
+            elapsed +=
+                Time.unscaledDeltaTime;
+
+            float t =
+                Mathf.Clamp01(
+                    elapsed / duration
+                );
+
+            // Smoothstep for a softer fade.
+            t =
+                t * t *
+                (3f - 2f * t);
+
+            AudioListener.volume =
+                Mathf.Lerp(
+                    startVolume,
+                    endVolume,
+                    t
+                );
+
+            yield return null;
+        }
+
+        AudioListener.volume =
+            endVolume;
+    }
+
+    private void PrepareFadeInForNextScene()
+    {
+        pendingSceneFadeInDuration =
+            audioFadeInDuration;
+
+        pendingSceneTargetVolume =
+            targetAudioVolume;
+
+        SceneManager.sceneLoaded -=
+            FadeInAfterSceneLoad;
+
+        SceneManager.sceneLoaded +=
+            FadeInAfterSceneLoad;
+    }
+
+    private static void CancelPendingSceneFadeIn()
+    {
+        SceneManager.sceneLoaded -=
+            FadeInAfterSceneLoad;
+    }
+
+    private static void FadeInAfterSceneLoad(
+        Scene scene,
+        LoadSceneMode mode
+    )
+    {
+        SceneManager.sceneLoaded -=
+            FadeInAfterSceneLoad;
+
+        AudioListener.volume = 0f;
+
+        GameObject fadeRunnerObject =
+            new GameObject(
+                "Scene Audio Fade In"
+            );
+
+        MainMenuSceneAudioFadeRunner runner =
+            fadeRunnerObject.AddComponent<
+                MainMenuSceneAudioFadeRunner
+            >();
+
+        runner.BeginFade(
+            pendingSceneFadeInDuration,
+            pendingSceneTargetVolume
+        );
     }
 
     // ----------------------------------------------------
@@ -933,3 +1163,74 @@ public class MainMenu : MonoBehaviour
         }
     }
 }
+
+public class MainMenuSceneAudioFadeRunner : MonoBehaviour
+{
+    public void BeginFade(
+        float duration,
+        float targetVolume
+    )
+    {
+        StartCoroutine(
+            FadeIn(
+                duration,
+                targetVolume
+            )
+        );
+    }
+
+    private IEnumerator FadeIn(
+        float duration,
+        float targetVolume
+    )
+    {
+        duration =
+            Mathf.Max(
+                0f,
+                duration
+            );
+
+        AudioListener.volume = 0f;
+
+        if (duration <= 0f)
+        {
+            AudioListener.volume =
+                targetVolume;
+
+            Destroy(gameObject);
+            yield break;
+        }
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed +=
+                Time.unscaledDeltaTime;
+
+            float t =
+                Mathf.Clamp01(
+                    elapsed / duration
+                );
+
+            t =
+                t * t *
+                (3f - 2f * t);
+
+            AudioListener.volume =
+                Mathf.Lerp(
+                    0f,
+                    targetVolume,
+                    t
+                );
+
+            yield return null;
+        }
+
+        AudioListener.volume =
+            targetVolume;
+
+        Destroy(gameObject);
+    }
+}
+

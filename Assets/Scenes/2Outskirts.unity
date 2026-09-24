@@ -20279,11 +20279,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1014692583}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1c02815f68d644a83f4a939b1eb890, type: 3}
+  m_Script: {fileID: 11500000, guid: cfbe665fe262270469dba35b01d086fd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TriggerSceneLoader
-  fadeImage: {fileID: 1530074910}
-  fadeDuration: 0.5
+  m_EditorClassIdentifier: 
+  nextSceneName: 2Cutscene
+  screenFader: {fileID: 1530074911}
+  onlyPlayer: 1
+  fadeOutDurationOverride: 0.5
+  fallbackWaitSeconds: 0
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
+  mainMenuSceneName: MainMenu
 --- !u!1 &1017388317
 GameObject:
   m_ObjectHideFlags: 0
@@ -30676,15 +30683,15 @@ Transform:
   - {fileID: 1430015864}
   m_Father: {fileID: 957250378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1530074910 stripped
+--- !u!114 &1530074911 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4246740591314527640, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4071481230577620691, guid: 58e3d9b1a6bef4f42a06fc2bd5400af0, type: 3}
   m_PrefabInstance: {fileID: 1510382078}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: d8f217463500e2141aeebf06ec02ec86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1533096538
@@ -32900,6 +32907,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
+      propertyPath: m_Volume
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 8300000, guid: 75af8623742d7dc4aae4db080b6053db, type: 3}
@@ -32910,7 +32921,7 @@ PrefabInstance:
     - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 75af8623742d7dc4aae4db080b6053db, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
       propertyPath: rolloffMode
       value: 2

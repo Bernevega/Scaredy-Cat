@@ -395,6 +395,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 12.305, y: 216.203, z: 64.741}
+--- !u!1001 &355028598
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -42.63661
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.29479
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1624431049662653111, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5845974552560689706, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
+      propertyPath: m_Name
+      value: SkyManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 80e5904b571b40e4daa117507a2d87b4, type: 3}
 --- !u!1 &360468111
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,6 +990,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 6
   useSurfaceNormal: 0
+  bounceSound: {fileID: 8300000, guid: f8024d4db75783840a689e658eb6c523, type: 3}
+  bounceVolume: 0.6
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!54 &564383650
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1575,6 +1636,10 @@ MonoBehaviour:
   onlyPlayer: 1
   fadeOutDurationOverride: -1
   fallbackWaitSeconds: 0
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
+  mainMenuSceneName: MainMenu
 --- !u!65 &874574035
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2597,6 +2662,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 6
   useSurfaceNormal: 0
+  bounceSound: {fileID: 8300000, guid: f8024d4db75783840a689e658eb6c523, type: 3}
+  bounceVolume: 0.6
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 2807682680380074944, guid: 13c9313c10f8a5249ab00be278b2b372, type: 2}
 --- !u!54 &1463971242
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4267,3 +4336,4 @@ SceneRoots:
   - {fileID: 1400969058}
   - {fileID: 2024033071}
   - {fileID: 880921497}
+  - {fileID: 355028598}

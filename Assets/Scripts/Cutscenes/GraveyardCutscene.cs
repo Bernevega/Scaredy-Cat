@@ -16,7 +16,11 @@ public class GraveyardCutscene : MonoBehaviour
     [SerializeField] Transform[] oyenWaypoints;
     [SerializeField] Transform[] kittyWaypoints;
     [SerializeField] Transform flowerPos;
+
+    [Header("Scene Transition")]
     [SerializeField] SceneTransitionZone cutsceneTransition;
+
+    private Collider cutsceneTransitionCollider;
 
     int cameraStep = 0;
     int oyenStep = 0;
@@ -48,11 +52,36 @@ public class GraveyardCutscene : MonoBehaviour
     {
         mainCam = Camera.main;
         triggerCollider = GetComponent<Collider>();
+
+        // Keep the scene transition object active from the beginning.
+        // This prevents its Start/Awake audio logic from suddenly running
+        // in the middle of the cutscene.
+        if (cutsceneTransition != null)
+        {
+            cutsceneTransition.gameObject.SetActive(true);
+
+            cutsceneTransitionCollider =
+                cutsceneTransition.GetComponent<Collider>();
+
+            // Don't allow the transition to trigger yet.
+            if (cutsceneTransitionCollider != null)
+                cutsceneTransitionCollider.enabled = false;
+        }
     }
 
     private void Start()
     {
-        SimpleDialogManager.Instance.eventDialogueChanged += OnDialogueAdvance;
+        SimpleDialogManager.Instance.eventDialogueChanged +=
+            OnDialogueAdvance;
+    }
+
+    private void OnDestroy()
+    {
+        if (SimpleDialogManager.Instance != null)
+        {
+            SimpleDialogManager.Instance.eventDialogueChanged -=
+                OnDialogueAdvance;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -76,7 +105,8 @@ public class GraveyardCutscene : MonoBehaviour
 
         kittyAnimator = player.GetAnimator();
 
-        Rigidbody playerRb = player.GetComponent<Rigidbody>();
+        Rigidbody playerRb =
+            player.GetComponent<Rigidbody>();
 
         playerRb.linearVelocity = new Vector3(
             0,
@@ -89,7 +119,6 @@ public class GraveyardCutscene : MonoBehaviour
         SetKittyWalking(false);
 
         cutsceneActivated = true;
-        cutsceneTransition.gameObject.SetActive(true);
     }
 
     private void Update()
@@ -150,14 +179,19 @@ public class GraveyardCutscene : MonoBehaviour
     {
         if (kittyAnimator != null)
         {
-            kittyAnimator.SetBool("moveInput", walking);
+            kittyAnimator.SetBool(
+                "moveInput",
+                walking
+            );
         }
     }
 
     private void FirstCameraPanState()
     {
-        if (mainCam.transform.position !=
-            cameraWaypoints[cameraStep].position)
+        if (
+            mainCam.transform.position !=
+            cameraWaypoints[cameraStep].position
+        )
         {
             mainCam.transform.position =
                 Vector3.MoveTowards(
@@ -169,7 +203,9 @@ public class GraveyardCutscene : MonoBehaviour
         else
         {
             camState = CameraState.Idle;
-            cutState = CutsceneState.KittyOyenWalk1;
+
+            cutState =
+                CutsceneState.KittyOyenWalk1;
 
             Rigidbody playerRb =
                 player.GetComponent<Rigidbody>();
@@ -212,16 +248,24 @@ public class GraveyardCutscene : MonoBehaviour
 
         if (oyenStep < 2)
         {
-            oyenAnimator.SetBool("Walking", true);
+            oyenAnimator.SetBool(
+                "Walking",
+                true
+            );
         }
         else
         {
-            oyenAnimator.SetBool("Walking", false);
+            oyenAnimator.SetBool(
+                "Walking",
+                false
+            );
         }
 
-        if (kittyStep < 2 &&
+        if (
+            kittyStep < 2 &&
             player.transform.position !=
-            kittyWaypoints[kittyStep].position)
+            kittyWaypoints[kittyStep].position
+        )
         {
             player.transform.position =
                 Vector3.MoveTowards(
@@ -238,7 +282,10 @@ public class GraveyardCutscene : MonoBehaviour
                     kittyWaypoints[kittyStep].forward
                 );
             }
-            else if (kittyStep + 1 < kittyWaypoints.Length)
+            else if (
+                kittyStep + 1 <
+                kittyWaypoints.Length
+            )
             {
                 player.SetDirection(
                     (
@@ -257,9 +304,11 @@ public class GraveyardCutscene : MonoBehaviour
         }
 
         // Oyen movement
-        if (oyenStep < 3 &&
+        if (
+            oyenStep < 3 &&
             oyen.transform.position !=
-            oyenWaypoints[oyenStep].position)
+            oyenWaypoints[oyenStep].position
+        )
         {
             oyen.transform.position =
                 Vector3.MoveTowards(
@@ -275,7 +324,10 @@ public class GraveyardCutscene : MonoBehaviour
                 oyen.targetDirection =
                     oyenWaypoints[oyenStep].forward;
             }
-            else if (oyenStep + 1 < oyenWaypoints.Length)
+            else if (
+                oyenStep + 1 <
+                oyenWaypoints.Length
+            )
             {
                 oyen.targetDirection =
                     (
@@ -287,13 +339,25 @@ public class GraveyardCutscene : MonoBehaviour
             oyenStep++;
         }
 
-        if (oyenStep == 3 && kittyStep == 2)
+        if (
+            oyenStep == 3 &&
+            kittyStep == 2
+        )
         {
             SetKittyWalking(false);
-            oyenAnimator.SetBool("Walking", false);
 
-            cutState = CutsceneState.Idle;
-            Invoke(nameof(KittyOyenWalkWait), 1f);
+            oyenAnimator.SetBool(
+                "Walking",
+                false
+            );
+
+            cutState =
+                CutsceneState.Idle;
+
+            Invoke(
+                nameof(KittyOyenWalkWait),
+                1f
+            );
         }
     }
 
@@ -305,12 +369,14 @@ public class GraveyardCutscene : MonoBehaviour
             "GoodbyeDialogue"
         );
 
-        cutState = CutsceneState.Idle;
+        cutState =
+            CutsceneState.Idle;
     }
 
     private void TransitionToKittyPlaceFlower()
     {
-        cutState = CutsceneState.KittyPlaceFlower;
+        cutState =
+            CutsceneState.KittyPlaceFlower;
 
         if (kittyStep - 1 > 0)
         {
@@ -325,8 +391,10 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void KittyPlaceFlowerState()
     {
-        if (player.transform.position !=
-            kittyWaypoints[kittyStep].position)
+        if (
+            player.transform.position !=
+            kittyWaypoints[kittyStep].position
+        )
         {
             SetKittyWalking(true);
 
@@ -346,14 +414,15 @@ public class GraveyardCutscene : MonoBehaviour
                 kittyWaypoints[kittyStep].forward
             );
 
-            // Set this after SetDirection so it cannot be
-            // reactivated by the direction change.
             SetKittyWalking(false);
 
-            cutState = CutsceneState.Idle;
+            cutState =
+                CutsceneState.Idle;
 
             Invoke(
-                nameof(KittyFlowerPlace2StateTransition),
+                nameof(
+                    KittyFlowerPlace2StateTransition
+                ),
                 1f
             );
 
@@ -363,7 +432,8 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void KittyFlowerPlace2StateTransition()
     {
-        cutState = CutsceneState.KittyPlaceFlower2;
+        cutState =
+            CutsceneState.KittyPlaceFlower2;
 
         if (kittyStep - 1 > 0)
         {
@@ -382,7 +452,8 @@ public class GraveyardCutscene : MonoBehaviour
 
             if (flowerObject != null)
             {
-                flowerObject.transform.parent = null;
+                flowerObject.transform.parent =
+                    null;
 
                 flowerObject.transform.position =
                     flowerPos.transform.position;
@@ -403,7 +474,10 @@ public class GraveyardCutscene : MonoBehaviour
             }
 
             GameObject result =
-                FindFlowerRecursive(child, childName);
+                FindFlowerRecursive(
+                    child,
+                    childName
+                );
 
             if (result != null)
             {
@@ -416,8 +490,10 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void KittyPlaceFlower2State()
     {
-        if (player.transform.position !=
-            kittyWaypoints[kittyStep].position)
+        if (
+            player.transform.position !=
+            kittyWaypoints[kittyStep].position
+        )
         {
             SetKittyWalking(true);
 
@@ -437,12 +513,15 @@ public class GraveyardCutscene : MonoBehaviour
                 kittyWaypoints[kittyStep].forward
             );
 
-            // Apply the stop after changing direction.
             SetKittyWalking(false);
 
-            cutState = CutsceneState.Idle;
+            cutState =
+                CutsceneState.Idle;
 
-            Invoke(nameof(SayTitleDrop), 1f);
+            Invoke(
+                nameof(SayTitleDrop),
+                1f
+            );
 
             kittyStep++;
         }
@@ -450,7 +529,10 @@ public class GraveyardCutscene : MonoBehaviour
 
     private void KittyOyenWalkOffState()
     {
-        if (kittyStep < kittyWaypoints.Length)
+        if (
+            kittyStep <
+            kittyWaypoints.Length
+        )
         {
             SetKittyWalking(true);
         }
@@ -459,18 +541,29 @@ public class GraveyardCutscene : MonoBehaviour
             SetKittyWalking(false);
         }
 
-        if (oyenStep < oyenWaypoints.Length)
+        if (
+            oyenStep <
+            oyenWaypoints.Length
+        )
         {
-            oyenAnimator.SetBool("Walking", true);
+            oyenAnimator.SetBool(
+                "Walking",
+                true
+            );
         }
         else
         {
-            oyenAnimator.SetBool("Walking", false);
+            oyenAnimator.SetBool(
+                "Walking",
+                false
+            );
         }
 
-        if (kittyStep < kittyWaypoints.Length &&
+        if (
+            kittyStep < kittyWaypoints.Length &&
             player.transform.position !=
-            kittyWaypoints[kittyStep].position)
+            kittyWaypoints[kittyStep].position
+        )
         {
             player.transform.position =
                 Vector3.MoveTowards(
@@ -479,9 +572,15 @@ public class GraveyardCutscene : MonoBehaviour
                     2f * Time.deltaTime
                 );
         }
-        else if (kittyStep < kittyWaypoints.Length)
+        else if (
+            kittyStep <
+            kittyWaypoints.Length
+        )
         {
-            if (kittyStep + 1 < kittyWaypoints.Length)
+            if (
+                kittyStep + 1 <
+                kittyWaypoints.Length
+            )
             {
                 player.SetDirection(
                     (
@@ -493,7 +592,10 @@ public class GraveyardCutscene : MonoBehaviour
 
             kittyStep++;
 
-            if (kittyStep == kittyWaypoints.Length)
+            if (
+                kittyStep ==
+                kittyWaypoints.Length
+            )
             {
                 player.SetDirection(
                     kittyWaypoints[^1].forward
@@ -504,9 +606,12 @@ public class GraveyardCutscene : MonoBehaviour
         }
 
         // Oyen movement
-        if (oyenStep < oyenWaypoints.Length &&
+        if (
+            oyenStep <
+            oyenWaypoints.Length &&
             oyen.transform.position !=
-            oyenWaypoints[oyenStep].position)
+            oyenWaypoints[oyenStep].position
+        )
         {
             oyen.transform.position =
                 Vector3.MoveTowards(
@@ -515,9 +620,15 @@ public class GraveyardCutscene : MonoBehaviour
                     1f * Time.deltaTime
                 );
         }
-        else if (oyenStep < oyenWaypoints.Length)
+        else if (
+            oyenStep <
+            oyenWaypoints.Length
+        )
         {
-            if (oyenStep + 1 < oyenWaypoints.Length)
+            if (
+                oyenStep + 1 <
+                oyenWaypoints.Length
+            )
             {
                 oyen.targetDirection =
                     (
@@ -528,22 +639,37 @@ public class GraveyardCutscene : MonoBehaviour
 
             oyenStep++;
 
-            if (oyenStep == oyenWaypoints.Length)
+            if (
+                oyenStep ==
+                oyenWaypoints.Length
+            )
             {
                 oyen.targetDirection =
                     oyenWaypoints[^1].forward;
 
-                oyenAnimator.SetBool("Walking", false);
+                oyenAnimator.SetBool(
+                    "Walking",
+                    false
+                );
             }
         }
 
-        if (kittyStep == kittyWaypoints.Length &&
-            oyenStep == oyenWaypoints.Length)
+        if (
+            kittyStep ==
+            kittyWaypoints.Length &&
+            oyenStep ==
+            oyenWaypoints.Length
+        )
         {
             SetKittyWalking(false);
-            oyenAnimator.SetBool("Walking", false);
 
-            cutState = CutsceneState.SecondCameraPan;
+            oyenAnimator.SetBool(
+                "Walking",
+                false
+            );
+
+            cutState =
+                CutsceneState.SecondCameraPan;
         }
     }
 
@@ -554,8 +680,10 @@ public class GraveyardCutscene : MonoBehaviour
         bool positionReached = false;
         bool rotationReached = false;
 
-        if (mainCam.transform.position !=
-            cameraWaypoints[cameraStep].position)
+        if (
+            mainCam.transform.position !=
+            cameraWaypoints[cameraStep].position
+        )
         {
             mainCam.transform.position =
                 Vector3.MoveTowards(
@@ -569,8 +697,10 @@ public class GraveyardCutscene : MonoBehaviour
             positionReached = true;
         }
 
-        if (mainCam.transform.rotation !=
-            cameraWaypoints[cameraStep].rotation)
+        if (
+            mainCam.transform.rotation !=
+            cameraWaypoints[cameraStep].rotation
+        )
         {
             mainCam.transform.rotation =
                 Quaternion.Lerp(
@@ -594,9 +724,13 @@ public class GraveyardCutscene : MonoBehaviour
             rotationReached = true;
         }
 
-        if (rotationReached && positionReached)
+        if (
+            rotationReached &&
+            positionReached
+        )
         {
-            cutState = CutsceneState.Idle;
+            cutState =
+                CutsceneState.Idle;
         }
     }
 
@@ -638,6 +772,17 @@ public class GraveyardCutscene : MonoBehaviour
                         oyen.transform.position
                     ).normalized;
 
+                // Enable the actual transition trigger only now,
+                // when Kitty begins walking toward the exit.
+                if (
+                    cutsceneTransitionCollider !=
+                    null
+                )
+                {
+                    cutsceneTransitionCollider.enabled =
+                        true;
+                }
+
                 cutState =
                     CutsceneState.KittyOyenWalkOff;
             }
@@ -649,7 +794,10 @@ public class GraveyardCutscene : MonoBehaviour
         Vector3 target
     )
     {
-        return (target - origin).sqrMagnitude;
+        return (
+            target -
+            origin
+        ).sqrMagnitude;
     }
 
     private Vector3 Waypoint_GetDirectionTo(
@@ -657,14 +805,21 @@ public class GraveyardCutscene : MonoBehaviour
         Vector3 target
     )
     {
-        return (origin - target).normalized;
+        return (
+            origin -
+            target
+        ).normalized;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
 
-        for (int i = 0; i < kittyWaypoints.Length; i++)
+        for (
+            int i = 0;
+            i < kittyWaypoints.Length;
+            i++
+        )
         {
             Gizmos.DrawSphere(
                 kittyWaypoints[i].position,
@@ -680,7 +835,11 @@ public class GraveyardCutscene : MonoBehaviour
 
         Gizmos.color = Color.red;
 
-        for (int i = 0; i < oyenWaypoints.Length; i++)
+        for (
+            int i = 0;
+            i < oyenWaypoints.Length;
+            i++
+        )
         {
             Gizmos.DrawSphere(
                 oyenWaypoints[i].position,
@@ -696,7 +855,11 @@ public class GraveyardCutscene : MonoBehaviour
 
         Gizmos.color = Color.cyan;
 
-        for (int i = 0; i < cameraWaypoints.Length; i++)
+        for (
+            int i = 0;
+            i < cameraWaypoints.Length;
+            i++
+        )
         {
             Gizmos.DrawSphere(
                 cameraWaypoints[i].position,

@@ -6777,6 +6777,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &12235523
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10061,6 +10065,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &88005142
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19438,6 +19446,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &377369795
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25587,6 +25599,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &557216800
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33143,6 +33159,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &768927730
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -36660,6 +36680,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &834464756
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38009,7 +38033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogActor
   sceneID: KittyStart
-  triggerRadius: 3
+  triggerRadius: 6
   autoStartOnLoad: 1
   autoStartDelay: 6
   requireKeyPress: 0
@@ -42036,6 +42060,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &999019917
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44575,6 +44603,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &1076905517
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48965,6 +48997,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &1185579818
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -61632,6 +61668,10 @@ MonoBehaviour:
   faintDelay: 0
   fadeDelay: 0
   sceneToLoad: 
+  fadeAudio: 0
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
   disablePlayerMovementOnFaint: 0
   movementScriptTypeName: 
   interactionCanvas: {fileID: 1694643767}
@@ -67565,6 +67605,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &1677033296
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -75275,6 +75319,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &1903583075
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -79548,6 +79596,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &2016153540
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -81346,7 +81398,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2070411981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81362,8 +81414,12 @@ MonoBehaviour:
   nextSceneName: 5Cutscene
   screenFader: {fileID: 892832851}
   onlyPlayer: 1
-  fadeOutDurationOverride: -1
+  fadeOutDurationOverride: 2
   fallbackWaitSeconds: 0
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 2
+  targetAudioVolume: 1
+  mainMenuSceneName: MainMenu
 --- !u!65 &2070411982
 BoxCollider:
   m_ObjectHideFlags: 0

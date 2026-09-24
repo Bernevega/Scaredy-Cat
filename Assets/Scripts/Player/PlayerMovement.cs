@@ -52,6 +52,9 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;
     private bool _wasDialogActive = false;
 
+    // Landing sound is only allowed after an actual jump.
+    private bool landingSoundArmed = false;
+
     public bool hasJumped = false;
     public MoveState moveState = MoveState.Idle;
 
@@ -286,6 +289,9 @@ public class PlayerMovement : MonoBehaviour
 
                 hasJumped = true;
                 moveState = MoveState.Jumping;
+
+                // Allow landing sound for this jump.
+                landingSoundArmed = true;
             }
         }
 
@@ -312,6 +318,20 @@ public class PlayerMovement : MonoBehaviour
                     1080f * Time.deltaTime
                 );
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!landingSoundArmed)
+            return;
+
+        // Only count collisions with objects included in groundMask.
+        if ((groundMask.value & (1 << collision.gameObject.layer)) == 0)
+            return;
+
+        landingSoundArmed = false;
+
+        PlayLandingSound();
     }
 
     public void SetDirection(Vector3 dir)
@@ -386,6 +406,12 @@ public class PlayerMovement : MonoBehaviour
     private void LandStart()
     {
         moveState = MoveState.Landing;
+    }
+
+    private void PlayLandingSound()
+    {
+        if (landSoundEffect == null)
+            return;
 
         GameObject soundPlayer =
             ObjectPool.instance.objPool_GetObject(

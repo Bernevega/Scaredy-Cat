@@ -3687,13 +3687,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
+      propertyPath: m_Volume
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 8300000, guid: b77a66bde9b412447a92cd7511469b79, type: 3}
     - target: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: b77a66bde9b412447a92cd7511469b79, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6103902349253095321, guid: 8ff2793463669cd4c9e64bd448fa8c56, type: 3}
       propertyPath: m_PlayOnAwake
       value: 1
@@ -18950,6 +18954,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &598819136
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19188,6 +19196,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
+      propertyPath: m_Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 8300000, guid: 75af8623742d7dc4aae4db080b6053db, type: 3}
@@ -19198,7 +19210,7 @@ PrefabInstance:
     - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 75af8623742d7dc4aae4db080b6053db, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 494424378747405619, guid: afde63e0790772946b7058d947247034, type: 3}
       propertyPath: rolloffMode
       value: 2
@@ -34370,9 +34382,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactable: {fileID: 1690252258}
   braceletItemScriptable: {fileID: 11400000, guid: 15015aaf45970ef4db812636ba287afd, type: 2}
-  nextSceneTransition: {fileID: 1459619132}
   animator: {fileID: 587123019273352204}
   playerMovementScript: {fileID: 1579237186}
+  nextSceneName: 5Cemetary
+  screenFader: {fileID: 1094592796}
+  screenFadeOutDuration: 3
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 3
+  targetAudioVolume: 1
   interactionCanvas: {fileID: 1737052180}
   interactionRadius: 0.75
   interactionFadeDuration: 0.25
@@ -38504,6 +38521,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bounceForce: 3
   useSurfaceNormal: 0
+  bounceSound: {fileID: 0}
+  bounceVolume: 1
+  pitchRange: {x: 0.9, y: 1.1}
+  audioOutput: {fileID: 0}
 --- !u!65 &1318220236
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40044,7 +40065,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 60beec5448dcff5478c3a65fcf28c851, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -41107,7 +41128,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1459619132}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cfbe665fe262270469dba35b01d086fd, type: 3}
   m_Name: 
@@ -41117,6 +41138,10 @@ MonoBehaviour:
   onlyPlayer: 1
   fadeOutDurationOverride: 3
   fallbackWaitSeconds: 1
+  audioFadeInDuration: 0
+  audioFadeOutDuration: 3
+  targetAudioVolume: 1
+  mainMenuSceneName: MainMenu
 --- !u!135 &1459619134
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -66183,6 +66208,10 @@ MonoBehaviour:
   faintDelay: 0.3
   fadeDelay: 1
   sceneToLoad: 
+  fadeAudio: 0
+  audioFadeInDuration: 1
+  audioFadeOutDuration: 1
+  targetAudioVolume: 1
   disablePlayerMovementOnFaint: 0
   movementScriptTypeName: PlayerMovement
   interactionCanvas: {fileID: 984930532}
